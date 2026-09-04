@@ -8,6 +8,8 @@ use IsyThl\EuropeanDigitalCredentials\Entity;
 use IsyThl\EuropeanDigitalCredentials\Concept;
 use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
 use IsyThl\EuropeanDigitalCredentials\Claim;
+use IsyThl\EuropeanDigitalCredentials\Address;
+use IsyThl\EuropeanDigitalCredentials\ContactPoint;
 use IsyThl\EuropeanDigitalCredentials\Credential;
 use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
 use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
@@ -16,6 +18,8 @@ use IsyThl\EuropeanDigitalCredentials\IndividualDisplay;
 use IsyThl\EuropeanDigitalCredentials\Identifier;
 use IsyThl\EuropeanDigitalCredentials\LegalIdentifier;
 use IsyThl\EuropeanDigitalCredentials\MediaObject;
+use IsyThl\EuropeanDigitalCredentials\Note;
+use IsyThl\EuropeanDigitalCredentials\EmailAddress;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use PHPUnit\Framework\TestCase;
@@ -283,5 +287,42 @@ final class EntityTest extends TestCase
         self::assertSame('87654321', $data['identifier'][0]['notation']);
         self::assertSame('LegalIdentifier', $data['nationalID']['type']);
         self::assertSame('ITA', substr($data['nationalID']['spatial']['id'], -3));
+    }
+
+    public function testSubjectContactPointSerializesAddressAndMailboxArrays(): void
+    {
+        $country = new Concept(
+            'http://publications.europa.eu/resource/authority/country/ITA',
+            new LocalizedString(['en' => 'Italy']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
+            'country',
+        );
+        $contact = new ContactPoint(
+            'contact-1',
+            new Address('address-1', $country, new Note('note-1', new LocalizedString(['en' => 'Via da Vinci, 12']))),
+            new EmailAddress('ana.andromeda@example.com'),
+        );
+        $subject = new CredentialSubject(
+            'subject-1',
+            new LocalizedString(['en' => 'Ana']),
+            new LocalizedString(['en' => 'Andromeda']),
+            new LocalizedString(['en' => 'Ana Andromeda']),
+            [new class ('claim-1') extends Claim {
+                public function toArray(): array
+                {
+                    return ['id' => $this->id, 'type' => 'Claim'];
+                }
+            }],
+            null,
+            null,
+            null,
+            null,
+            $contact,
+        );
+
+        $data = $subject->toArray();
+        self::assertSame('ContactPoint', $data['contactPoint'][0]['type']);
+        self::assertSame('ana.andromeda@example.com', substr($data['contactPoint'][0]['emailAddress'][0]['id'], 7));
+        self::assertSame(['en' => ['Via da Vinci, 12']], $data['contactPoint'][0]['address'][0]['fullAddress']['noteLiteral']);
     }
 }

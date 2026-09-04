@@ -15,6 +15,7 @@ use IsyThl\EuropeanDigitalCredentials\ContactPoint;
 use IsyThl\EuropeanDigitalCredentials\CreditPoint;
 use IsyThl\EuropeanDigitalCredentials\Credential;
 use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
+use IsyThl\EuropeanDigitalCredentials\CredentialDocumentValidator;
 use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
 use IsyThl\EuropeanDigitalCredentials\DisplayDetail;
 use IsyThl\EuropeanDigitalCredentials\IndividualDisplay;
@@ -121,6 +122,25 @@ final class EntityTest extends TestCase {
             'http://data.europa.eu/snb/credential/e34929035b',
             $credential->toArray()['credentialProfiles'][0]['id'],
         );
+        (new CredentialDocumentValidator())->validateJson($credential->toJson());
+    }
+
+    public function testCredentialDocumentValidatorRejectsJsonArrays(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        (new CredentialDocumentValidator())->validateJson('[]');
+    }
+
+    public function testCredentialDocumentValidatorReportsMissingRequiredField(): void {
+        $this->expectExceptionMessage('credentialProfiles');
+
+        (new CredentialDocumentValidator())->validate([
+            '@context' => [
+                'https://www.w3.org/2018/credentials/v1',
+                'http://data.europa.eu/snb/model/context/edc-ap',
+            ],
+            'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
+        ]);
     }
 
     public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void {

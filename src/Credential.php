@@ -68,6 +68,13 @@ final class Credential extends Entity {
         return $data;
     }
 
+    public function toJson(): string {
+        $json = parent::toJson();
+        (new CredentialDocumentValidator())->validateJson($json);
+
+        return $json;
+    }
+
     private function formatDate(DateTimeImmutable $date): string {
         return $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
     }

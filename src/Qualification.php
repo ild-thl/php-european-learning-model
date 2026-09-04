@@ -21,6 +21,8 @@ final class Qualification extends LearningAchievementSpecification
         public readonly ?Concept $eqfLevel = null,
         /** @var list<Concept> */
         public readonly array $nqfLevels = [],
+        /** @var list<Accreditation> */
+        public readonly array $accreditations = [],
     ) {
         parent::__construct(
             $id,
@@ -43,6 +45,12 @@ final class Qualification extends LearningAchievementSpecification
             static fn ($nqfLevel): bool => !$nqfLevel instanceof Concept,
         ) !== []) {
             throw new \InvalidArgumentException('NQF levels must be concepts.');
+        }
+        if (array_filter(
+            $accreditations,
+            static fn ($accreditation): bool => !$accreditation instanceof Accreditation,
+        ) !== []) {
+            throw new \InvalidArgumentException('Accreditations must be Accreditation objects.');
         }
     }
 
@@ -68,6 +76,12 @@ final class Qualification extends LearningAchievementSpecification
         }
         if ($this->eqfLevel !== null) {
             $data['eqfLevel'] = $this->eqfLevel->toArray();
+        }
+        if ($this->accreditations !== []) {
+            $data['accreditation'] = array_map(
+                static fn (Accreditation $accreditation): array => $accreditation->toArray(),
+                $this->accreditations,
+            );
         }
         return $data;
     }

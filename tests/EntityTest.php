@@ -9,6 +9,7 @@ use IsyThl\EuropeanDigitalCredentials\Concept;
 use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
 use IsyThl\EuropeanDigitalCredentials\Claim;
 use IsyThl\EuropeanDigitalCredentials\Address;
+use IsyThl\EuropeanDigitalCredentials\Accreditation;
 use IsyThl\EuropeanDigitalCredentials\AwardingProcess;
 use IsyThl\EuropeanDigitalCredentials\ContactPoint;
 use IsyThl\EuropeanDigitalCredentials\CreditPoint;
@@ -577,5 +578,50 @@ final class EntityTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         new WebResource('resource-1', 'javascript:alert(1)');
+    }
+
+    public function testQualificationSerializesAccreditations(): void
+    {
+        $country = new Concept(
+            'http://publications.europa.eu/resource/authority/country/IRL',
+            new LocalizedString(['en' => 'Ireland']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
+        );
+        $organisation = new Organisation(
+            'organisation-1',
+            new Location(
+                'location-1',
+                new Address(
+                    'address-1',
+                    $country,
+                    new Note('note-1', new LocalizedString(['en' => 'Dublin'])),
+                ),
+            ),
+            new LocalizedString(['en' => 'Quality Authority']),
+            new LegalIdentifier('registration-1', '123', $country),
+        );
+        $accreditation = new Accreditation(
+            'accreditation-1',
+            new LocalizedString(['en' => 'Quality assured']),
+            $organisation,
+        );
+        $qualification = new Qualification(
+            'qualification-1',
+            new LocalizedString(['en' => 'Qualification']),
+            null,
+            [],
+            null,
+            [],
+            null,
+            null,
+            null,
+            [],
+            null,
+            [],
+            [$accreditation],
+        );
+
+        self::assertSame('Accreditation', $qualification->toArray()['accreditation'][0]['type']);
+        self::assertSame('Quality Authority', $qualification->toArray()['accreditation'][0]['accreditingAgent']['legalName']['en'][0]);
     }
 }

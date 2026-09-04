@@ -490,4 +490,36 @@ final class EntityTest extends TestCase
         self::assertSame('LearningOutcome', $data['learningOutcome'][0]['type']);
         self::assertSame('Problem solving', $data['learningOutcome'][0]['relatedSkills'][0]['prefLabel']['en'][0]);
     }
+
+    public function testQualificationSerializesEqfAndNqfLevels(): void
+    {
+        $eqf = new Concept(
+            'http://data.europa.eu/snb/eqf/level-4',
+            new LocalizedString(['en' => 'Level 4']),
+            new ConceptScheme('http://data.europa.eu/snb/eqf'),
+        );
+        $nqf = new Concept(
+            'http://example.test/nqf/level-4',
+            new LocalizedString(['en' => 'National level 4']),
+            new ConceptScheme('http://example.test/nqf'),
+        );
+        $qualification = new Qualification(
+            'qualification-1',
+            new LocalizedString(['en' => 'Qualification']),
+            null,
+            [],
+            null,
+            [],
+            null,
+            null,
+            null,
+            [],
+            $eqf,
+            [$nqf],
+        );
+
+        $data = $qualification->toArray();
+        self::assertSame('http://data.europa.eu/snb/eqf/level-4', $data['eqfLevel']['id']);
+        self::assertSame('http://example.test/nqf/level-4', $data['nqfLevel'][0]['id']);
+    }
 }

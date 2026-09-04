@@ -18,6 +18,9 @@ final class Qualification extends LearningAchievementSpecification
         ?string $volumeOfLearning = null,
         public readonly ?bool $isPartialQualification = null,
         public readonly array $qualificationCodes = [],
+        public readonly ?Concept $eqfLevel = null,
+        /** @var list<Concept> */
+        public readonly array $nqfLevels = [],
     ) {
         parent::__construct(
             $id,
@@ -35,6 +38,12 @@ final class Qualification extends LearningAchievementSpecification
         ) !== []) {
             throw new \InvalidArgumentException('Qualification codes must be concepts.');
         }
+        if (array_filter(
+            $nqfLevels,
+            static fn ($nqfLevel): bool => !$nqfLevel instanceof Concept,
+        ) !== []) {
+            throw new \InvalidArgumentException('NQF levels must be concepts.');
+        }
     }
 
     public function toArray(): array
@@ -50,6 +59,15 @@ final class Qualification extends LearningAchievementSpecification
                 static fn (Concept $qualificationCode): array => $qualificationCode->toArray(),
                 $this->qualificationCodes,
             );
+        }
+        if ($this->nqfLevels !== []) {
+            $data['nqfLevel'] = array_map(
+                static fn (Concept $nqfLevel): array => $nqfLevel->toArray(),
+                $this->nqfLevels,
+            );
+        }
+        if ($this->eqfLevel !== null) {
+            $data['eqfLevel'] = $this->eqfLevel->toArray();
         }
         return $data;
     }

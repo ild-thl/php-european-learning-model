@@ -151,4 +151,29 @@ final class EntityTest extends TestCase
         self::assertSame('2024-01-04T00:00:00Z', $data['validUntil']);
         self::assertArrayNotHasKey('expirationDate', $data);
     }
+
+    public function testDisplayDescriptionIsOptionalAndLocalized(): void
+    {
+        $language = new Concept(
+            'http://example.test/language/en',
+            new LocalizedString(['en' => 'English']),
+            new ConceptScheme('http://example.test/languages'),
+        );
+        $display = new DisplayParameter(
+            'display-1',
+            $language,
+            $language,
+            new LocalizedString(['en' => 'Title']),
+            new LocalizedString(['en' => 'Description', 'de' => 'Beschreibung']),
+        );
+
+        self::assertSame([
+            'en' => ['Description'],
+            'de' => ['Beschreibung'],
+        ], $display->toArray()['description']);
+        self::assertArrayNotHasKey(
+            'description',
+            (new DisplayParameter('display-2', $language, $language, new LocalizedString(['en' => 'Title'])))->toArray(),
+        );
+    }
 }

@@ -15,6 +15,7 @@ use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\RdfVocabularyProvider;
 use IsyThl\EuropeanDigitalCredentials\VocabularyResourceFetcher;
 use IsyThl\EuropeanDigitalCredentials\VocabularyScheme;
+use IsyThl\EuropeanDigitalCredentials\VocabularyProvider;
 use PHPUnit\Framework\TestCase;
 
 final class VocabularyTest extends TestCase {
@@ -151,6 +152,33 @@ XML;
 
         self::assertSame($scheme, $cached->getScheme($schemeId));
         self::assertSame($scheme, $cached->getScheme($schemeId));
+    }
+
+    public function testCachedProviderLoadsTheSourceOnlyOnCacheMiss(): void {
+        $schemeId = 'http://example.test/scheme';
+        $scheme = new VocabularyScheme($schemeId, new ConceptScheme($schemeId));
+        $source = new class ($scheme) implements VocabularyProvider {
+            public int $calls = 0;
+
+            public function __construct(private readonly VocabularyScheme $scheme) {
+            }
+
+            public function getScheme(string $schemeId): ?VocabularyScheme {
+                $this->calls++;
+
+                return $schemeId === $this->scheme->id ? $this->scheme : null;
+            }
+
+            public function getConcept(string $conceptId, string $schemeId): ?Concept {
+                return $this->getScheme($schemeId)?->find($conceptId);
+            }
+        };
+        $cached = new CachedVocabularyProvider($source, new InMemoryVocabularyCache());
+
+        $cached->getScheme($schemeId);
+        $cached->getScheme($schemeId);
+
+        self::assertSame(1, $source->calls);
     }
 
     public function testJsonLdProviderRejectsOversizedResponse(): void {

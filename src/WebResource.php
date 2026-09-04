@@ -20,6 +20,7 @@ final class WebResource extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => 'urn:epass:webResource:' . $this->id,

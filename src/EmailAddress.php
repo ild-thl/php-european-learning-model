@@ -15,6 +15,7 @@ final class EmailAddress extends Entity {
         parent::__construct($email);
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return ['id' => 'mailto:' . $this->id, 'type' => 'Mailbox'];
     }

@@ -17,6 +17,7 @@ final class LearningAssessmentSpecification extends Entity {
         parent::__construct($id);
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return [
             'id' => 'urn:epass:learningAssessmentSpec:' . $this->id,

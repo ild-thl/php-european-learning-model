@@ -35,6 +35,7 @@ final class LearningOutcome extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => 'urn:epass:LearningOutcome:' . $this->id,

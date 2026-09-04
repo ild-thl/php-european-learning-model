@@ -29,6 +29,7 @@ final class CredentialSubject extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => 'urn:epass:person:' . $this->id,

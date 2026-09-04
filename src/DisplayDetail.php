@@ -19,6 +19,7 @@ final class DisplayDetail extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return [
             'id' => 'urn:epass:displayDetail:' . $this->id,

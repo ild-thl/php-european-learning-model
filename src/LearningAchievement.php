@@ -57,6 +57,7 @@ final class LearningAchievement extends Claim {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => 'urn:epass:learningAchievement:' . $this->id,

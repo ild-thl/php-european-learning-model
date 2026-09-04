@@ -17,6 +17,7 @@ class Organisation extends Entity {
         parent::__construct($id);
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => 'urn:epass:org:' . $this->id,

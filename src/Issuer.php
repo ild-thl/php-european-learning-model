@@ -17,6 +17,7 @@ final class Issuer extends Organisation {
         parent::__construct($id, $location, $legalName, $registration, $contactPoint, $logo);
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = parent::toArray();
         $data['id'] = $this->id;

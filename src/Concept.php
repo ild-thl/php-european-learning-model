@@ -20,6 +20,7 @@ final class Concept extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => $this->id,
@@ -33,6 +34,7 @@ final class Concept extends Entity {
         return $data;
     }
 
+    /** @param array<string, mixed> $data */
     public static function fromArray(array $data): self {
         if (
             !isset($data['id'], $data['inScheme'], $data['prefLabel'])

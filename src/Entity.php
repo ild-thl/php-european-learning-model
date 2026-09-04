@@ -14,6 +14,7 @@ abstract class Entity {
         $this->id = $id ?? self::newIdentifier();
     }
 
+    /** @return array<string, mixed> */
     abstract public function toArray(): array;
 
     public function toJson(): string {

@@ -8,7 +8,11 @@ use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
 final class Qualification extends LearningAchievementSpecification {
 
-    /** @param list<Concept> $qualificationCodes */
+    /**
+     * @param list<CreditPoint> $creditPoints
+     * @param list<string> $category
+     * @param list<Concept> $qualificationCodes
+     */
     public function __construct(
         string $id,
         LocalizedString $title,
@@ -62,6 +66,7 @@ final class Qualification extends LearningAchievementSpecification {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = parent::toArray();
         $data['id'] = 'urn:epass:qualification:' . $this->id;

@@ -20,6 +20,7 @@ final class MediaObject extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return [
             'id' => 'urn:epass:mediaObject:' . $this->id,

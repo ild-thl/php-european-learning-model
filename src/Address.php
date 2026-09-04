@@ -14,6 +14,7 @@ final class Address extends Entity {
         parent::__construct($id);
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return [
             'id' => 'urn:epass:address:' . $this->id,

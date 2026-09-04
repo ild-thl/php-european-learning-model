@@ -28,6 +28,7 @@ final class DisplayParameter extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => 'urn:epass:displayParameter:' . $this->id,

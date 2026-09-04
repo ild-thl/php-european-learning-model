@@ -10,6 +10,7 @@ final class Note extends Entity {
         parent::__construct($id);
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return [
             'id' => 'urn:epass:note:' . $this->id,

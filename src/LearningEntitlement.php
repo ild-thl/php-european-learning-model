@@ -10,7 +10,7 @@ use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 final class LearningEntitlement extends Claim {
 
     /**
-     * @param list<LearningAchievementSpecification|Qualification> $entitledBy
+    * @param list<LearningAchievementSpecification> $entitledBy
      */
     public function __construct(
         string $id,
@@ -28,7 +28,6 @@ final class LearningEntitlement extends Claim {
                 $entitledBy,
                 static fn ($item): bool => (
                     !$item instanceof LearningAchievementSpecification
-                    && !$item instanceof Qualification
                 ),
             ) !== []
         ) {
@@ -38,6 +37,7 @@ final class LearningEntitlement extends Claim {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => 'urn:epass:learningEntitlement:' . $this->id,
@@ -53,7 +53,7 @@ final class LearningEntitlement extends Claim {
         }
         if ($this->entitledBy !== []) {
             $data['entitledBy'] = array_map(
-                static fn (LearningAchievementSpecification|Qualification $item): array => $item->toArray(),
+                static fn (LearningAchievementSpecification $item): array => $item->toArray(),
                 $this->entitledBy,
             );
         }

@@ -19,6 +19,7 @@ final class LegalIdentifier extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return [
             'id' => 'urn:epass:legalIdentifier:' . $this->id,

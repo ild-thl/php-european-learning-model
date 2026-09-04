@@ -18,6 +18,7 @@ final class LearningActivity extends Claim {
         parent::__construct($id);
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => 'urn:epass:activity:' . $this->id,

@@ -15,10 +15,12 @@ final class ConceptScheme extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return ['id' => $this->id, 'type' => $this->schemeType];
     }
 
+    /** @param array<string, mixed> $data */
     public static function fromArray(array $data): self {
         if (!isset($data['id'], $data['type']) || !is_string($data['id']) || !is_string($data['type'])) {
             throw new InvalidCredentialException('A concept scheme requires string id and type fields.');

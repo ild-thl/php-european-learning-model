@@ -36,6 +36,7 @@ final class Credential extends Entity {
 
     public readonly Concept $credentialProfile;
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
             'id' => 'urn:credential:' . $this->id,

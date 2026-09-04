@@ -15,6 +15,7 @@ final class AwardingProcess extends Entity {
         }
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return [
             'id' => 'urn:epass:awardingProcess:' . $this->id,

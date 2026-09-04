@@ -14,6 +14,7 @@ final class ContactPoint extends Entity {
         parent::__construct($id);
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         $data = ['id' => 'urn:epass:contactPoint:' . $this->id, 'type' => 'ContactPoint'];
         if ($this->address !== null) {

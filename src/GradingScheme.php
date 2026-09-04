@@ -14,6 +14,7 @@ final class GradingScheme extends Entity {
         parent::__construct($id);
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array {
         return [
             'id' => 'urn:epass:gradingScheme:' . $this->id,

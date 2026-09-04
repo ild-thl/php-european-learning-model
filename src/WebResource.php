@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
+use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+
 final class WebResource extends Entity
 {
     public function __construct(
@@ -13,7 +15,7 @@ final class WebResource extends Entity
     ) {
         parent::__construct($id);
         if (filter_var($contentUrl, FILTER_VALIDATE_URL) === false || !in_array(parse_url($contentUrl, PHP_URL_SCHEME), ['http', 'https'], true)) {
-            throw new \InvalidArgumentException('Web resource content URLs must be HTTP or HTTPS URLs.');
+            throw new InvalidCredentialException('Web resource content URLs must be HTTP or HTTPS URLs.');
         }
     }
 

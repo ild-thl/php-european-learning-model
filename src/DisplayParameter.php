@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
+use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+
 final class DisplayParameter extends Entity
 {
     public function __construct(
@@ -20,7 +22,7 @@ final class DisplayParameter extends Entity
             $individualDisplays,
             static fn ($individualDisplay): bool => !$individualDisplay instanceof IndividualDisplay,
         ) !== []) {
-            throw new \InvalidArgumentException('Display parameters accept only individual displays.');
+            throw new InvalidCredentialException('Display parameters accept only individual displays.');
         }
     }
 

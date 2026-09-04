@@ -160,6 +160,37 @@ final class EntityTest extends TestCase {
         ]);
     }
 
+    public function testSpecificationSerializesEducationConcepts(): void {
+        $level = new Concept(
+            'http://example.test/education-level/6',
+            new LocalizedString(['en' => 'Bachelor']),
+            new ConceptScheme('http://example.test/education-levels'),
+        );
+        $subject = new Concept(
+            'http://example.test/education-subject/computing',
+            new LocalizedString(['en' => 'Computing']),
+            new ConceptScheme('http://example.test/education-subjects'),
+        );
+        $specification = new LearningAchievementSpecification(
+            'specification-1',
+            new LocalizedString(['en' => 'Digital skills']),
+            null,
+            [],
+            null,
+            [],
+            null,
+            null,
+            [],
+            [],
+            [],
+            [$level],
+            [$subject],
+        );
+
+        self::assertSame('Bachelor', $specification->toArray()['educationLevel'][0]['prefLabel']['en'][0]);
+        self::assertSame('Computing', $specification->toArray()['educationSubject'][0]['prefLabel']['en'][0]);
+    }
+
     public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void {
         $subject = new CredentialSubject(
             'subject-1',

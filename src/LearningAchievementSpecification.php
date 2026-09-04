@@ -25,6 +25,10 @@ class LearningAchievementSpecification extends Entity {
         public readonly array $additionalNotes = [],
         /** @var list<WebResource> */
         public readonly array $supplementaryDocuments = [],
+        /** @var list<Concept> */
+        public readonly array $educationLevels = [],
+        /** @var list<Concept> */
+        public readonly array $educationSubjects = [],
     ) {
         parent::__construct($id);
         if (
@@ -61,6 +65,15 @@ class LearningAchievementSpecification extends Entity {
             ) !== []
         ) {
             throw new InvalidCredentialException('Supplementary documents must be WebResource objects.');
+        }
+        $educationConcepts = [
+            'education level' => $educationLevels,
+            'education subject' => $educationSubjects,
+        ];
+        foreach ($educationConcepts as $name => $concepts) {
+            if (array_filter($concepts, static fn ($concept): bool => !$concept instanceof Concept) !== []) {
+                throw new InvalidCredentialException(sprintf('Specification %s values must be concepts.', $name));
+            }
         }
         foreach ([$maximumDuration, $volumeOfLearning] as $duration) {
             $isValidDuration = $duration === null || preg_match(
@@ -116,6 +129,18 @@ class LearningAchievementSpecification extends Entity {
             $data['supplementaryDocument'] = array_map(
                 static fn (WebResource $document): array => $document->toArray(),
                 $this->supplementaryDocuments,
+            );
+        }
+        if ($this->educationLevels !== []) {
+            $data['educationLevel'] = array_map(
+                static fn (Concept $level): array => $level->toArray(),
+                $this->educationLevels,
+            );
+        }
+        if ($this->educationSubjects !== []) {
+            $data['educationSubject'] = array_map(
+                static fn (Concept $subject): array => $subject->toArray(),
+                $this->educationSubjects,
             );
         }
         return $data;

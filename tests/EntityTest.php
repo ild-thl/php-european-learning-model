@@ -26,6 +26,7 @@ use IsyThl\EuropeanDigitalCredentials\EmailAddress;
 use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievement;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
+use IsyThl\EuropeanDigitalCredentials\LearningOutcome;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
 use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
@@ -464,5 +465,29 @@ final class EntityTest extends TestCase
         self::assertSame('urn:epass:qualification:qualification-1', $data['id']);
         self::assertFalse($data['isPartialQualification']);
         self::assertSame('Example qualification', $data['qualificationCodes'][0]['prefLabel']['en'][0]);
+    }
+
+    public function testSpecificationSerializesLearningOutcomeAndRelatedSkills(): void
+    {
+        $skill = new Concept(
+            'http://example.test/skill/one',
+            new LocalizedString(['en' => 'Problem solving']),
+            new ConceptScheme('http://example.test/skills'),
+        );
+        $specification = new LearningAchievementSpecification(
+            'specification-1',
+            new LocalizedString(['en' => 'Digital skills']),
+            null,
+            [],
+            null,
+            [],
+            null,
+            null,
+            [new LearningOutcome('outcome-1', new LocalizedString(['en' => 'Can solve problems']), [$skill])],
+        );
+
+        $data = $specification->toArray();
+        self::assertSame('LearningOutcome', $data['learningOutcome'][0]['type']);
+        self::assertSame('Problem solving', $data['learningOutcome'][0]['relatedSkills'][0]['prefLabel']['en'][0]);
     }
 }

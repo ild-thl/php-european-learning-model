@@ -17,6 +17,8 @@ class LearningAchievementSpecification extends Entity
         public readonly array $category = [],
         public readonly ?string $maximumDuration = null,
         public readonly ?string $volumeOfLearning = null,
+        /** @var list<LearningOutcome> */
+        public readonly array $learningOutcomes = [],
     ) {
         parent::__construct($id);
         if (array_filter(
@@ -27,6 +29,12 @@ class LearningAchievementSpecification extends Entity
         }
         if (array_filter($category, static fn ($value): bool => !is_string($value) || $value === '') !== []) {
             throw new \InvalidArgumentException('Specification categories must be non-empty strings.');
+        }
+        if (array_filter(
+            $learningOutcomes,
+            static fn ($learningOutcome): bool => !$learningOutcome instanceof LearningOutcome,
+        ) !== []) {
+            throw new \InvalidArgumentException('Learning outcomes must be LearningOutcome objects.');
         }
         foreach ([$maximumDuration, $volumeOfLearning] as $duration) {
             if ($duration !== null && preg_match('/^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?=\\d)(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?$/', $duration) !== 1) {
@@ -62,6 +70,12 @@ class LearningAchievementSpecification extends Entity
         }
         if ($this->volumeOfLearning !== null) {
             $data['volumeOfLearning'] = $this->volumeOfLearning;
+        }
+        if ($this->learningOutcomes !== []) {
+            $data['learningOutcome'] = array_map(
+                static fn (LearningOutcome $learningOutcome): array => $learningOutcome->toArray(),
+                $this->learningOutcomes,
+            );
         }
         return $data;
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
+use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+
 final class Qualification extends LearningAchievementSpecification
 {
     /** @param list<Concept> $qualificationCodes */
@@ -38,19 +40,19 @@ final class Qualification extends LearningAchievementSpecification
             $qualificationCodes,
             static fn ($qualificationCode): bool => !$qualificationCode instanceof Concept,
         ) !== []) {
-            throw new \InvalidArgumentException('Qualification codes must be concepts.');
+            throw new InvalidCredentialException('Qualification codes must be concepts.');
         }
         if (array_filter(
             $nqfLevels,
             static fn ($nqfLevel): bool => !$nqfLevel instanceof Concept,
         ) !== []) {
-            throw new \InvalidArgumentException('NQF levels must be concepts.');
+            throw new InvalidCredentialException('NQF levels must be concepts.');
         }
         if (array_filter(
             $accreditations,
             static fn ($accreditation): bool => !$accreditation instanceof Accreditation,
         ) !== []) {
-            throw new \InvalidArgumentException('Accreditations must be Accreditation objects.');
+            throw new InvalidCredentialException('Accreditations must be Accreditation objects.');
         }
     }
 

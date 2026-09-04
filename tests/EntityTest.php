@@ -657,4 +657,25 @@ final class EntityTest extends TestCase
         self::assertSame('CreditPoint', $achievement->toArray()['creditReceived']['type']);
         self::assertSame('3', $achievement->toArray()['creditReceived']['point']);
     }
+
+    public function testQualificationRejectsInvalidAccreditationType(): void
+    {
+        $this->expectException(InvalidCredentialException::class);
+
+        new Qualification(
+            'qualification-1',
+            new LocalizedString(['en' => 'Qualification']),
+            null,
+            [],
+            null,
+            [],
+            null,
+            null,
+            null,
+            [],
+            null,
+            [],
+            [new \stdClass()],
+        );
+    }
 }

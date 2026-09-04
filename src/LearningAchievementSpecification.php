@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
+use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+
 class LearningAchievementSpecification extends Entity
 {
     public function __construct(
@@ -29,32 +31,32 @@ class LearningAchievementSpecification extends Entity
             $creditPoints,
             static fn ($creditPoint): bool => !$creditPoint instanceof CreditPoint,
         ) !== []) {
-            throw new \InvalidArgumentException('Specifications accept only credit points.');
+            throw new InvalidCredentialException('Specifications accept only credit points.');
         }
         if (array_filter($category, static fn ($value): bool => !is_string($value) || $value === '') !== []) {
-            throw new \InvalidArgumentException('Specification categories must be non-empty strings.');
+            throw new InvalidCredentialException('Specification categories must be non-empty strings.');
         }
         if (array_filter(
             $learningOutcomes,
             static fn ($learningOutcome): bool => !$learningOutcome instanceof LearningOutcome,
         ) !== []) {
-            throw new \InvalidArgumentException('Learning outcomes must be LearningOutcome objects.');
+            throw new InvalidCredentialException('Learning outcomes must be LearningOutcome objects.');
         }
         if (array_filter(
             $additionalNotes,
             static fn ($note): bool => !$note instanceof Note,
         ) !== []) {
-            throw new \InvalidArgumentException('Specification notes must be Note objects.');
+            throw new InvalidCredentialException('Specification notes must be Note objects.');
         }
         if (array_filter(
             $supplementaryDocuments,
             static fn ($document): bool => !$document instanceof WebResource,
         ) !== []) {
-            throw new \InvalidArgumentException('Supplementary documents must be WebResource objects.');
+            throw new InvalidCredentialException('Supplementary documents must be WebResource objects.');
         }
         foreach ([$maximumDuration, $volumeOfLearning] as $duration) {
             if ($duration !== null && preg_match('/^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?=\\d)(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?$/', $duration) !== 1) {
-                throw new \InvalidArgumentException('Specification durations must use ISO 8601 format.');
+                throw new InvalidCredentialException('Specification durations must use ISO 8601 format.');
             }
         }
     }

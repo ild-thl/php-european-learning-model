@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
+use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+
 final class LearningOutcome extends Entity
 {
     /** @param list<Concept> $relatedSkills */
@@ -19,13 +21,13 @@ final class LearningOutcome extends Entity
             $relatedSkills,
             static fn ($relatedSkill): bool => !$relatedSkill instanceof Concept,
         ) !== []) {
-            throw new \InvalidArgumentException('Learning outcome skills must be concepts.');
+            throw new InvalidCredentialException('Learning outcome skills must be concepts.');
         }
         if (array_filter(
             $additionalNotes,
             static fn ($note): bool => !$note instanceof Note,
         ) !== []) {
-            throw new \InvalidArgumentException('Learning outcome notes must be Note objects.');
+            throw new InvalidCredentialException('Learning outcome notes must be Note objects.');
         }
     }
 

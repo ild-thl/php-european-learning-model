@@ -143,6 +143,23 @@ final class EntityTest extends TestCase {
         ]);
     }
 
+    public function testCredentialDocumentValidatorRejectsMalformedDates(): void {
+        $this->expectExceptionMessage('validFrom');
+
+        (new CredentialDocumentValidator())->validate([
+            '@context' => [
+                'https://www.w3.org/2018/credentials/v1',
+                'http://data.europa.eu/snb/model/context/edc-ap',
+            ],
+            'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
+            'credentialProfiles' => [['id' => 'profile-1']],
+            'credentialSchema' => ['id' => 'schema-1'],
+            'credentialSubject' => ['id' => 'subject-1'],
+            'displayParameter' => ['id' => 'display-1'],
+            'validFrom' => '2026-01-01',
+        ]);
+    }
+
     public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void {
         $subject = new CredentialSubject(
             'subject-1',

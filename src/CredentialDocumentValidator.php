@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
 final class CredentialDocumentValidator {
@@ -53,8 +55,15 @@ final class CredentialDocumentValidator {
         if ($document['credentialProfiles'] === []) {
             throw new InvalidCredentialException('Credential profiles must contain at least one profile.');
         }
-        if (!is_string($document['validFrom']) || $document['validFrom'] === '') {
-            throw new InvalidCredentialException('Credential validFrom must be a non-empty date string.');
+        if (!$this->isUtcDate($document['validFrom'])) {
+            throw new InvalidCredentialException('Credential validFrom must be a UTC date in ELM format.');
+        }
+        foreach (['expirationDate', 'issuanceDate', 'issued', 'validUntil'] as $field) {
+            if (array_key_exists($field, $document) && !$this->isUtcDate($document[$field])) {
+                throw new InvalidCredentialException(
+                    sprintf('Credential %s must be a UTC date in ELM format.', $field),
+                );
+            }
         }
     }
 
@@ -68,5 +77,19 @@ final class CredentialDocumentValidator {
             throw new InvalidCredentialException('A credential document must be a JSON object.');
         }
         $this->validate($document);
+    }
+
+    private function isUtcDate(mixed $value): bool {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        $date = DateTimeImmutable::createFromFormat(
+            '!Y-m-d\TH:i:s\Z',
+            $value,
+            new DateTimeZone('UTC'),
+        );
+
+        return $date !== false && $date->format('Y-m-d\TH:i:s\Z') === $value;
     }
 }

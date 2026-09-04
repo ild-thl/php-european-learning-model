@@ -20,6 +20,8 @@ final class LearningAchievement extends Claim {
         public readonly array $identifiers = [],
         /** @var list<LearningActivity> */
         public readonly array $influencedBy = [],
+        /** @var list<LearningEntitlement> */
+        public readonly array $entitlesTo = [],
     ) {
         parent::__construct($id);
         $invalidAssessments = array_filter(
@@ -45,6 +47,13 @@ final class LearningAchievement extends Claim {
         );
         if ($invalidActivities !== []) {
             throw new InvalidCredentialException('Achievement activities must be LearningActivity objects.');
+        }
+        $invalidEntitlements = array_filter(
+            $entitlesTo,
+            static fn ($entitlement): bool => !$entitlement instanceof LearningEntitlement,
+        );
+        if ($invalidEntitlements !== []) {
+            throw new InvalidCredentialException('Achievement entitlements must be LearningEntitlement objects.');
         }
     }
 
@@ -75,6 +84,12 @@ final class LearningAchievement extends Claim {
             $data['influencedBy'] = array_map(
                 static fn (LearningActivity $activity): array => $activity->toArray(),
                 $this->influencedBy,
+            );
+        }
+        if ($this->entitlesTo !== []) {
+            $data['entitlesTo'] = array_map(
+                static fn (LearningEntitlement $entitlement): array => $entitlement->toArray(),
+                $this->entitlesTo,
             );
         }
         return $data;

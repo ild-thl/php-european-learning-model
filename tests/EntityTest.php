@@ -29,6 +29,8 @@ use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievement;
 use IsyThl\EuropeanDigitalCredentials\LearningActivity;
 use IsyThl\EuropeanDigitalCredentials\LearningActivitySpecification;
+use IsyThl\EuropeanDigitalCredentials\LearningEntitlement;
+use IsyThl\EuropeanDigitalCredentials\LearningEntitlementSpecification;
 use IsyThl\EuropeanDigitalCredentials\LearningAssessment;
 use IsyThl\EuropeanDigitalCredentials\LearningAssessmentSpecification;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
@@ -329,6 +331,47 @@ final class EntityTest extends TestCase {
 
         self::assertSame('LearningActivity', $achievement->toArray()['influencedBy'][0]['type']);
         self::assertSame('urn:epass:activity:activity-1', $achievement->toArray()['influencedBy'][0]['id']);
+    }
+
+    public function testLearningAchievementSerializesEntitlement(): void {
+        $country = new Concept(
+            'http://example.test/country/DE',
+            new LocalizedString(['en' => 'Germany']),
+            new ConceptScheme('http://example.test/countries'),
+        );
+        $organisation = new Organisation(
+            'organisation-2',
+            new Location(
+                'location-2',
+                new Address('address-2', $country, new Note('note-2', new LocalizedString(['en' => 'Berlin']))),
+            ),
+            new LocalizedString(['en' => 'Example Authority']),
+        );
+        $entitlement = new LearningEntitlement(
+            'entitlement-1',
+            new LocalizedString(['en' => 'Right to join the organisation']),
+            new AwardingProcess('awarding-3', $organisation),
+            null,
+            [],
+            new \DateTimeImmutable('2025-01-01T12:00:00+02:00'),
+            null,
+            new LearningEntitlementSpecification(
+                'entitlement-spec-1',
+                new LocalizedString(['en' => 'Membership entitlement']),
+                new Concept(
+                    'http://example.test/entitlement-type/membership',
+                    new LocalizedString(['en' => 'Membership']),
+                    new ConceptScheme('http://example.test/entitlement-types'),
+                ),
+            ),
+        );
+
+        self::assertSame('LearningEntitlement', $entitlement->toArray()['type']);
+        self::assertSame('2025-01-01T10:00:00Z', $entitlement->toArray()['issued']);
+        self::assertSame(
+            'LearningEntitlementSpecification',
+            $entitlement->toArray()['specifiedBy']['type'],
+        );
     }
 
     public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void {

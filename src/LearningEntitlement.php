@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+namespace IsyThl\EuropeanDigitalCredentials;
+
+use DateTimeImmutable;
+use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+
+final class LearningEntitlement extends Claim {
+
+    /**
+     * @param list<LearningAchievementSpecification|Qualification> $entitledBy
+     */
+    public function __construct(
+        string $id,
+        public readonly LocalizedString $title,
+        public readonly AwardingProcess $awardedBy,
+        public readonly ?LocalizedString $description = null,
+        public readonly array $entitledBy = [],
+        public readonly ?DateTimeImmutable $issued = null,
+        public readonly ?DateTimeImmutable $expiryDate = null,
+        public readonly ?LearningEntitlementSpecification $specifiedBy = null,
+    ) {
+        parent::__construct($id);
+        if (
+            array_filter(
+                $entitledBy,
+                static fn ($item): bool => (
+                    !$item instanceof LearningAchievementSpecification
+                    && !$item instanceof Qualification
+                ),
+            ) !== []
+        ) {
+            throw new InvalidCredentialException(
+                'Entitlement provenance must be achievement specifications or qualifications.',
+            );
+        }
+    }
+
+    public function toArray(): array {
+        $data = [
+            'id' => 'urn:epass:learningEntitlement:' . $this->id,
+            'type' => 'LearningEntitlement',
+            'awardedBy' => $this->awardedBy->toArray(),
+            'title' => $this->title->toArray(),
+        ];
+        if ($this->issued !== null) {
+            $data['issued'] = $this->formatDate($this->issued);
+        }
+        if ($this->description !== null) {
+            $data['description'] = $this->description->toArray();
+        }
+        if ($this->entitledBy !== []) {
+            $data['entitledBy'] = array_map(
+                static fn (LearningAchievementSpecification|Qualification $item): array => $item->toArray(),
+                $this->entitledBy,
+            );
+        }
+        if ($this->expiryDate !== null) {
+            $data['expiryDate'] = $this->formatDate($this->expiryDate);
+        }
+        if ($this->specifiedBy !== null) {
+            $data['specifiedBy'] = $this->specifiedBy->toArray();
+        }
+
+        return $data;
+    }
+
+    private function formatDate(DateTimeImmutable $date): string {
+        return $date->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
+    }
+}

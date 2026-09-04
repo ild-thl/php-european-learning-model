@@ -19,6 +19,8 @@ class LearningAchievementSpecification extends Entity
         public readonly ?string $volumeOfLearning = null,
         /** @var list<LearningOutcome> */
         public readonly array $learningOutcomes = [],
+        /** @var list<Note> */
+        public readonly array $additionalNotes = [],
     ) {
         parent::__construct($id);
         if (array_filter(
@@ -35,6 +37,12 @@ class LearningAchievementSpecification extends Entity
             static fn ($learningOutcome): bool => !$learningOutcome instanceof LearningOutcome,
         ) !== []) {
             throw new \InvalidArgumentException('Learning outcomes must be LearningOutcome objects.');
+        }
+        if (array_filter(
+            $additionalNotes,
+            static fn ($note): bool => !$note instanceof Note,
+        ) !== []) {
+            throw new \InvalidArgumentException('Specification notes must be Note objects.');
         }
         foreach ([$maximumDuration, $volumeOfLearning] as $duration) {
             if ($duration !== null && preg_match('/^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?=\\d)(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?$/', $duration) !== 1) {
@@ -75,6 +83,12 @@ class LearningAchievementSpecification extends Entity
             $data['learningOutcome'] = array_map(
                 static fn (LearningOutcome $learningOutcome): array => $learningOutcome->toArray(),
                 $this->learningOutcomes,
+            );
+        }
+        if ($this->additionalNotes !== []) {
+            $data['additionalNote'] = array_map(
+                static fn (Note $note): array => $note->toArray(),
+                $this->additionalNotes,
             );
         }
         return $data;

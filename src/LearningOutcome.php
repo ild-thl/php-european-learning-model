@@ -11,6 +11,8 @@ final class LearningOutcome extends Entity
         string $id,
         public readonly LocalizedString $title,
         public readonly array $relatedSkills = [],
+        /** @var list<Note> */
+        public readonly array $additionalNotes = [],
     ) {
         parent::__construct($id);
         if (array_filter(
@@ -18,6 +20,12 @@ final class LearningOutcome extends Entity
             static fn ($relatedSkill): bool => !$relatedSkill instanceof Concept,
         ) !== []) {
             throw new \InvalidArgumentException('Learning outcome skills must be concepts.');
+        }
+        if (array_filter(
+            $additionalNotes,
+            static fn ($note): bool => !$note instanceof Note,
+        ) !== []) {
+            throw new \InvalidArgumentException('Learning outcome notes must be Note objects.');
         }
     }
 
@@ -32,6 +40,12 @@ final class LearningOutcome extends Entity
             $data['relatedSkills'] = array_map(
                 static fn (Concept $relatedSkill): array => $relatedSkill->toArray(),
                 $this->relatedSkills,
+            );
+        }
+        if ($this->additionalNotes !== []) {
+            $data['additionalNote'] = array_map(
+                static fn (Note $note): array => $note->toArray(),
+                $this->additionalNotes,
             );
         }
         return $data;

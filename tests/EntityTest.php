@@ -522,4 +522,25 @@ final class EntityTest extends TestCase
         self::assertSame('http://data.europa.eu/snb/eqf/level-4', $data['eqfLevel']['id']);
         self::assertSame('http://example.test/nqf/level-4', $data['nqfLevel'][0]['id']);
     }
+
+    public function testLearningOutcomeAndSpecificationSerializeAdditionalNotes(): void
+    {
+        $note = new Note('note-1', new LocalizedString(['en' => 'Additional context']));
+        $outcome = new LearningOutcome('outcome-1', new LocalizedString(['en' => 'Can apply skills']), [], [$note]);
+        $specification = new LearningAchievementSpecification(
+            'specification-1',
+            new LocalizedString(['en' => 'Digital skills']),
+            null,
+            [],
+            null,
+            [],
+            null,
+            null,
+            [],
+            [$note],
+        );
+
+        self::assertSame('Additional context', $outcome->toArray()['additionalNote'][0]['noteLiteral']['en'][0]);
+        self::assertSame('Note', $specification->toArray()['additionalNote'][0]['type']);
+    }
 }

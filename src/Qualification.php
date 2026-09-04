@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
-final class Qualification extends LearningAchievementSpecification
-{
+final class Qualification extends LearningAchievementSpecification {
+
     /** @param list<Concept> $qualificationCodes */
     public function __construct(
         string $id,
@@ -36,28 +36,33 @@ final class Qualification extends LearningAchievementSpecification
             $maximumDuration,
             $volumeOfLearning,
         );
-        if (array_filter(
-            $qualificationCodes,
-            static fn ($qualificationCode): bool => !$qualificationCode instanceof Concept,
-        ) !== []) {
+        if (
+            array_filter(
+                $qualificationCodes,
+                static fn ($qualificationCode): bool => !$qualificationCode instanceof Concept,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('Qualification codes must be concepts.');
         }
-        if (array_filter(
-            $nqfLevels,
-            static fn ($nqfLevel): bool => !$nqfLevel instanceof Concept,
-        ) !== []) {
+        if (
+            array_filter(
+                $nqfLevels,
+                static fn ($nqfLevel): bool => !$nqfLevel instanceof Concept,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('NQF levels must be concepts.');
         }
-        if (array_filter(
-            $accreditations,
-            static fn ($accreditation): bool => !$accreditation instanceof Accreditation,
-        ) !== []) {
+        if (
+            array_filter(
+                $accreditations,
+                static fn ($accreditation): bool => !$accreditation instanceof Accreditation,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('Accreditations must be Accreditation objects.');
         }
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         $data = parent::toArray();
         $data['id'] = 'urn:epass:qualification:' . $this->id;
         $data['type'] = 'Qualification';

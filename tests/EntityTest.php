@@ -35,13 +35,11 @@ use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use PHPUnit\Framework\TestCase;
 
-final class EntityTest extends TestCase
-{
-    public function testSerializationIsDeterministicAndPreservesUnicode(): void
-    {
+final class EntityTest extends TestCase {
+
+    public function testSerializationIsDeterministicAndPreservesUnicode(): void {
         $entity = new class ('urn:test:credential') extends Entity {
-            public function toArray(): array
-            {
+            public function toArray(): array {
                 return ['id' => $this->id, 'label' => ['en' => ['Zoë']]];
             }
         };
@@ -52,11 +50,9 @@ final class EntityTest extends TestCase
         self::assertSame($expected, $entity->toJson());
     }
 
-    public function testGeneratedIdentifiersHaveCredentialUrnFormat(): void
-    {
+    public function testGeneratedIdentifiersHaveCredentialUrnFormat(): void {
         $entity = new class extends Entity {
-            public function toArray(): array
-            {
+            public function toArray(): array {
                 return ['id' => $this->id];
             }
         };
@@ -64,8 +60,7 @@ final class EntityTest extends TestCase
         self::assertMatchesRegularExpression('/^urn:credential:[0-9a-f]{32}$/', $entity->id);
     }
 
-    public function testLocalizedValuesKeepLanguageMapAndArrayShape(): void
-    {
+    public function testLocalizedValuesKeepLanguageMapAndArrayShape(): void {
         $localized = new LocalizedString(['en' => 'Course completion', 'de' => ['Kursabschluss']]);
 
         self::assertSame([
@@ -74,15 +69,13 @@ final class EntityTest extends TestCase
         ], $localized->toArray());
     }
 
-    public function testLocalizedValuesRejectMalformedLanguages(): void
-    {
+    public function testLocalizedValuesRejectMalformedLanguages(): void {
         $this->expectException(InvalidCredentialException::class);
 
         new LocalizedString(['english' => 'Course completion']);
     }
 
-    public function testConceptRoundTripsItsJsonLdShape(): void
-    {
+    public function testConceptRoundTripsItsJsonLdShape(): void {
         $concept = new Concept(
             'http://example.test/concept/one',
             new LocalizedString(['en' => 'One']),
@@ -93,23 +86,20 @@ final class EntityTest extends TestCase
         self::assertSame($concept->toArray(), Concept::fromArray($concept->toArray())->toArray());
     }
 
-    public function testConceptRejectsMissingProfileFields(): void
-    {
+    public function testConceptRejectsMissingProfileFields(): void {
         $this->expectException(InvalidCredentialException::class);
 
         Concept::fromArray(['id' => 'http://example.test/concept/one']);
     }
 
-    public function testCredentialIncludesTheGenericProfileByDefault(): void
-    {
+    public function testCredentialIncludesTheGenericProfileByDefault(): void {
         $subject = new CredentialSubject(
             'subject-1',
             new LocalizedString(['en' => 'Ada']),
             new LocalizedString(['en' => 'Lovelace']),
             new LocalizedString(['en' => 'Ada Lovelace']),
             [new class ('claim-1') extends Claim {
-                public function toArray(): array
-                {
+                public function toArray(): array {
                     return ['id' => $this->id, 'type' => 'Claim'];
                 }
             }],
@@ -133,16 +123,14 @@ final class EntityTest extends TestCase
         );
     }
 
-    public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void
-    {
+    public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void {
         $subject = new CredentialSubject(
             'subject-1',
             new LocalizedString(['en' => 'Ada']),
             new LocalizedString(['en' => 'Lovelace']),
             new LocalizedString(['en' => 'Ada Lovelace']),
             [new class ('claim-1') extends Claim {
-                public function toArray(): array
-                {
+                public function toArray(): array {
                     return ['id' => $this->id, 'type' => 'Claim'];
                 }
             }],
@@ -172,8 +160,7 @@ final class EntityTest extends TestCase
         self::assertArrayNotHasKey('expirationDate', $data);
     }
 
-    public function testDisplayDescriptionIsOptionalAndLocalized(): void
-    {
+    public function testDisplayDescriptionIsOptionalAndLocalized(): void {
         $language = new Concept(
             'http://example.test/language/en',
             new LocalizedString(['en' => 'English']),
@@ -193,12 +180,16 @@ final class EntityTest extends TestCase
         ], $display->toArray()['description']);
         self::assertArrayNotHasKey(
             'description',
-            (new DisplayParameter('display-2', $language, $language, new LocalizedString(['en' => 'Title'])))->toArray(),
+            (new DisplayParameter(
+                'display-2',
+                $language,
+                $language,
+                new LocalizedString(['en' => 'Title']),
+            ))->toArray(),
         );
     }
 
-    public function testDisplayMediaObjectsSerializeAsNestedProfileObjects(): void
-    {
+    public function testDisplayMediaObjectsSerializeAsNestedProfileObjects(): void {
         $language = new Concept(
             'http://example.test/language/en',
             new LocalizedString(['en' => 'English']),
@@ -230,12 +221,17 @@ final class EntityTest extends TestCase
             [$display],
         );
 
-        self::assertSame('MediaObject', $parameter->toArray()['individualDisplay'][0]['displayDetail'][0]['image']['type']);
-        self::assertSame('aGVsbG8=', $parameter->toArray()['individualDisplay'][0]['displayDetail'][0]['image']['content']);
+        self::assertSame(
+            'MediaObject',
+            $parameter->toArray()['individualDisplay'][0]['displayDetail'][0]['image']['type'],
+        );
+        self::assertSame(
+            'aGVsbG8=',
+            $parameter->toArray()['individualDisplay'][0]['displayDetail'][0]['image']['content'],
+        );
     }
 
-    public function testDisplayDetailRejectsNonPositivePages(): void
-    {
+    public function testDisplayDetailRejectsNonPositivePages(): void {
         $language = new Concept(
             'http://example.test/language/en',
             new LocalizedString(['en' => 'English']),
@@ -247,16 +243,14 @@ final class EntityTest extends TestCase
         new DisplayDetail('detail-1', 0, $media);
     }
 
-    public function testCredentialSubjectSerializesOptionalBirthDataInUtc(): void
-    {
+    public function testCredentialSubjectSerializesOptionalBirthDataInUtc(): void {
         $subject = new CredentialSubject(
             'subject-1',
             new LocalizedString(['en' => 'Ada']),
             new LocalizedString(['en' => 'Lovelace']),
             new LocalizedString(['en' => 'Ada Lovelace']),
             [new class ('claim-1') extends Claim {
-                public function toArray(): array
-                {
+                public function toArray(): array {
                     return ['id' => $this->id, 'type' => 'Claim'];
                 }
             }],
@@ -269,8 +263,7 @@ final class EntityTest extends TestCase
         self::assertSame('1815-12-09T23:00:00Z', $data['dateOfBirth']);
     }
 
-    public function testCredentialSubjectSerializesTypedIdentifiersWithProfileShapes(): void
-    {
+    public function testCredentialSubjectSerializesTypedIdentifiersWithProfileShapes(): void {
         $country = new Concept(
             'http://publications.europa.eu/resource/authority/country/ITA',
             new LocalizedString(['en' => 'Italy']),
@@ -283,8 +276,7 @@ final class EntityTest extends TestCase
             new LocalizedString(['en' => 'Andromeda']),
             new LocalizedString(['en' => 'Ana Andromeda']),
             [new class ('claim-1') extends Claim {
-                public function toArray(): array
-                {
+                public function toArray(): array {
                     return ['id' => $this->id, 'type' => 'Claim'];
                 }
             }],
@@ -300,8 +292,7 @@ final class EntityTest extends TestCase
         self::assertSame('ITA', substr($data['nationalID']['spatial']['id'], -3));
     }
 
-    public function testSubjectContactPointSerializesAddressAndMailboxArrays(): void
-    {
+    public function testSubjectContactPointSerializesAddressAndMailboxArrays(): void {
         $country = new Concept(
             'http://publications.europa.eu/resource/authority/country/ITA',
             new LocalizedString(['en' => 'Italy']),
@@ -319,8 +310,7 @@ final class EntityTest extends TestCase
             new LocalizedString(['en' => 'Andromeda']),
             new LocalizedString(['en' => 'Ana Andromeda']),
             [new class ('claim-1') extends Claim {
-                public function toArray(): array
-                {
+                public function toArray(): array {
                     return ['id' => $this->id, 'type' => 'Claim'];
                 }
             }],
@@ -334,18 +324,24 @@ final class EntityTest extends TestCase
         $data = $subject->toArray();
         self::assertSame('ContactPoint', $data['contactPoint'][0]['type']);
         self::assertSame('ana.andromeda@example.com', substr($data['contactPoint'][0]['emailAddress'][0]['id'], 7));
-        self::assertSame(['en' => ['Via da Vinci, 12']], $data['contactPoint'][0]['address'][0]['fullAddress']['noteLiteral']);
+        self::assertSame(
+            ['en' => ['Via da Vinci, 12']],
+            $data['contactPoint'][0]['address'][0]['fullAddress']['noteLiteral'],
+        );
     }
 
-    public function testCredentialSerializesIssuerWithRegistrationAndRawIssuerId(): void
-    {
+    public function testCredentialSerializesIssuerWithRegistrationAndRawIssuerId(): void {
         $country = new Concept(
             'http://publications.europa.eu/resource/authority/country/DEU',
             new LocalizedString(['en' => 'Germany']),
             new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
             'country',
         );
-        $address = new Address('address-1', $country, new Note('note-1', new LocalizedString(['en' => 'Berlin'])));
+        $address = new Address(
+            'address-1',
+            $country,
+            new Note('note-1', new LocalizedString(['en' => 'Berlin'])),
+        );
         $issuer = new Issuer(
             'did:example:issuer',
             new Location('location-1', $address),
@@ -357,8 +353,7 @@ final class EntityTest extends TestCase
         self::assertSame('DE-123', $issuer->toArray()['registration']['notation']);
     }
 
-    public function testLearningAchievementSerializesRequiredClaimStructure(): void
-    {
+    public function testLearningAchievementSerializesRequiredClaimStructure(): void {
         $country = new Concept(
             'http://publications.europa.eu/resource/authority/country/DEU',
             new LocalizedString(['en' => 'Germany']),
@@ -366,7 +361,14 @@ final class EntityTest extends TestCase
         );
         $organisation = new Organisation(
             'organisation-1',
-            new Location('location-1', new Address('address-1', $country, new Note('note-1', new LocalizedString(['en' => 'Berlin'])))),
+            new Location(
+                'location-1',
+                new Address(
+                    'address-1',
+                    $country,
+                    new Note('note-1', new LocalizedString(['en' => 'Berlin'])),
+                ),
+            ),
             new LocalizedString(['en' => 'Example Authority']),
         );
         $title = new LocalizedString(['en' => 'Digital Skills']);
@@ -383,8 +385,7 @@ final class EntityTest extends TestCase
         self::assertSame(['en' => ['A course.']], $data['specifiedBy']['description']);
     }
 
-    public function testAchievementSpecificationSerializesCreditPointArray(): void
-    {
+    public function testAchievementSpecificationSerializesCreditPointArray(): void {
         $framework = new Concept(
             'http://data.europa.eu/snb/education-credit/6fcec5c5af',
             new LocalizedString(['en' => 'European Credit Transfer System']),
@@ -401,8 +402,7 @@ final class EntityTest extends TestCase
         self::assertSame('Concept', $specification->toArray()['creditPoint'][0]['framework']['type']);
     }
 
-    public function testAchievementSpecificationSerializesLanguageCategoriesAndDurations(): void
-    {
+    public function testAchievementSpecificationSerializesLanguageCategoriesAndDurations(): void {
         $language = new Concept(
             'http://publications.europa.eu/resource/authority/language/ENG',
             new LocalizedString(['en' => 'English']),
@@ -427,8 +427,7 @@ final class EntityTest extends TestCase
         self::assertSame('PT4H', $data['volumeOfLearning']);
     }
 
-    public function testAchievementSpecificationRejectsMalformedDuration(): void
-    {
+    public function testAchievementSpecificationRejectsMalformedDuration(): void {
         $this->expectException(\InvalidArgumentException::class);
 
         new LearningAchievementSpecification(
@@ -442,8 +441,7 @@ final class EntityTest extends TestCase
         );
     }
 
-    public function testQualificationUsesQualificationProfileTypeAndIdentifier(): void
-    {
+    public function testQualificationUsesQualificationProfileTypeAndIdentifier(): void {
         $qualificationCode = new Concept(
             'http://example.test/qualification/code',
             new LocalizedString(['en' => 'Example qualification']),
@@ -469,8 +467,7 @@ final class EntityTest extends TestCase
         self::assertSame('Example qualification', $data['qualificationCodes'][0]['prefLabel']['en'][0]);
     }
 
-    public function testSpecificationSerializesLearningOutcomeAndRelatedSkills(): void
-    {
+    public function testSpecificationSerializesLearningOutcomeAndRelatedSkills(): void {
         $skill = new Concept(
             'http://example.test/skill/one',
             new LocalizedString(['en' => 'Problem solving']),
@@ -493,8 +490,7 @@ final class EntityTest extends TestCase
         self::assertSame('Problem solving', $data['learningOutcome'][0]['relatedSkills'][0]['prefLabel']['en'][0]);
     }
 
-    public function testQualificationSerializesEqfAndNqfLevels(): void
-    {
+    public function testQualificationSerializesEqfAndNqfLevels(): void {
         $eqf = new Concept(
             'http://data.europa.eu/snb/eqf/level-4',
             new LocalizedString(['en' => 'Level 4']),
@@ -525,8 +521,7 @@ final class EntityTest extends TestCase
         self::assertSame('http://example.test/nqf/level-4', $data['nqfLevel'][0]['id']);
     }
 
-    public function testLearningOutcomeAndSpecificationSerializeAdditionalNotes(): void
-    {
+    public function testLearningOutcomeAndSpecificationSerializeAdditionalNotes(): void {
         $note = new Note('note-1', new LocalizedString(['en' => 'Additional context']));
         $outcome = new LearningOutcome('outcome-1', new LocalizedString(['en' => 'Can apply skills']), [], [$note]);
         $specification = new LearningAchievementSpecification(
@@ -546,8 +541,7 @@ final class EntityTest extends TestCase
         self::assertSame('Note', $specification->toArray()['additionalNote'][0]['type']);
     }
 
-    public function testSpecificationSerializesSupplementaryWebResources(): void
-    {
+    public function testSpecificationSerializesSupplementaryWebResources(): void {
         $resource = new WebResource(
             'resource-1',
             'https://example.test/course',
@@ -573,15 +567,13 @@ final class EntityTest extends TestCase
         self::assertSame(['Course details'], $document['title']['en']);
     }
 
-    public function testWebResourceRejectsNonHttpUrl(): void
-    {
+    public function testWebResourceRejectsNonHttpUrl(): void {
         $this->expectException(\InvalidArgumentException::class);
 
         new WebResource('resource-1', 'javascript:alert(1)');
     }
 
-    public function testQualificationSerializesAccreditations(): void
-    {
+    public function testQualificationSerializesAccreditations(): void {
         $country = new Concept(
             'http://publications.europa.eu/resource/authority/country/IRL',
             new LocalizedString(['en' => 'Ireland']),
@@ -622,11 +614,13 @@ final class EntityTest extends TestCase
         );
 
         self::assertSame('Accreditation', $qualification->toArray()['accreditation'][0]['type']);
-        self::assertSame('Quality Authority', $qualification->toArray()['accreditation'][0]['accreditingAgent']['legalName']['en'][0]);
+        self::assertSame(
+            'Quality Authority',
+            $qualification->toArray()['accreditation'][0]['accreditingAgent']['legalName']['en'][0],
+        );
     }
 
-    public function testLearningAchievementSerializesReceivedCredit(): void
-    {
+    public function testLearningAchievementSerializesReceivedCredit(): void {
         $country = new Concept(
             'http://publications.europa.eu/resource/authority/country/DEU',
             new LocalizedString(['en' => 'Germany']),
@@ -634,7 +628,10 @@ final class EntityTest extends TestCase
         );
         $organisation = new Organisation(
             'organisation-1',
-            new Location('location-1', new Address('address-1', $country, new Note('note-1', new LocalizedString(['en' => 'Berlin'])))),
+            new Location(
+                'location-1',
+                new Address('address-1', $country, new Note('note-1', new LocalizedString(['en' => 'Berlin']))),
+            ),
             new LocalizedString(['en' => 'Example Authority']),
         );
         $credit = new CreditPoint(
@@ -658,8 +655,7 @@ final class EntityTest extends TestCase
         self::assertSame('3', $achievement->toArray()['creditReceived']['point']);
     }
 
-    public function testQualificationRejectsInvalidAccreditationType(): void
-    {
+    public function testQualificationRejectsInvalidAccreditationType(): void {
         $this->expectException(InvalidCredentialException::class);
 
         new Qualification(

@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
-final class CreditPoint extends Entity
-{
+final class CreditPoint extends Entity {
+
     public function __construct(
         string $id,
         public readonly Concept $framework,
@@ -19,8 +19,7 @@ final class CreditPoint extends Entity
         }
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         return [
             'id' => 'urn:epass:creditPoint:' . $this->id,
             'type' => 'CreditPoint',

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
-class Organisation extends Entity
-{
+class Organisation extends Entity {
+
     public function __construct(
         string $id,
         public readonly Location $location,
@@ -17,8 +17,7 @@ class Organisation extends Entity
         parent::__construct($id);
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         $data = [
             'id' => 'urn:epass:org:' . $this->id,
             'type' => 'Organisation',

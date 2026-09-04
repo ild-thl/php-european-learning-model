@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
-final class LearningOutcome extends Entity
-{
+final class LearningOutcome extends Entity {
+
     /** @param list<Concept> $relatedSkills */
     public function __construct(
         string $id,
@@ -17,22 +17,25 @@ final class LearningOutcome extends Entity
         public readonly array $additionalNotes = [],
     ) {
         parent::__construct($id);
-        if (array_filter(
-            $relatedSkills,
-            static fn ($relatedSkill): bool => !$relatedSkill instanceof Concept,
-        ) !== []) {
+        if (
+            array_filter(
+                $relatedSkills,
+                static fn ($relatedSkill): bool => !$relatedSkill instanceof Concept,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('Learning outcome skills must be concepts.');
         }
-        if (array_filter(
-            $additionalNotes,
-            static fn ($note): bool => !$note instanceof Note,
-        ) !== []) {
+        if (
+            array_filter(
+                $additionalNotes,
+                static fn ($note): bool => !$note instanceof Note,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('Learning outcome notes must be Note objects.');
         }
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         $data = [
             'id' => 'urn:epass:LearningOutcome:' . $this->id,
             'type' => 'LearningOutcome',

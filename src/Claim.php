@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
-abstract class Claim extends Entity
-{
+abstract class Claim extends Entity {
+
 }

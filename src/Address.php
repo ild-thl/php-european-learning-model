@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
-final class Address extends Entity
-{
+final class Address extends Entity {
+
     public function __construct(
         string $id,
         public readonly Concept $countryCode,
@@ -14,8 +14,7 @@ final class Address extends Entity
         parent::__construct($id);
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         return [
             'id' => 'urn:epass:address:' . $this->id,
             'type' => 'Address',

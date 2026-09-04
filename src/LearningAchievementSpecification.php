@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
-class LearningAchievementSpecification extends Entity
-{
+class LearningAchievementSpecification extends Entity {
+
     public function __construct(
         string $id,
         public readonly LocalizedString $title,
@@ -27,42 +27,53 @@ class LearningAchievementSpecification extends Entity
         public readonly array $supplementaryDocuments = [],
     ) {
         parent::__construct($id);
-        if (array_filter(
-            $creditPoints,
-            static fn ($creditPoint): bool => !$creditPoint instanceof CreditPoint,
-        ) !== []) {
+        if (
+            array_filter(
+                $creditPoints,
+                static fn ($creditPoint): bool => !$creditPoint instanceof CreditPoint,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('Specifications accept only credit points.');
         }
         if (array_filter($category, static fn ($value): bool => !is_string($value) || $value === '') !== []) {
             throw new InvalidCredentialException('Specification categories must be non-empty strings.');
         }
-        if (array_filter(
-            $learningOutcomes,
-            static fn ($learningOutcome): bool => !$learningOutcome instanceof LearningOutcome,
-        ) !== []) {
+        if (
+            array_filter(
+                $learningOutcomes,
+                static fn ($learningOutcome): bool => !$learningOutcome instanceof LearningOutcome,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('Learning outcomes must be LearningOutcome objects.');
         }
-        if (array_filter(
-            $additionalNotes,
-            static fn ($note): bool => !$note instanceof Note,
-        ) !== []) {
+        if (
+            array_filter(
+                $additionalNotes,
+                static fn ($note): bool => !$note instanceof Note,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('Specification notes must be Note objects.');
         }
-        if (array_filter(
-            $supplementaryDocuments,
-            static fn ($document): bool => !$document instanceof WebResource,
-        ) !== []) {
+        if (
+            array_filter(
+                $supplementaryDocuments,
+                static fn ($document): bool => !$document instanceof WebResource,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('Supplementary documents must be WebResource objects.');
         }
         foreach ([$maximumDuration, $volumeOfLearning] as $duration) {
-            if ($duration !== null && preg_match('/^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?=\\d)(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?$/', $duration) !== 1) {
+            $isValidDuration = $duration === null || preg_match(
+                '/^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?=\\d)(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?$/',
+                $duration,
+            ) === 1;
+            if (!$isValidDuration) {
                 throw new InvalidCredentialException('Specification durations must use ISO 8601 format.');
             }
         }
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         $data = [
             'id' => 'urn:epass:learningAchievementSpecification:' . $this->id,
             'type' => 'LearningAchievementSpecification',

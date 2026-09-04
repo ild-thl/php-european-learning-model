@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
-final class Issuer extends Organisation
-{
+final class Issuer extends Organisation {
+
     public function __construct(
         string $id,
         Location $location,
@@ -17,8 +17,7 @@ final class Issuer extends Organisation
         parent::__construct($id, $location, $legalName, $registration, $contactPoint, $logo);
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         $data = parent::toArray();
         $data['id'] = $this->id;
         return $data;

@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
-final class DisplayDetail extends Entity
-{
+final class DisplayDetail extends Entity {
+
     public function __construct(
         string $id,
         public readonly int $page,
@@ -19,8 +19,7 @@ final class DisplayDetail extends Entity
         }
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         return [
             'id' => 'urn:epass:displayDetail:' . $this->id,
             'type' => 'DisplayDetail',

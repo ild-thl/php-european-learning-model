@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
-final class LegalIdentifier extends Entity
-{
+final class LegalIdentifier extends Entity {
+
     public function __construct(
         string $id,
         public readonly string $notation,
@@ -19,8 +19,7 @@ final class LegalIdentifier extends Entity
         }
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         return [
             'id' => 'urn:epass:legalIdentifier:' . $this->id,
             'type' => 'LegalIdentifier',

@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
-final class DisplayParameter extends Entity
-{
+final class DisplayParameter extends Entity {
+
     public function __construct(
         string $id,
         public readonly Concept $language,
@@ -18,16 +18,17 @@ final class DisplayParameter extends Entity
         public readonly array $individualDisplays = [],
     ) {
         parent::__construct($id);
-        if (array_filter(
-            $individualDisplays,
-            static fn ($individualDisplay): bool => !$individualDisplay instanceof IndividualDisplay,
-        ) !== []) {
+        if (
+            array_filter(
+                $individualDisplays,
+                static fn ($individualDisplay): bool => !$individualDisplay instanceof IndividualDisplay,
+            ) !== []
+        ) {
             throw new InvalidCredentialException('Display parameters accept only individual displays.');
         }
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         $data = [
             'id' => 'urn:epass:displayParameter:' . $this->id,
             'type' => 'DisplayParameter',

@@ -1,0 +1,8 @@
+parameters:
+    level: 6
+    treatPhpDocTypesAsCertain: false
+    paths:
+        - src
+    excludePaths:
+        - src/Legacy
+    tmpDir: build/phpstan

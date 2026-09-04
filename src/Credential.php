@@ -7,8 +7,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 use DateTimeImmutable;
 use DateTimeZone;
 
-final class Credential extends Entity
-{
+final class Credential extends Entity {
+
     private const CONTEXT = [
         'https://www.w3.org/2018/credentials/v1',
         'http://data.europa.eu/snb/model/context/edc-ap',
@@ -36,8 +36,7 @@ final class Credential extends Entity
 
     public readonly Concept $credentialProfile;
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         $data = [
             'id' => 'urn:credential:' . $this->id,
             'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
@@ -69,8 +68,7 @@ final class Credential extends Entity
         return $data;
     }
 
-    private function formatDate(DateTimeImmutable $date): string
-    {
+    private function formatDate(DateTimeImmutable $date): string {
         return $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
     }
 }

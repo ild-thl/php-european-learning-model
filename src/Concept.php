@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
-final class Concept extends Entity
-{
+final class Concept extends Entity {
+
     public function __construct(
         string $id,
         public readonly LocalizedString $prefLabel,
@@ -20,8 +20,7 @@ final class Concept extends Entity
         }
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         $data = [
             'id' => $this->id,
             'type' => 'Concept',
@@ -34,9 +33,9 @@ final class Concept extends Entity
         return $data;
     }
 
-    public static function fromArray(array $data): self
-    {
-        if (!isset($data['id'], $data['inScheme'], $data['prefLabel'])
+    public static function fromArray(array $data): self {
+        if (
+            !isset($data['id'], $data['inScheme'], $data['prefLabel'])
             || !is_string($data['id'])
             || !is_array($data['inScheme'])
             || !is_array($data['prefLabel'])

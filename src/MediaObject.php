@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
-final class MediaObject extends Entity
-{
+final class MediaObject extends Entity {
+
     public function __construct(
         string $id,
         public readonly string $content,
@@ -20,8 +20,7 @@ final class MediaObject extends Entity
         }
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         return [
             'id' => 'urn:epass:mediaObject:' . $this->id,
             'type' => 'MediaObject',

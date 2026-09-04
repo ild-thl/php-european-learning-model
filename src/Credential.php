@@ -6,6 +6,7 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
 final class Credential extends Entity {
 
@@ -30,11 +31,20 @@ final class Credential extends Entity {
         $this->credentialProfile = $credentialProfile ?? new Concept(
             'http://data.europa.eu/snb/credential/e34929035b',
             new LocalizedString(['en' => 'Generic']),
-            new ConceptScheme('http://data.europa.eu/snb/credential/25831c2'),
+            new ConceptScheme(ElmVocabularySchemes::CREDENTIAL),
         );
+        if ($this->credentialProfile->inScheme->id !== ElmVocabularySchemes::CREDENTIAL) {
+            throw new InvalidCredentialException(
+                'Credential profile must belong to the ELM credential profile scheme.',
+            );
+        }
     }
 
     public readonly Concept $credentialProfile;
+
+    public function validateProfile(VocabularyScheme $scheme): void {
+        $scheme->assertContains($this->credentialProfile, 'credentialProfile');
+    }
 
     /** @return array<string, mixed> */
     public function toArray(): array {

@@ -132,6 +132,47 @@ final class EntityTest extends TestCase {
         (new CredentialDocumentValidator())->validateJson($credential->toJson());
     }
 
+    public function testCredentialRejectsProfileFromAnotherScheme(): void {
+        $this->expectException(\IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException::class);
+
+        new Credential(
+            'credential-1',
+            new CredentialSubject(
+                'subject-1',
+                new LocalizedString(['en' => 'Ada']),
+                new LocalizedString(['en' => 'Lovelace']),
+                new LocalizedString(['en' => 'Ada Lovelace']),
+                [new class ('claim-1') extends Claim {
+                    public function toArray(): array {
+                        return ['id' => $this->id, 'type' => 'Claim'];
+                    }
+                }],
+            ),
+            new DisplayParameter(
+                'display-1',
+                new Concept(
+                    'http://publications.europa.eu/resource/authority/language/ENG',
+                    new LocalizedString(['en' => 'English']),
+                    new ConceptScheme('http://publications.europa.eu/resource/authority/language'),
+                    'language',
+                ),
+                new Concept(
+                    'http://publications.europa.eu/resource/authority/language/ENG',
+                    new LocalizedString(['en' => 'English']),
+                    new ConceptScheme('http://publications.europa.eu/resource/authority/language'),
+                    'language',
+                ),
+                new LocalizedString(['en' => 'Title']),
+            ),
+            new \DateTimeImmutable('2024-01-01T00:00:00+00:00'),
+            credentialProfile: new Concept(
+                'http://example.test/profile',
+                new \IsyThl\EuropeanDigitalCredentials\LocalizedString(['en' => 'Profile']),
+                new ConceptScheme('http://example.test/wrong-scheme'),
+            ),
+        );
+    }
+
     public function testCredentialDocumentValidatorRejectsJsonArrays(): void {
         $this->expectException(InvalidCredentialException::class);
 

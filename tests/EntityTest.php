@@ -29,6 +29,7 @@ use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
 use IsyThl\EuropeanDigitalCredentials\LearningOutcome;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
 use IsyThl\EuropeanDigitalCredentials\Qualification;
+use IsyThl\EuropeanDigitalCredentials\WebResource;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use PHPUnit\Framework\TestCase;
@@ -542,5 +543,39 @@ final class EntityTest extends TestCase
 
         self::assertSame('Additional context', $outcome->toArray()['additionalNote'][0]['noteLiteral']['en'][0]);
         self::assertSame('Note', $specification->toArray()['additionalNote'][0]['type']);
+    }
+
+    public function testSpecificationSerializesSupplementaryWebResources(): void
+    {
+        $resource = new WebResource(
+            'resource-1',
+            'https://example.test/course',
+            new LocalizedString(['en' => 'Course details']),
+        );
+        $specification = new LearningAchievementSpecification(
+            'specification-1',
+            new LocalizedString(['en' => 'Digital skills']),
+            null,
+            [],
+            null,
+            [],
+            null,
+            null,
+            [],
+            [],
+            [$resource],
+        );
+
+        $document = $specification->toArray()['supplementaryDocument'][0];
+        self::assertSame('urn:epass:webResource:resource-1', $document['id']);
+        self::assertSame('https://example.test/course', $document['contentURL']);
+        self::assertSame(['Course details'], $document['title']['en']);
+    }
+
+    public function testWebResourceRejectsNonHttpUrl(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new WebResource('resource-1', 'javascript:alert(1)');
     }
 }

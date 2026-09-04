@@ -21,6 +21,8 @@ class LearningAchievementSpecification extends Entity
         public readonly array $learningOutcomes = [],
         /** @var list<Note> */
         public readonly array $additionalNotes = [],
+        /** @var list<WebResource> */
+        public readonly array $supplementaryDocuments = [],
     ) {
         parent::__construct($id);
         if (array_filter(
@@ -43,6 +45,12 @@ class LearningAchievementSpecification extends Entity
             static fn ($note): bool => !$note instanceof Note,
         ) !== []) {
             throw new \InvalidArgumentException('Specification notes must be Note objects.');
+        }
+        if (array_filter(
+            $supplementaryDocuments,
+            static fn ($document): bool => !$document instanceof WebResource,
+        ) !== []) {
+            throw new \InvalidArgumentException('Supplementary documents must be WebResource objects.');
         }
         foreach ([$maximumDuration, $volumeOfLearning] as $duration) {
             if ($duration !== null && preg_match('/^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?=\\d)(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?$/', $duration) !== 1) {
@@ -89,6 +97,12 @@ class LearningAchievementSpecification extends Entity
             $data['additionalNote'] = array_map(
                 static fn (Note $note): array => $note->toArray(),
                 $this->additionalNotes,
+            );
+        }
+        if ($this->supplementaryDocuments !== []) {
+            $data['supplementaryDocument'] = array_map(
+                static fn (WebResource $document): array => $document->toArray(),
+                $this->supplementaryDocuments,
             );
         }
         return $data;

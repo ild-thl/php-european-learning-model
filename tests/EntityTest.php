@@ -11,6 +11,7 @@ use IsyThl\EuropeanDigitalCredentials\Claim;
 use IsyThl\EuropeanDigitalCredentials\Address;
 use IsyThl\EuropeanDigitalCredentials\AwardingProcess;
 use IsyThl\EuropeanDigitalCredentials\ContactPoint;
+use IsyThl\EuropeanDigitalCredentials\CreditPoint;
 use IsyThl\EuropeanDigitalCredentials\Credential;
 use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
 use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
@@ -376,5 +377,23 @@ final class EntityTest extends TestCase
         self::assertSame('LearningAchievement', $data['type']);
         self::assertSame('Organisation', $data['awardedBy']['awardingBody']['type']);
         self::assertSame(['en' => ['A course.']], $data['specifiedBy']['description']);
+    }
+
+    public function testAchievementSpecificationSerializesCreditPointArray(): void
+    {
+        $framework = new Concept(
+            'http://data.europa.eu/snb/education-credit/6fcec5c5af',
+            new LocalizedString(['en' => 'European Credit Transfer System']),
+            new ConceptScheme('http://data.europa.eu/snb/education-credit/25831c2'),
+        );
+        $specification = new LearningAchievementSpecification(
+            'specification-1',
+            new LocalizedString(['en' => 'Digital skills']),
+            null,
+            [new CreditPoint('credit-1', $framework, '2')],
+        );
+
+        self::assertSame('2', $specification->toArray()['creditPoint'][0]['point']);
+        self::assertSame('Concept', $specification->toArray()['creditPoint'][0]['framework']['type']);
     }
 }

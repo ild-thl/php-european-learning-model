@@ -10,8 +10,16 @@ final class LearningAchievementSpecification extends Entity
         string $id,
         public readonly LocalizedString $title,
         public readonly ?LocalizedString $description = null,
+        /** @var list<CreditPoint> */
+        public readonly array $creditPoints = [],
     ) {
         parent::__construct($id);
+        if (array_filter(
+            $creditPoints,
+            static fn ($creditPoint): bool => !$creditPoint instanceof CreditPoint,
+        ) !== []) {
+            throw new \InvalidArgumentException('Specifications accept only credit points.');
+        }
     }
 
     public function toArray(): array
@@ -23,6 +31,12 @@ final class LearningAchievementSpecification extends Entity
         ];
         if ($this->description !== null) {
             $data['description'] = $this->description->toArray();
+        }
+        if ($this->creditPoints !== []) {
+            $data['creditPoint'] = array_map(
+                static fn (CreditPoint $creditPoint): array => $creditPoint->toArray(),
+                $this->creditPoints,
+            );
         }
         return $data;
     }

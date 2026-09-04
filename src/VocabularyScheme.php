@@ -60,6 +60,14 @@ final class VocabularyScheme extends Entity {
             && in_array($concept->id, $this->conceptIds(), true);
     }
 
+    public function assertContains(Concept $concept, string $field = 'concept'): void {
+        if (!$this->contains($concept)) {
+            throw new InvalidCredentialException(
+                sprintf('%s must belong to vocabulary scheme "%s".', $field, $this->id),
+            );
+        }
+    }
+
     public function find(string $conceptId): ?Concept {
         foreach ($this->concepts as $concept) {
             if ($concept->id === $conceptId) {

@@ -42,7 +42,24 @@ final class VocabularyTest extends TestCase {
         self::assertSame($concept, $provider->getConcept($concept->id, $scheme->id));
         self::assertSame($concept, $provider->getConceptByNotation('one', $scheme->id));
         self::assertTrue($snapshot->contains($concept));
+        $snapshot->assertContains($concept, 'language');
         self::assertSame('Eins', $snapshot->toArray()['concept'][0]['prefLabel']['de'][0]);
+    }
+
+    public function testVocabularyReportsMembershipFailure(): void {
+        $scheme = new ConceptScheme('http://example.test/scheme');
+        $snapshot = new VocabularyScheme($scheme->id, $scheme);
+        $otherConcept = new Concept(
+            'http://example.test/concept/other',
+            new LocalizedString(['en' => 'Other']),
+            new ConceptScheme('http://example.test/other-scheme'),
+        );
+
+        $this->expectExceptionObject(new InvalidCredentialException(
+            'country must belong to vocabulary scheme "http://example.test/scheme".',
+        ));
+
+        $snapshot->assertContains($otherConcept, 'country');
     }
 
     public function testProfileSchemeRegistryContainsStableIdentifiers(): void {

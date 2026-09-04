@@ -229,4 +229,26 @@ final class EntityTest extends TestCase
         $this->expectException(InvalidCredentialException::class);
         new DisplayDetail('detail-1', 0, $media);
     }
+
+    public function testCredentialSubjectSerializesOptionalBirthDataInUtc(): void
+    {
+        $subject = new CredentialSubject(
+            'subject-1',
+            new LocalizedString(['en' => 'Ada']),
+            new LocalizedString(['en' => 'Lovelace']),
+            new LocalizedString(['en' => 'Ada Lovelace']),
+            [new class ('claim-1') extends Claim {
+                public function toArray(): array
+                {
+                    return ['id' => $this->id, 'type' => 'Claim'];
+                }
+            }],
+            new LocalizedString(['en' => 'Augusta Ada King']),
+            new \DateTimeImmutable('1815-12-10T00:00:00+01:00'),
+        );
+
+        $data = $subject->toArray();
+        self::assertSame(['en' => ['Augusta Ada King']], $data['birthName']);
+        self::assertSame('1815-12-09T23:00:00Z', $data['dateOfBirth']);
+    }
 }

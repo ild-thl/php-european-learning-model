@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
 final class CredentialSubject extends Entity
@@ -15,6 +17,8 @@ final class CredentialSubject extends Entity
         public readonly LocalizedString $familyName,
         public readonly LocalizedString $fullName,
         public readonly array $claims,
+        public readonly ?LocalizedString $birthName = null,
+        public readonly ?DateTimeImmutable $dateOfBirth = null,
     ) {
         parent::__construct($id);
         if ($claims === [] || array_filter($claims, static fn ($claim): bool => !$claim instanceof Claim) !== []) {
@@ -24,7 +28,7 @@ final class CredentialSubject extends Entity
 
     public function toArray(): array
     {
-        return [
+        $data = [
             'id' => 'urn:epass:person:' . $this->id,
             'type' => 'Person',
             'familyName' => $this->familyName->toArray(),
@@ -32,5 +36,14 @@ final class CredentialSubject extends Entity
             'givenName' => $this->givenName->toArray(),
             'hasClaim' => array_map(static fn (Claim $claim): array => $claim->toArray(), $this->claims),
         ];
+
+        if ($this->dateOfBirth !== null) {
+            $data['dateOfBirth'] = $this->dateOfBirth->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d\\TH:i:s\\Z');
+        }
+        if ($this->birthName !== null) {
+            $data['birthName'] = $this->birthName->toArray();
+        }
+
+        return $data;
     }
 }

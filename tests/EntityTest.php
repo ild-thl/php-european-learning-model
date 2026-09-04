@@ -27,6 +27,7 @@ use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievement;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
+use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use PHPUnit\Framework\TestCase;
@@ -436,5 +437,32 @@ final class EntityTest extends TestCase
             [],
             'one month',
         );
+    }
+
+    public function testQualificationUsesQualificationProfileTypeAndIdentifier(): void
+    {
+        $qualificationCode = new Concept(
+            'http://example.test/qualification/code',
+            new LocalizedString(['en' => 'Example qualification']),
+            new ConceptScheme('http://example.test/qualification'),
+        );
+        $qualification = new Qualification(
+            'qualification-1',
+            new LocalizedString(['en' => 'Digital micro-credential creation']),
+            null,
+            [],
+            null,
+            [],
+            null,
+            null,
+            false,
+            [$qualificationCode],
+        );
+
+        $data = $qualification->toArray();
+        self::assertSame('Qualification', $data['type']);
+        self::assertSame('urn:epass:qualification:qualification-1', $data['id']);
+        self::assertFalse($data['isPartialQualification']);
+        self::assertSame('Example qualification', $data['qualificationCodes'][0]['prefLabel']['en'][0]);
     }
 }

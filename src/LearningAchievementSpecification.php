@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
-final class LearningAchievementSpecification extends Entity
+class LearningAchievementSpecification extends Entity
 {
     public function __construct(
         string $id,

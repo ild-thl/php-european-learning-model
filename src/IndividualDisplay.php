@@ -15,6 +15,7 @@ final class IndividualDisplay extends Entity {
         public readonly array $displayDetails,
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme($language, ElmVocabularySchemes::LANGUAGE, 'language');
         if (
             $displayDetails === [] || array_filter(
                 $displayDetails,

@@ -14,6 +14,7 @@ final class LegalIdentifier extends Entity {
         public readonly Concept $spatial,
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme($spatial, ElmVocabularySchemes::COUNTRY, 'spatial');
         if ($notation === '') {
             throw new InvalidCredentialException('A legal identifier requires notation.');
         }

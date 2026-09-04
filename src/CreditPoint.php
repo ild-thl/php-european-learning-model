@@ -14,6 +14,7 @@ final class CreditPoint extends Entity {
         public readonly string $point,
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme($framework, ElmVocabularySchemes::EDUCATION_CREDIT, 'framework');
         if ($point === '') {
             throw new InvalidCredentialException('A credit point requires a point value.');
         }

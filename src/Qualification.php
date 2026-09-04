@@ -56,6 +56,12 @@ final class Qualification extends LearningAchievementSpecification {
         ) {
             throw new InvalidCredentialException('NQF levels must be concepts.');
         }
+        if ($eqfLevel !== null) {
+            ConceptAssertions::assertScheme($eqfLevel, ElmVocabularySchemes::EQF, 'eqfLevel');
+        }
+        foreach ($nqfLevels as $nqfLevel) {
+            ConceptAssertions::assertSchemePrefix($nqfLevel, ElmVocabularySchemes::QDR_BASE, 'nqfLevels');
+        }
         if (
             array_filter(
                 $accreditations,

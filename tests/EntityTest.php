@@ -179,6 +179,46 @@ final class EntityTest extends TestCase {
         (new CredentialDocumentValidator())->validateJson('[]');
     }
 
+    public function testDisplayParameterRejectsNonLanguageConcepts(): void {
+        $concept = new Concept(
+            'http://example.test/concept',
+            new LocalizedString(['en' => 'Concept']),
+            new ConceptScheme('http://example.test/scheme'),
+        );
+
+        $this->expectExceptionMessage('language must use vocabulary scheme');
+
+        new DisplayParameter('display-1', $concept, $concept, new LocalizedString(['en' => 'Title']));
+    }
+
+    public function testAddressRejectsNonCountryConcepts(): void {
+        $concept = new Concept(
+            'http://example.test/concept',
+            new LocalizedString(['en' => 'Concept']),
+            new ConceptScheme('http://example.test/scheme'),
+        );
+
+        $this->expectExceptionMessage('countryCode must use vocabulary scheme');
+
+        new Address('address-1', $concept, new Note('note-1', new LocalizedString(['en' => 'Address'])));
+    }
+
+    public function testLearningEntitlementRejectsNonEntitlementType(): void {
+        $concept = new Concept(
+            'http://example.test/concept',
+            new LocalizedString(['en' => 'Concept']),
+            new ConceptScheme('http://example.test/scheme'),
+        );
+
+        $this->expectExceptionMessage('type must use vocabulary scheme');
+
+        new LearningEntitlementSpecification(
+            'entitlement-1',
+            new LocalizedString(['en' => 'Access']),
+            $concept,
+        );
+    }
+
     public function testCredentialDocumentValidatorRejectsProfileFromAnotherScheme(): void {
         $document = [
             '@context' => [
@@ -246,7 +286,7 @@ final class EntityTest extends TestCase {
         $subject = new Concept(
             'http://example.test/education-subject/computing',
             new LocalizedString(['en' => 'Computing']),
-            new ConceptScheme('http://example.test/education-subjects'),
+            new ConceptScheme('http://data.europa.eu/snb/isced-f/25831c2'),
         );
         $specification = new LearningAchievementSpecification(
             'specification-1',
@@ -272,7 +312,7 @@ final class EntityTest extends TestCase {
         $country = new Concept(
             'http://example.test/country/DE',
             new LocalizedString(['en' => 'Germany']),
-            new ConceptScheme('http://example.test/countries'),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
         );
         $organisation = new Organisation(
             'organisation-1',
@@ -289,12 +329,17 @@ final class EntityTest extends TestCase {
         $assessmentType = new Concept(
             'http://example.test/assessment/exam',
             new LocalizedString(['en' => 'Exam']),
-            new ConceptScheme('http://example.test/assessment-types'),
+            new ConceptScheme('http://data.europa.eu/snb/assessment/25831c2'),
         );
         $language = new Concept(
             'http://example.test/language/en',
             new LocalizedString(['en' => 'English']),
-            new ConceptScheme('http://example.test/languages'),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/language'),
+        );
+        $verification = new Concept(
+            'http://example.test/verification/identity',
+            new LocalizedString(['en' => 'Identity verification']),
+            new ConceptScheme('http://data.europa.eu/snb/supervision-verification/25831c2'),
         );
         $specification = new LearningAssessmentSpecification(
             'assessment-spec-1',
@@ -313,14 +358,14 @@ final class EntityTest extends TestCase {
             new AwardingProcess('awarding-2', $organisation),
             new LocalizedString(['en' => 'Digital artefact assessment']),
             new Note('grade-1', new LocalizedString(['en' => 'Pass'])),
-            $assessmentType,
+            $verification,
             $specification,
             [new LearningAssessment(
                 'assessment-part-1',
                 new AwardingProcess('awarding-2', $organisation),
                 new LocalizedString(['en' => 'Evidence review']),
                 new Note('grade-part-1', new LocalizedString(['en' => 'Pass'])),
-                $assessmentType,
+                $verification,
                 $specification,
             )],
         );
@@ -345,7 +390,7 @@ final class EntityTest extends TestCase {
         $country = new Concept(
             'http://example.test/country/DE',
             new LocalizedString(['en' => 'Germany']),
-            new ConceptScheme('http://example.test/countries'),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
         );
         $organisation = new Organisation(
             'organisation-1',
@@ -377,7 +422,7 @@ final class EntityTest extends TestCase {
         $country = new Concept(
             'http://example.test/country/DE',
             new LocalizedString(['en' => 'Germany']),
-            new ConceptScheme('http://example.test/countries'),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
         );
         $organisation = new Organisation(
             'organisation-1',
@@ -433,7 +478,7 @@ final class EntityTest extends TestCase {
         $country = new Concept(
             'http://example.test/country/DE',
             new LocalizedString(['en' => 'Germany']),
-            new ConceptScheme('http://example.test/countries'),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
         );
         $organisation = new Organisation(
             'organisation-2',
@@ -457,7 +502,7 @@ final class EntityTest extends TestCase {
                 new Concept(
                     'http://example.test/entitlement-type/membership',
                     new LocalizedString(['en' => 'Membership']),
-                    new ConceptScheme('http://example.test/entitlement-types'),
+                    new ConceptScheme('http://data.europa.eu/snb/entitlement/25831c2'),
                 ),
             ),
         );
@@ -485,7 +530,7 @@ final class EntityTest extends TestCase {
         $language = new Concept(
             'http://example.test/language/en',
             new LocalizedString(['en' => 'English']),
-            new ConceptScheme('http://example.test/languages'),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/language'),
         );
         $credential = new Credential(
             'credential-1',
@@ -511,7 +556,7 @@ final class EntityTest extends TestCase {
         $language = new Concept(
             'http://example.test/language/en',
             new LocalizedString(['en' => 'English']),
-            new ConceptScheme('http://example.test/languages'),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/language'),
         );
         $display = new DisplayParameter(
             'display-1',
@@ -540,7 +585,7 @@ final class EntityTest extends TestCase {
         $language = new Concept(
             'http://example.test/language/en',
             new LocalizedString(['en' => 'English']),
-            new ConceptScheme('http://example.test/languages'),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/language'),
         );
         $encoding = new Concept(
             'http://data.europa.eu/snb/encoding/6146cde7dd',
@@ -582,9 +627,19 @@ final class EntityTest extends TestCase {
         $language = new Concept(
             'http://example.test/language/en',
             new LocalizedString(['en' => 'English']),
-            new ConceptScheme('http://example.test/languages'),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/language'),
         );
-        $media = new MediaObject('media-1', 'aGVsbG8=', $language, $language);
+        $encoding = new Concept(
+            'http://example.test/encoding/base64',
+            new LocalizedString(['en' => 'Base64']),
+            new ConceptScheme('http://data.europa.eu/snb/encoding/25831c2'),
+        );
+        $contentType = new Concept(
+            'http://publications.europa.eu/resource/authority/file-type/PNG',
+            new LocalizedString(['en' => 'PNG']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/file-type'),
+        );
+        $media = new MediaObject('media-1', 'aGVsbG8=', $encoding, $contentType);
 
         $this->expectException(InvalidCredentialException::class);
         new DisplayDetail('detail-1', 0, $media);
@@ -841,12 +896,12 @@ final class EntityTest extends TestCase {
         $eqf = new Concept(
             'http://data.europa.eu/snb/eqf/level-4',
             new LocalizedString(['en' => 'Level 4']),
-            new ConceptScheme('http://data.europa.eu/snb/eqf'),
+            new ConceptScheme('http://data.europa.eu/snb/eqf/25831c2'),
         );
         $nqf = new Concept(
             'http://example.test/nqf/level-4',
             new LocalizedString(['en' => 'National level 4']),
-            new ConceptScheme('http://example.test/nqf'),
+            new ConceptScheme('http://data.europa.eu/snb/qdr/c_ef113b94'),
         );
         $qualification = new Qualification(
             'qualification-1',
@@ -986,7 +1041,7 @@ final class EntityTest extends TestCase {
             new Concept(
                 'http://data.europa.eu/snb/ects',
                 new LocalizedString(['en' => 'ECTS']),
-                new ConceptScheme('http://data.europa.eu/snb/credit-point-framework'),
+                new ConceptScheme('http://data.europa.eu/snb/education-credit/25831c2'),
             ),
             '3',
         );

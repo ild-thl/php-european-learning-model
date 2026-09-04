@@ -21,6 +21,11 @@ final class LearningAssessment extends Claim {
         public readonly array $isPartOf = [],
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme(
+            $idVerification,
+            ElmVocabularySchemes::SUPERVISION_VERIFICATION,
+            'idVerification',
+        );
         if (array_filter($hasPart, static fn ($assessment): bool => !$assessment instanceof self) !== []) {
             throw new InvalidCredentialException('Assessment parts must be LearningAssessment objects.');
         }

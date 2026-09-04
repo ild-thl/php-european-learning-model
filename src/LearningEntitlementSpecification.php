@@ -21,6 +21,7 @@ final class LearningEntitlementSpecification extends Entity {
         public readonly array $supplementaryDocuments = [],
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme($type, ElmVocabularySchemes::ENTITLEMENT, 'type');
         if (array_filter($additionalNotes, static fn ($note): bool => !$note instanceof Note) !== []) {
             throw new InvalidCredentialException('Entitlement specification notes must be Note objects.');
         }

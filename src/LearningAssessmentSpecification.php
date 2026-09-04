@@ -15,6 +15,9 @@ final class LearningAssessmentSpecification extends Entity {
         public readonly Concept $mode,
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme($assessmentType, ElmVocabularySchemes::ASSESSMENT, 'assessmentType');
+        ConceptAssertions::assertScheme($language, ElmVocabularySchemes::LANGUAGE, 'language');
+        ConceptAssertions::assertScheme($mode, ElmVocabularySchemes::ASSESSMENT, 'mode');
     }
 
     /** @return array<string, mixed> */

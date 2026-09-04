@@ -18,6 +18,8 @@ final class DisplayParameter extends Entity {
         public readonly array $individualDisplays = [],
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme($language, ElmVocabularySchemes::LANGUAGE, 'language');
+        ConceptAssertions::assertScheme($primaryLanguage, ElmVocabularySchemes::LANGUAGE, 'primaryLanguage');
         if (
             array_filter(
                 $individualDisplays,

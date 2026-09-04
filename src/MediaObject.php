@@ -15,6 +15,8 @@ final class MediaObject extends Entity {
         public readonly Concept $contentType,
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme($contentEncoding, ElmVocabularySchemes::CONTENT_ENCODING, 'contentEncoding');
+        ConceptAssertions::assertScheme($contentType, ElmVocabularySchemes::CONTENT_TYPE, 'contentType');
         if ($content === '') {
             throw new InvalidCredentialException('A media object requires content.');
         }

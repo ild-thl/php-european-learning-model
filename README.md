@@ -40,7 +40,22 @@ Vocabulary retrieval is an explicit provider boundary: JSON-LD and RDF/XML
 providers accept an injected resource fetcher and can be wrapped by a cache
 decorator for authoritative vocabulary browsing. The package never handles
 signatures, keys, certificates, or transport configuration. Field-specific
-membership policies and complete SHACL validation are still being extracted.
+membership policies are enforced for credential profiles, languages, countries,
+education credits, EQF/NQF, assessments, verification, entitlements, media,
+and ISCED-F subjects. Complete SHACL validation is still being extracted.
+
+The legacy concept classes are represented as ordinary `Concept` values with
+field-owned scheme assertions rather than empty package subclasses. This
+preserves the ELM JSON-LD shape while rejecting a concept from the wrong
+controlled list at construction time. NQF concepts are validated against the
+dynamic `http://data.europa.eu/snb/qdr/` scheme family.
+
+The package is not yet concept-complete. Remaining legacy controlled fields
+include achievement-specification `dcType`, learning setting, mode, status,
+and target groups; learning-outcome ESCO skills and reusability; accreditation
+controlled fields; entitlement occupation limits; and application-specific
+qualification-code schemes. These require the corresponding ELM model fields
+before their scheme rules can be enforced.
 
 ## Development
 

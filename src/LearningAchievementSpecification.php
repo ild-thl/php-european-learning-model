@@ -31,6 +31,10 @@ class LearningAchievementSpecification extends Entity {
         public readonly array $educationSubjects = [],
     ) {
         parent::__construct($id);
+        if ($language !== null) {
+            ConceptAssertions::assertScheme($language, ElmVocabularySchemes::LANGUAGE, 'language');
+        }
+        ConceptAssertions::assertSchemes($educationSubjects, ElmVocabularySchemes::ISCED_F, 'educationSubjects');
         if (
             array_filter(
                 $creditPoints,

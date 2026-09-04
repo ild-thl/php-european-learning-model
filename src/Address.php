@@ -12,6 +12,7 @@ final class Address extends Entity {
         public readonly Note $fullAddress,
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme($countryCode, ElmVocabularySchemes::COUNTRY, 'countryCode');
     }
 
     /** @return array<string, mixed> */

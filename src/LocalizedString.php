@@ -45,4 +45,17 @@ final class LocalizedString {
     public function toArray(): array {
         return $this->translations;
     }
+
+    /**
+     * @param list<string> $fallbackLanguages
+     */
+    public function value(string $language, array $fallbackLanguages = []): ?string {
+        foreach (array_merge([$language], $fallbackLanguages) as $candidate) {
+            if (isset($this->translations[$candidate])) {
+                return $this->translations[$candidate][0];
+            }
+        }
+
+        return $this->translations[array_key_first($this->translations)][0] ?? null;
+    }
 }

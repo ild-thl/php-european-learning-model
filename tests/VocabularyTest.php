@@ -15,6 +15,9 @@ use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\RdfVocabularyProvider;
 use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
 use IsyThl\EuropeanDigitalCredentials\VocabularyResourceFetcher;
+use IsyThl\EuropeanDigitalCredentials\Vocabulary\JsonVocabularySearchProvider;
+use IsyThl\EuropeanDigitalCredentials\Vocabulary\EscoVocabularySearchProvider;
+use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularySearchResourceFetcher;
 use IsyThl\EuropeanDigitalCredentials\VocabularyScheme;
 use IsyThl\EuropeanDigitalCredentials\VocabularyProvider;
 use PHPUnit\Framework\TestCase;
@@ -46,6 +49,154 @@ final class VocabularyTest extends TestCase {
         self::assertSame('Eins', $snapshot->toArray()['concept'][0]['prefLabel']['de'][0]);
     }
 
+    public function testSchemeProvidesDropdownLookupsAndLanguageAwareSearch(): void {
+        $scheme = new ConceptScheme('http://example.test/activities');
+        $workshop = new Concept(
+            'http://example.test/activity/workshop',
+            new LocalizedString(['en' => 'Workshop', 'de' => 'Workshop']),
+            $scheme,
+            'workshop',
+        );
+        $lecture = new Concept(
+            'http://example.test/activity/lecture',
+            new LocalizedString(['en' => 'Lecture', 'de' => 'Vorlesung']),
+            $scheme,
+            'lecture',
+        );
+        $snapshot = new VocabularyScheme($scheme->id, $scheme, [$workshop, $lecture]);
+
+        self::assertSame([$workshop, $lecture], $snapshot->getConcepts());
+        self::assertSame($workshop, $snapshot->byId($workshop->id));
+        self::assertSame($lecture, $snapshot->byNotation('lecture'));
+        self::assertSame([$lecture], $snapshot->search('vor', 'de'));
+        self::assertSame('Workshop', $workshop->prefLabel->value('fr', ['en']));
+    }
+
+    public function testSearchProviderPaginatesWithoutChangingSelectionIdentifiers(): void {
+        $scheme = new ConceptScheme('http://example.test/activities');
+        $concepts = [];
+        foreach (['Workshop', 'Lecture', 'Seminar'] as $index => $label) {
+            $concepts[] = new Concept(
+                'http://example.test/activity/' . strtolower($label),
+                new LocalizedString(['en' => $label]),
+                $scheme,
+                strtolower($label),
+            );
+        }
+        $provider = new InMemoryVocabularyProvider([new VocabularyScheme($scheme->id, $scheme, $concepts)]);
+
+        $firstPage = $provider->searchConcepts($scheme->id, '', 'en', 2);
+        $secondPage = $provider->searchConcepts($scheme->id, '', 'en', 2, $firstPage->nextCursor);
+
+        self::assertSame([$concepts[0], $concepts[1]], $firstPage->concepts);
+        self::assertTrue($firstPage->hasMore());
+        self::assertSame([$concepts[2]], $secondPage->concepts);
+        self::assertFalse($secondPage->hasMore());
+        self::assertSame($concepts[2], $provider->getConceptByNotation('seminar', $scheme->id));
+    }
+
+    public function testJsonSearchProviderParsesPagedConcepts(): void {
+        $schemeId = 'http://example.test/activities';
+        $fetcher = new class implements VocabularySearchResourceFetcher {
+            public function search(
+                string $schemeId,
+                string $query,
+                string $language,
+                int $limit,
+                ?string $cursor,
+                array $fallbackLanguages = [],
+            ): string {
+                return json_encode([
+                    'concepts' => [
+                        [
+                            'id' => 'http://example.test/activity/workshop',
+                            'type' => 'Concept',
+                            'inScheme' => ['id' => $schemeId, 'type' => 'ConceptScheme'],
+                            'prefLabel' => [$language => ['Workshop']],
+                            'notation' => 'workshop',
+                        ],
+                    ],
+                    'nextCursor' => 'page-2',
+                ], JSON_THROW_ON_ERROR);
+            }
+        };
+        $provider = new JsonVocabularySearchProvider($fetcher);
+
+        $page = $provider->searchConcepts($schemeId, 'work', 'en', 1);
+
+        self::assertSame('http://example.test/activity/workshop', $page->concepts[0]->id);
+        self::assertSame('page-2', $page->nextCursor);
+    }
+
+    public function testEscoSearchProviderParsesSkillsAndPreservesNextLink(): void {
+        $fetcher = new class implements VocabularySearchResourceFetcher {
+            public function search(
+                string $schemeId,
+                string $query,
+                string $language,
+                int $limit,
+                ?string $cursor,
+                array $fallbackLanguages = [],
+            ): string {
+                return json_encode([
+                    '_embedded' => [
+                        'results' => [[
+                            'className' => 'Skill',
+                            'uri' => 'http://data.europa.eu/esco/skill/example',
+                            'preferredLabel' => ['en' => 'Example skill'],
+                            'isInScheme' => [$schemeId, 'http://data.europa.eu/esco/concept-scheme/member-skills'],
+                        ]],
+                    ],
+                    '_links' => ['next' => ['href' => 'https://example.test/esco/search?offset=1']],
+                ], JSON_THROW_ON_ERROR);
+            }
+        };
+        $provider = new EscoVocabularySearchProvider($fetcher);
+
+        $page = $provider->searchConcepts(ElmVocabularySchemes::ESCO_SKILLS, 'example', 'en', 1);
+
+        self::assertSame('Example skill', $page->concepts[0]->prefLabel->value('en'));
+        self::assertSame('https://example.test/esco/search?offset=1', $page->nextCursor);
+        self::assertSame(ElmVocabularySchemes::ESCO_SKILLS, $page->concepts[0]->inScheme->id);
+    }
+
+    public function testEscoSearchProviderParsesOccupationLabelsWithRegionalTags(): void {
+        $fetcher = new class implements VocabularySearchResourceFetcher {
+            public function search(
+                string $schemeId,
+                string $query,
+                string $language,
+                int $limit,
+                ?string $cursor,
+                array $fallbackLanguages = [],
+            ): string {
+                return json_encode([
+                    '_embedded' => [
+                        'results' => [[
+                            'className' => 'Occupation',
+                            'uri' => 'http://data.europa.eu/esco/occupation/example',
+                            'preferredLabel' => ['en-us' => 'Example occupation'],
+                            'isInScheme' => [$schemeId],
+                        ]],
+                    ],
+                ], JSON_THROW_ON_ERROR);
+            }
+        };
+        $provider = new EscoVocabularySearchProvider($fetcher);
+
+        $page = $provider->searchConcepts(ElmVocabularySchemes::OCCUPATIONS, 'example', 'en', 1);
+
+        self::assertSame('Example occupation', $page->concepts[0]->prefLabel->value('en-US'));
+    }
+
+    public function testEscoSearchProviderRejectsUnsupportedSchemes(): void {
+        $fetcher = $this->createMock(VocabularySearchResourceFetcher::class);
+        $provider = new EscoVocabularySearchProvider($fetcher);
+
+        $this->expectException(InvalidCredentialException::class);
+        $provider->searchConcepts(ElmVocabularySchemes::LANGUAGE, 'English', 'en');
+    }
+
     public function testVocabularyReportsMembershipFailure(): void {
         $scheme = new ConceptScheme('http://example.test/scheme');
         $snapshot = new VocabularyScheme($scheme->id, $scheme);
@@ -75,6 +226,64 @@ final class VocabularyTest extends TestCase {
             'http://data.europa.eu/snb/assessment/25831c2',
             ElmVocabularySchemes::ASSESSMENT,
         );
+        self::assertCount(24, ElmVocabularySchemes::all());
+    }
+
+    public function testRdfProviderParsesEveryRegisteredSchemeWithTheSameContract(): void {
+        $fetcher = new class implements VocabularyResourceFetcher {
+            public function fetch(string $resource): string {
+                $conceptId = $resource . '/example';
+
+                return <<<XML
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <skos:ConceptScheme rdf:about="{$resource}"/>
+    <skos:Concept rdf:about="{$conceptId}">
+        <skos:inScheme rdf:resource="{$resource}"/>
+        <skos:prefLabel xml:lang="en">Example</skos:prefLabel>
+        <skos:notation>example</skos:notation>
+    </skos:Concept>
+</rdf:RDF>
+XML;
+            }
+        };
+        $provider = new RdfVocabularyProvider($fetcher);
+
+        foreach (ElmVocabularySchemes::all() as $schemeId) {
+            $scheme = $provider->getScheme($schemeId);
+
+            self::assertNotNull($scheme, $schemeId);
+            self::assertSame('Example', $scheme->byNotation('example')?->prefLabel->value('en'));
+        }
+    }
+
+    public function testRdfProviderRejectsUnboundedEnrichment(): void {
+        $schemeId = 'http://example.test/large-scheme';
+        $fetcher = new class ($schemeId) implements VocabularyResourceFetcher {
+            public function __construct(private readonly string $schemeId) {
+            }
+
+            public function fetch(string $resource): string {
+                $concepts = '';
+                for ($index = 1; $index <= 2; $index++) {
+                    $conceptId = $this->schemeId . '/concept-' . $index;
+                    $concepts .= '<rdf:Description rdf:about="' . $conceptId . '">'
+                        . '<skos:inScheme rdf:resource="' . $this->schemeId . '"/>'
+                        . '</rdf:Description>';
+                }
+
+                return '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
+                    . ' xmlns:skos="http://www.w3.org/2004/02/skos/core#">'
+                    . '<skos:ConceptScheme rdf:about="' . $this->schemeId . '"/>'
+                    . $concepts . '</rdf:RDF>';
+            }
+        };
+
+        $this->expectException(InvalidCredentialException::class);
+        $this->expectExceptionMessage('use paged search');
+
+        (new RdfVocabularyProvider($fetcher, 5_000_000, 1))->getScheme($schemeId);
     }
 
     public function testVocabularyRejectsConceptFromAnotherScheme(): void {
@@ -163,6 +372,50 @@ XML;
         self::assertSame('Example', $scheme->title?->toArray()['en'][0]);
         self::assertSame('Eins', $scheme->concepts[0]->prefLabel->toArray()['de'][0]);
         self::assertSame('one', $scheme->concepts[0]->notation);
+    }
+
+    public function testRdfProviderEnrichesBareSchemeConceptIds(): void {
+        $schemeId = 'http://example.test/scheme';
+        $conceptId = 'http://example.test/concept/one';
+        $fetcher = new class ($schemeId, $conceptId) implements VocabularyResourceFetcher {
+            public function __construct(
+                private readonly string $schemeId,
+                private readonly string $conceptId,
+            ) {
+            }
+
+            public function fetch(string $resource): string {
+                if ($resource === $this->conceptId) {
+                    return <<<XML
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <rdf:Description rdf:about="{$this->conceptId}">
+        <skos:inScheme rdf:resource="{$this->schemeId}"/>
+        <skos:prefLabel xml:lang="en">One</skos:prefLabel>
+    </rdf:Description>
+</rdf:RDF>
+XML;
+                }
+
+                return <<<XML
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+    <rdf:Description rdf:about="{$this->schemeId}">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="{$this->conceptId}">
+        <skos:inScheme rdf:resource="{$this->schemeId}"/>
+    </rdf:Description>
+</rdf:RDF>
+XML;
+            }
+        };
+
+        $scheme = (new RdfVocabularyProvider($fetcher))->getScheme($schemeId);
+
+        self::assertNotNull($scheme);
+        self::assertSame('One', $scheme->byId($conceptId)?->prefLabel->value('en'));
     }
 
     public function testRdfProviderRejectsMalformedXml(): void {

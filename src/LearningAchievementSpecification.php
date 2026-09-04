@@ -29,12 +29,35 @@ class LearningAchievementSpecification extends Entity {
         public readonly array $educationLevels = [],
         /** @var list<Concept> */
         public readonly array $educationSubjects = [],
+        public readonly ?Concept $type = null,
+        public readonly ?Concept $learningSetting = null,
+        public readonly ?Concept $mode = null,
+        public readonly ?Concept $status = null,
+        /** @var list<Concept> */
+        public readonly array $targetGroups = [],
     ) {
         parent::__construct($id);
         if ($language !== null) {
             ConceptAssertions::assertScheme($language, ElmVocabularySchemes::LANGUAGE, 'language');
         }
         ConceptAssertions::assertSchemes($educationSubjects, ElmVocabularySchemes::ISCED_F, 'educationSubjects');
+        if ($type !== null) {
+            ConceptAssertions::assertScheme($type, static::typeScheme(), 'type');
+        }
+        if ($learningSetting !== null) {
+            ConceptAssertions::assertScheme(
+                $learningSetting,
+                ElmVocabularySchemes::LEARNING_SETTING,
+                'learningSetting',
+            );
+        }
+        if ($mode !== null) {
+            ConceptAssertions::assertScheme($mode, ElmVocabularySchemes::ASSESSMENT, 'mode');
+        }
+        if ($status !== null) {
+            ConceptAssertions::assertScheme($status, ElmVocabularySchemes::ACCREDITATION_STATUS, 'status');
+        }
+        ConceptAssertions::assertSchemes($targetGroups, ElmVocabularySchemes::TARGET_GROUP, 'targetGroups');
         if (
             array_filter(
                 $creditPoints,
@@ -88,6 +111,10 @@ class LearningAchievementSpecification extends Entity {
                 throw new InvalidCredentialException('Specification durations must use ISO 8601 format.');
             }
         }
+    }
+
+    protected static function typeScheme(): string {
+        return ElmVocabularySchemes::LEARNING_OPPORTUNITY;
     }
 
     /** @return array<string, mixed> */
@@ -146,6 +173,24 @@ class LearningAchievementSpecification extends Entity {
             $data['educationSubject'] = array_map(
                 static fn (Concept $subject): array => $subject->toArray(),
                 $this->educationSubjects,
+            );
+        }
+        if ($this->type !== null) {
+            $data['dcType'] = $this->type->toArray();
+        }
+        if ($this->learningSetting !== null) {
+            $data['learningSetting'] = $this->learningSetting->toArray();
+        }
+        if ($this->mode !== null) {
+            $data['mode'] = $this->mode->toArray();
+        }
+        if ($this->status !== null) {
+            $data['status'] = $this->status->toArray();
+        }
+        if ($this->targetGroups !== []) {
+            $data['targetGroup'] = array_map(
+                static fn (Concept $targetGroup): array => $targetGroup->toArray(),
+                $this->targetGroups,
             );
         }
         return $data;

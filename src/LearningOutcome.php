@@ -15,6 +15,9 @@ final class LearningOutcome extends Entity {
         public readonly array $relatedSkills = [],
         /** @var list<Note> */
         public readonly array $additionalNotes = [],
+        /** @var list<Concept> */
+        public readonly array $relatedEscosSkills = [],
+        public readonly ?Concept $reusabilityLevel = null,
     ) {
         parent::__construct($id);
         if (
@@ -33,6 +36,18 @@ final class LearningOutcome extends Entity {
         ) {
             throw new InvalidCredentialException('Learning outcome notes must be Note objects.');
         }
+        ConceptAssertions::assertSchemes(
+            $relatedEscosSkills,
+            ElmVocabularySchemes::ESCO_SKILLS,
+            'relatedEscosSkills',
+        );
+        if ($reusabilityLevel !== null) {
+            ConceptAssertions::assertScheme(
+                $reusabilityLevel,
+                ElmVocabularySchemes::SKILL_REUSE_LEVEL,
+                'reusabilityLevel',
+            );
+        }
     }
 
     /** @return array<string, mixed> */
@@ -47,6 +62,15 @@ final class LearningOutcome extends Entity {
                 static fn (Concept $relatedSkill): array => $relatedSkill->toArray(),
                 $this->relatedSkills,
             );
+        }
+        if ($this->relatedEscosSkills !== []) {
+            $data['relatedESCOSkill'] = array_map(
+                static fn (Concept $skill): array => $skill->toArray(),
+                $this->relatedEscosSkills,
+            );
+        }
+        if ($this->reusabilityLevel !== null) {
+            $data['reusabilityLevel'] = $this->reusabilityLevel->toArray();
         }
         if ($this->additionalNotes !== []) {
             $data['additionalNote'] = array_map(

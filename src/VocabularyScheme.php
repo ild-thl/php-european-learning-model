@@ -60,6 +60,11 @@ final class VocabularyScheme extends Entity {
             && in_array($concept->id, $this->conceptIds(), true);
     }
 
+    /** @return list<Concept> */
+    public function getConcepts(): array {
+        return $this->concepts;
+    }
+
     public function assertContains(Concept $concept, string $field = 'concept'): void {
         if (!$this->contains($concept)) {
             throw new InvalidCredentialException(
@@ -78,6 +83,10 @@ final class VocabularyScheme extends Entity {
         return null;
     }
 
+    public function byId(string $conceptId): ?Concept {
+        return $this->find($conceptId);
+    }
+
     public function findByNotation(string $notation): ?Concept {
         foreach ($this->concepts as $concept) {
             if ($concept->notation === $notation) {
@@ -86,6 +95,29 @@ final class VocabularyScheme extends Entity {
         }
 
         return null;
+    }
+
+    public function byNotation(string $notation): ?Concept {
+        return $this->findByNotation($notation);
+    }
+
+    /**
+     * @param list<string> $fallbackLanguages
+     * @return list<Concept>
+     */
+    public function search(string $query, string $language, array $fallbackLanguages = []): array {
+        $query = mb_strtolower(trim($query));
+        if ($query === '') {
+            return $this->concepts;
+        }
+
+        return array_values(array_filter(
+            $this->concepts,
+            static fn (Concept $concept): bool => str_contains(
+                mb_strtolower($concept->prefLabel->value($language, $fallbackLanguages) ?? ''),
+                $query,
+            ),
+        ));
     }
 
     /** @return list<string> */

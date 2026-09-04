@@ -29,5 +29,49 @@ final class ElmVocabularySchemes {
     public const string SUPERVISION_VERIFICATION = 'http://data.europa.eu/snb/supervision-verification/25831c2';
     public const string TARGET_GROUP = 'http://data.europa.eu/snb/target-group/25831c2';
     public const string DCF_SKILLS = 'http://data.europa.eu/snb/dcf/25831c2';
-    public const string OCCUPATIONS = 'http://data.europa.eu/esco/occupation';
+    public const string OCCUPATIONS = 'http://data.europa.eu/esco/concept-scheme/occupations';
+
+    /** @return array<string, string> */
+    public static function all(): array {
+        return [
+            'LANGUAGE' => self::LANGUAGE,
+            'COUNTRY' => self::COUNTRY,
+            'CREDENTIAL' => self::CREDENTIAL,
+            'EQF' => self::EQF,
+            'QDR' => self::QDR,
+            'LEARNING_SETTING' => self::LEARNING_SETTING,
+            'LEARNING_ACTIVITY' => self::LEARNING_ACTIVITY,
+            'ASSESSMENT' => self::ASSESSMENT,
+            'ISCED_F' => self::ISCED_F,
+            'ACCREDITATION' => self::ACCREDITATION,
+            'ENTITLEMENT' => self::ENTITLEMENT,
+            'ESCO_SKILLS' => self::ESCO_SKILLS,
+            'ACCREDITATION_DECISION' => self::ACCREDITATION_DECISION,
+            'ACCREDITATION_STATUS' => self::ACCREDITATION_STATUS,
+            'ATU' => self::ATU,
+            'CONTENT_ENCODING' => self::CONTENT_ENCODING,
+            'CONTENT_TYPE' => self::CONTENT_TYPE,
+            'EDUCATION_CREDIT' => self::EDUCATION_CREDIT,
+            'LEARNING_OPPORTUNITY' => self::LEARNING_OPPORTUNITY,
+            'SKILL_REUSE_LEVEL' => self::SKILL_REUSE_LEVEL,
+            'SUPERVISION_VERIFICATION' => self::SUPERVISION_VERIFICATION,
+            'TARGET_GROUP' => self::TARGET_GROUP,
+            'DCF_SKILLS' => self::DCF_SKILLS,
+            'OCCUPATIONS' => self::OCCUPATIONS,
+        ];
+    }
+
+    public static function requiresSearch(string $schemeId): bool {
+        return in_array($schemeId, [
+            self::LANGUAGE,
+            self::COUNTRY,
+            self::ATU,
+            self::CONTENT_TYPE,
+            self::QDR,
+            self::ISCED_F,
+            self::ESCO_SKILLS,
+            self::DCF_SKILLS,
+            self::OCCUPATIONS,
+        ], true);
+    }
 }

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
-final class CachedVocabularyProvider implements VocabularyProvider {
+use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularyConceptPage;
+use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularySearchProvider;
+
+final class CachedVocabularyProvider implements VocabularyProvider, VocabularySearchProvider {
 
     public function __construct(
         private readonly VocabularyProvider $provider,
@@ -35,5 +38,27 @@ final class CachedVocabularyProvider implements VocabularyProvider {
 
     public function getConceptByNotation(string $notation, string $schemeId): ?Concept {
         return $this->getScheme($schemeId)?->findByNotation($notation);
+    }
+
+    public function searchConcepts(
+        string $schemeId,
+        string $query,
+        string $language,
+        int $limit = 50,
+        ?string $cursor = null,
+        array $fallbackLanguages = [],
+    ): VocabularyConceptPage {
+        if (!$this->provider instanceof VocabularySearchProvider) {
+            throw new \LogicException('The wrapped vocabulary provider does not support search.');
+        }
+
+        return $this->provider->searchConcepts(
+            $schemeId,
+            $query,
+            $language,
+            $limit,
+            $cursor,
+            $fallbackLanguages,
+        );
     }
 }

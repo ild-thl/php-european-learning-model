@@ -19,6 +19,8 @@ final class LearningEntitlementSpecification extends Entity {
         public readonly ?LocalizedString $description = null,
         public readonly array $additionalNotes = [],
         public readonly array $supplementaryDocuments = [],
+        /** @var list<Concept> */
+        public readonly array $limitOccupations = [],
     ) {
         parent::__construct($id);
         ConceptAssertions::assertScheme($type, ElmVocabularySchemes::ENTITLEMENT, 'type');
@@ -33,6 +35,7 @@ final class LearningEntitlementSpecification extends Entity {
         ) {
             throw new InvalidCredentialException('Entitlement specification documents must be WebResource objects.');
         }
+        ConceptAssertions::assertSchemes($limitOccupations, ElmVocabularySchemes::OCCUPATIONS, 'limitOccupations');
     }
 
     /** @return array<string, mixed> */
@@ -56,6 +59,12 @@ final class LearningEntitlementSpecification extends Entity {
             $data['supplementaryDocument'] = array_map(
                 static fn (WebResource $document): array => $document->toArray(),
                 $this->supplementaryDocuments,
+            );
+        }
+        if ($this->limitOccupations !== []) {
+            $data['limitOccupation'] = array_map(
+                static fn (Concept $occupation): array => $occupation->toArray(),
+                $this->limitOccupations,
             );
         }
 

@@ -16,6 +16,7 @@ use IsyThl\EuropeanDigitalCredentials\CreditPoint;
 use IsyThl\EuropeanDigitalCredentials\Credential;
 use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
 use IsyThl\EuropeanDigitalCredentials\CredentialDocumentValidator;
+use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
 use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
 use IsyThl\EuropeanDigitalCredentials\DisplayDetail;
 use IsyThl\EuropeanDigitalCredentials\IndividualDisplay;
@@ -177,6 +178,123 @@ final class EntityTest extends TestCase {
         $this->expectException(InvalidCredentialException::class);
 
         (new CredentialDocumentValidator())->validateJson('[]');
+    }
+
+    public function testAchievementSpecificationSerializesControlledConceptFields(): void {
+        $concept = static function (string $id, string $scheme): Concept {
+            return new Concept(
+                'http://example.test/' . $id,
+                new LocalizedString(['en' => $id]),
+                new ConceptScheme($scheme),
+            );
+        };
+        $specification = new LearningAchievementSpecification(
+            'specification-1',
+            new LocalizedString(['en' => 'Course']),
+            type: $concept('course', ElmVocabularySchemes::LEARNING_OPPORTUNITY),
+            learningSetting: $concept('formal', ElmVocabularySchemes::LEARNING_SETTING),
+            mode: $concept('online', ElmVocabularySchemes::ASSESSMENT),
+            status: $concept('active', ElmVocabularySchemes::ACCREDITATION_STATUS),
+            targetGroups: [$concept('adult', ElmVocabularySchemes::TARGET_GROUP)],
+        );
+
+        $data = $specification->toArray();
+
+        self::assertSame('http://example.test/course', $data['dcType']['id']);
+        self::assertSame('http://example.test/formal', $data['learningSetting']['id']);
+        self::assertSame('http://example.test/online', $data['mode']['id']);
+        self::assertSame('http://example.test/active', $data['status']['id']);
+        self::assertSame('http://example.test/adult', $data['targetGroup'][0]['id']);
+    }
+
+    public function testActivitySpecificationUsesTheLearningActivityTypeScheme(): void {
+        $activityType = new Concept(
+            'http://example.test/workshop',
+            new LocalizedString(['en' => 'Workshop']),
+            new ConceptScheme(ElmVocabularySchemes::LEARNING_ACTIVITY),
+        );
+
+        $specification = new LearningActivitySpecification(
+            'activity-1',
+            new LocalizedString(['en' => 'Workshop']),
+            type: $activityType,
+        );
+
+        self::assertSame('http://example.test/workshop', $specification->toArray()['dcType']['id']);
+    }
+
+    public function testAccreditationSerializesControlledConceptFields(): void {
+        $concept = static function (string $id, string $scheme): Concept {
+            return new Concept(
+                'http://example.test/' . $id,
+                new LocalizedString(['en' => $id]),
+                new ConceptScheme($scheme),
+            );
+        };
+        $agent = new Organisation(
+            'agent-1',
+            new Location(
+                'location-1',
+                new Address(
+                    'address-1',
+                    $concept('nl', ElmVocabularySchemes::COUNTRY),
+                    new Note('note-1', new LocalizedString(['en' => 'The Hague'])),
+                ),
+            ),
+            new LocalizedString(['en' => 'Quality authority']),
+        );
+        $accreditation = new Accreditation(
+            'accreditation-1',
+            new LocalizedString(['en' => 'Accredited course']),
+            $agent,
+            accreditedForEqfLevels: [$concept('eqf-6', ElmVocabularySchemes::EQF)],
+            accreditedForThematicAreas: [$concept('computer-science', ElmVocabularySchemes::ISCED_F)],
+            accreditedInJurisdictions: [$concept('nl', ElmVocabularySchemes::ATU)],
+            decision: $concept('approved', ElmVocabularySchemes::ACCREDITATION_DECISION),
+            limitCredentialTypes: [$concept('qualification', ElmVocabularySchemes::CREDENTIAL)],
+            status: $concept('active', ElmVocabularySchemes::ACCREDITATION_STATUS),
+        );
+
+        $data = $accreditation->toArray();
+
+        self::assertSame('http://example.test/eqf-6', $data['accreditedForEQFLevel'][0]['id']);
+        self::assertSame('http://example.test/computer-science', $data['accreditedForThematicArea'][0]['id']);
+        self::assertSame('http://example.test/nl', $data['accreditedInJurisdiction'][0]['id']);
+        self::assertSame('http://example.test/approved', $data['decision']['id']);
+        self::assertSame('http://example.test/qualification', $data['limitCredentialType'][0]['id']);
+        self::assertSame('http://example.test/active', $data['status']['id']);
+    }
+
+    public function testAccreditationRejectsDecisionFromAnotherScheme(): void {
+        $agent = new Organisation(
+            'agent-1',
+            new Location(
+                'location-1',
+                new Address(
+                    'address-1',
+                    new Concept(
+                        'http://example.test/nl',
+                        new LocalizedString(['en' => 'Netherlands']),
+                        new ConceptScheme(ElmVocabularySchemes::COUNTRY),
+                    ),
+                    new Note('note-1', new LocalizedString(['en' => 'The Hague'])),
+                ),
+            ),
+            new LocalizedString(['en' => 'Quality authority']),
+        );
+
+        $this->expectException(InvalidCredentialException::class);
+
+        new Accreditation(
+            'accreditation-1',
+            new LocalizedString(['en' => 'Accredited course']),
+            $agent,
+            decision: new Concept(
+                'http://example.test/wrong',
+                new LocalizedString(['en' => 'Wrong']),
+                new ConceptScheme(ElmVocabularySchemes::ASSESSMENT),
+            ),
+        );
     }
 
     public function testDisplayParameterRejectsNonLanguageConcepts(): void {

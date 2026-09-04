@@ -13,6 +13,8 @@ use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
 use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
 use IsyThl\EuropeanDigitalCredentials\DisplayDetail;
 use IsyThl\EuropeanDigitalCredentials\IndividualDisplay;
+use IsyThl\EuropeanDigitalCredentials\Identifier;
+use IsyThl\EuropeanDigitalCredentials\LegalIdentifier;
 use IsyThl\EuropeanDigitalCredentials\MediaObject;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
@@ -250,5 +252,36 @@ final class EntityTest extends TestCase
         $data = $subject->toArray();
         self::assertSame(['en' => ['Augusta Ada King']], $data['birthName']);
         self::assertSame('1815-12-09T23:00:00Z', $data['dateOfBirth']);
+    }
+
+    public function testCredentialSubjectSerializesTypedIdentifiersWithProfileShapes(): void
+    {
+        $country = new Concept(
+            'http://publications.europa.eu/resource/authority/country/ITA',
+            new LocalizedString(['en' => 'Italy']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
+            'country',
+        );
+        $subject = new CredentialSubject(
+            'subject-1',
+            new LocalizedString(['en' => 'Ana']),
+            new LocalizedString(['en' => 'Andromeda']),
+            new LocalizedString(['en' => 'Ana Andromeda']),
+            [new class ('claim-1') extends Claim {
+                public function toArray(): array
+                {
+                    return ['id' => $this->id, 'type' => 'Claim'];
+                }
+            }],
+            null,
+            null,
+            new Identifier('identifier-1', '87654321', 'Student Card ID'),
+            new LegalIdentifier('legal-1', 'IT-12345678', $country),
+        );
+
+        $data = $subject->toArray();
+        self::assertSame('87654321', $data['identifier'][0]['notation']);
+        self::assertSame('LegalIdentifier', $data['nationalID']['type']);
+        self::assertSame('ITA', substr($data['nationalID']['spatial']['id'], -3));
     }
 }

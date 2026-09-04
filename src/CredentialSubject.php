@@ -19,6 +19,8 @@ final class CredentialSubject extends Entity
         public readonly array $claims,
         public readonly ?LocalizedString $birthName = null,
         public readonly ?DateTimeImmutable $dateOfBirth = null,
+        public readonly ?Identifier $identifier = null,
+        public readonly ?LegalIdentifier $nationalId = null,
     ) {
         parent::__construct($id);
         if ($claims === [] || array_filter($claims, static fn ($claim): bool => !$claim instanceof Claim) !== []) {
@@ -39,6 +41,12 @@ final class CredentialSubject extends Entity
 
         if ($this->dateOfBirth !== null) {
             $data['dateOfBirth'] = $this->dateOfBirth->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d\\TH:i:s\\Z');
+        }
+        if ($this->identifier !== null) {
+            $data['identifier'] = [$this->identifier->toArray()];
+        }
+        if ($this->nationalId !== null) {
+            $data['nationalID'] = $this->nationalId->toArray();
         }
         if ($this->birthName !== null) {
             $data['birthName'] = $this->birthName->toArray();

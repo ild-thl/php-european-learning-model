@@ -6,9 +6,13 @@ namespace IsyThl\EuropeanDigitalCredentials\Tests;
 
 use IsyThl\EuropeanDigitalCredentials\Concept;
 use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
+use IsyThl\EuropeanDigitalCredentials\CachedVocabularyProvider;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyCache;
 use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyProvider;
+use IsyThl\EuropeanDigitalCredentials\JsonLdVocabularyProvider;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
+use IsyThl\EuropeanDigitalCredentials\VocabularyResourceFetcher;
 use IsyThl\EuropeanDigitalCredentials\VocabularyScheme;
 use PHPUnit\Framework\TestCase;
 
@@ -65,5 +69,55 @@ final class VocabularyTest extends TestCase {
         $this->expectException(InvalidCredentialException::class);
 
         new VocabularyScheme($scheme->id, $scheme, [$concept, $concept]);
+    }
+
+    public function testJsonLdProviderParsesBrowseableScheme(): void {
+        $schemeId = 'http://example.test/scheme';
+        $fetcher = new class implements VocabularyResourceFetcher {
+            public function fetch(string $resource): string {
+                return json_encode([
+                    '@graph' => [
+                        ['@id' => $resource, '@type' => 'ConceptScheme', 'prefLabel' => ['en' => ['Example']]],
+                        [
+                            '@id' => 'http://example.test/concept/one',
+                            '@type' => 'Concept',
+                            'inScheme' => ['@id' => $resource],
+                            'prefLabel' => ['en' => ['One']],
+                            'notation' => 'one',
+                        ],
+                    ],
+                ], JSON_THROW_ON_ERROR);
+            }
+        };
+        $provider = new JsonLdVocabularyProvider($fetcher);
+
+        $scheme = $provider->getScheme($schemeId);
+
+        self::assertNotNull($scheme);
+        self::assertSame('One', $scheme->concepts[0]->prefLabel->toArray()['en'][0]);
+        self::assertSame('one', $provider->getConcept('http://example.test/concept/one', $schemeId)?->notation);
+    }
+
+    public function testCachedProviderUsesTheCachedScheme(): void {
+        $schemeId = 'http://example.test/scheme';
+        $scheme = new VocabularyScheme($schemeId, new ConceptScheme($schemeId));
+        $source = new InMemoryVocabularyProvider([$scheme]);
+        $cached = new CachedVocabularyProvider($source, new InMemoryVocabularyCache());
+
+        self::assertSame($scheme, $cached->getScheme($schemeId));
+        self::assertSame($scheme, $cached->getScheme($schemeId));
+    }
+
+    public function testJsonLdProviderRejectsOversizedResponse(): void {
+        $fetcher = new class implements VocabularyResourceFetcher {
+            public function fetch(string $resource): string {
+                return '{}';
+            }
+        };
+        $provider = new JsonLdVocabularyProvider($fetcher, 1);
+
+        $this->expectException(InvalidCredentialException::class);
+
+        $provider->getScheme('http://example.test/scheme');
     }
 }

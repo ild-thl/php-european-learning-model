@@ -624,4 +624,37 @@ final class EntityTest extends TestCase
         self::assertSame('Accreditation', $qualification->toArray()['accreditation'][0]['type']);
         self::assertSame('Quality Authority', $qualification->toArray()['accreditation'][0]['accreditingAgent']['legalName']['en'][0]);
     }
+
+    public function testLearningAchievementSerializesReceivedCredit(): void
+    {
+        $country = new Concept(
+            'http://publications.europa.eu/resource/authority/country/DEU',
+            new LocalizedString(['en' => 'Germany']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
+        );
+        $organisation = new Organisation(
+            'organisation-1',
+            new Location('location-1', new Address('address-1', $country, new Note('note-1', new LocalizedString(['en' => 'Berlin'])))),
+            new LocalizedString(['en' => 'Example Authority']),
+        );
+        $credit = new CreditPoint(
+            'credit-1',
+            new Concept(
+                'http://data.europa.eu/snb/ects',
+                new LocalizedString(['en' => 'ECTS']),
+                new ConceptScheme('http://data.europa.eu/snb/credit-point-framework'),
+            ),
+            '3',
+        );
+        $achievement = new LearningAchievement(
+            'achievement-1',
+            new LocalizedString(['en' => 'Digital Skills']),
+            new AwardingProcess('awarding-1', $organisation),
+            new LearningAchievementSpecification('specification-1', new LocalizedString(['en' => 'Digital Skills'])),
+            $credit,
+        );
+
+        self::assertSame('CreditPoint', $achievement->toArray()['creditReceived']['type']);
+        self::assertSame('3', $achievement->toArray()['creditReceived']['point']);
+    }
 }

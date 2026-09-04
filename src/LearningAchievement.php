@@ -11,18 +11,23 @@ final class LearningAchievement extends Claim
         public readonly LocalizedString $title,
         public readonly AwardingProcess $awardedBy,
         public readonly LearningAchievementSpecification $specifiedBy,
+        public readonly ?CreditPoint $creditReceived = null,
     ) {
         parent::__construct($id);
     }
 
     public function toArray(): array
     {
-        return [
+        $data = [
             'id' => 'urn:epass:learningAchievement:' . $this->id,
             'type' => 'LearningAchievement',
             'awardedBy' => $this->awardedBy->toArray(),
             'title' => $this->title->toArray(),
             'specifiedBy' => $this->specifiedBy->toArray(),
         ];
+        if ($this->creditReceived !== null) {
+            $data['creditReceived'] = $this->creditReceived->toArray();
+        }
+        return $data;
     }
 }

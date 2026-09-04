@@ -55,6 +55,21 @@ final class CredentialDocumentValidator {
         if ($document['credentialProfiles'] === []) {
             throw new InvalidCredentialException('Credential profiles must contain at least one profile.');
         }
+        foreach ($document['credentialProfiles'] as $profile) {
+            if (!is_array($profile) || array_is_list($profile)) {
+                throw new InvalidCredentialException('Credential profiles must contain concept objects.');
+            }
+            if (($profile['type'] ?? null) !== 'Concept') {
+                throw new InvalidCredentialException('Credential profiles must be Concept objects.');
+            }
+            $profileScheme = $profile['inScheme'] ?? null;
+            if (
+                !is_array($profileScheme)
+                || ($profileScheme['id'] ?? null) !== ElmVocabularySchemes::CREDENTIAL
+            ) {
+                throw new InvalidCredentialException('Credential profiles must use the ELM credential profile scheme.');
+            }
+        }
         if (!$this->isUtcDate($document['validFrom'])) {
             throw new InvalidCredentialException('Credential validFrom must be a UTC date in ELM format.');
         }

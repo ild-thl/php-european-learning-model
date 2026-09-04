@@ -179,6 +179,29 @@ final class EntityTest extends TestCase {
         (new CredentialDocumentValidator())->validateJson('[]');
     }
 
+    public function testCredentialDocumentValidatorRejectsProfileFromAnotherScheme(): void {
+        $document = [
+            '@context' => [
+                'https://www.w3.org/2018/credentials/v1',
+                'http://data.europa.eu/snb/model/context/edc-ap',
+            ],
+            'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
+            'credentialProfiles' => [[
+                'id' => 'http://example.test/profile',
+                'type' => 'Concept',
+                'inScheme' => ['id' => 'http://example.test/wrong-scheme'],
+            ]],
+            'credentialSchema' => ['id' => 'schema-1'],
+            'credentialSubject' => ['id' => 'subject-1'],
+            'displayParameter' => ['id' => 'display-1'],
+            'validFrom' => '2026-01-01T00:00:00Z',
+        ];
+
+        $this->expectExceptionMessage('ELM credential profile scheme');
+
+        (new CredentialDocumentValidator())->validate($document);
+    }
+
     public function testCredentialDocumentValidatorReportsMissingRequiredField(): void {
         $this->expectExceptionMessage('credentialProfiles');
 
@@ -200,7 +223,11 @@ final class EntityTest extends TestCase {
                 'http://data.europa.eu/snb/model/context/edc-ap',
             ],
             'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
-            'credentialProfiles' => [['id' => 'profile-1']],
+            'credentialProfiles' => [[
+                'id' => 'http://data.europa.eu/snb/credential/e34929035b',
+                'type' => 'Concept',
+                'inScheme' => ['id' => 'http://data.europa.eu/snb/credential/25831c2'],
+            ]],
             'credentialSchema' => ['id' => 'schema-1'],
             'credentialSubject' => ['id' => 'subject-1'],
             'displayParameter' => ['id' => 'display-1'],

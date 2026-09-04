@@ -11,6 +11,9 @@ use IsyThl\EuropeanDigitalCredentials\Claim;
 use IsyThl\EuropeanDigitalCredentials\Credential;
 use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
 use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
+use IsyThl\EuropeanDigitalCredentials\DisplayDetail;
+use IsyThl\EuropeanDigitalCredentials\IndividualDisplay;
+use IsyThl\EuropeanDigitalCredentials\MediaObject;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use PHPUnit\Framework\TestCase;
@@ -175,5 +178,55 @@ final class EntityTest extends TestCase
             'description',
             (new DisplayParameter('display-2', $language, $language, new LocalizedString(['en' => 'Title'])))->toArray(),
         );
+    }
+
+    public function testDisplayMediaObjectsSerializeAsNestedProfileObjects(): void
+    {
+        $language = new Concept(
+            'http://example.test/language/en',
+            new LocalizedString(['en' => 'English']),
+            new ConceptScheme('http://example.test/languages'),
+        );
+        $encoding = new Concept(
+            'http://data.europa.eu/snb/encoding/6146cde7dd',
+            new LocalizedString(['en' => 'base64']),
+            new ConceptScheme('http://data.europa.eu/snb/encoding/25831c2'),
+        );
+        $contentType = new Concept(
+            'http://publications.europa.eu/resource/authority/file-type/PNG',
+            new LocalizedString(['en' => 'PNG']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/file-type'),
+            'file-type',
+        );
+        $media = new MediaObject('media-1', 'aGVsbG8=', $encoding, $contentType);
+        $display = new IndividualDisplay(
+            'individual-1',
+            $language,
+            [new DisplayDetail('detail-1', 1, $media)],
+        );
+        $parameter = new DisplayParameter(
+            'display-1',
+            $language,
+            $language,
+            new LocalizedString(['en' => 'Title']),
+            null,
+            [$display],
+        );
+
+        self::assertSame('MediaObject', $parameter->toArray()['individualDisplay'][0]['displayDetail'][0]['image']['type']);
+        self::assertSame('aGVsbG8=', $parameter->toArray()['individualDisplay'][0]['displayDetail'][0]['image']['content']);
+    }
+
+    public function testDisplayDetailRejectsNonPositivePages(): void
+    {
+        $language = new Concept(
+            'http://example.test/language/en',
+            new LocalizedString(['en' => 'English']),
+            new ConceptScheme('http://example.test/languages'),
+        );
+        $media = new MediaObject('media-1', 'aGVsbG8=', $language, $language);
+
+        $this->expectException(InvalidCredentialException::class);
+        new DisplayDetail('detail-1', 0, $media);
     }
 }

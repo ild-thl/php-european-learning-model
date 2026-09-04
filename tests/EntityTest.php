@@ -9,6 +9,7 @@ use IsyThl\EuropeanDigitalCredentials\Concept;
 use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
 use IsyThl\EuropeanDigitalCredentials\Claim;
 use IsyThl\EuropeanDigitalCredentials\Address;
+use IsyThl\EuropeanDigitalCredentials\AwardingProcess;
 use IsyThl\EuropeanDigitalCredentials\ContactPoint;
 use IsyThl\EuropeanDigitalCredentials\Credential;
 use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
@@ -22,6 +23,9 @@ use IsyThl\EuropeanDigitalCredentials\MediaObject;
 use IsyThl\EuropeanDigitalCredentials\Note;
 use IsyThl\EuropeanDigitalCredentials\EmailAddress;
 use IsyThl\EuropeanDigitalCredentials\Location;
+use IsyThl\EuropeanDigitalCredentials\LearningAchievement;
+use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
+use IsyThl\EuropeanDigitalCredentials\Organisation;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use PHPUnit\Framework\TestCase;
@@ -346,5 +350,31 @@ final class EntityTest extends TestCase
 
         self::assertSame('did:example:issuer', $issuer->toArray()['id']);
         self::assertSame('DE-123', $issuer->toArray()['registration']['notation']);
+    }
+
+    public function testLearningAchievementSerializesRequiredClaimStructure(): void
+    {
+        $country = new Concept(
+            'http://publications.europa.eu/resource/authority/country/DEU',
+            new LocalizedString(['en' => 'Germany']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
+        );
+        $organisation = new Organisation(
+            'organisation-1',
+            new Location('location-1', new Address('address-1', $country, new Note('note-1', new LocalizedString(['en' => 'Berlin'])))),
+            new LocalizedString(['en' => 'Example Authority']),
+        );
+        $title = new LocalizedString(['en' => 'Digital Skills']);
+        $achievement = new LearningAchievement(
+            'achievement-1',
+            $title,
+            new AwardingProcess('awarding-1', $organisation),
+            new LearningAchievementSpecification('specification-1', $title, new LocalizedString(['en' => 'A course.'])),
+        );
+
+        $data = $achievement->toArray();
+        self::assertSame('LearningAchievement', $data['type']);
+        self::assertSame('Organisation', $data['awardedBy']['awardingBody']['type']);
+        self::assertSame(['en' => ['A course.']], $data['specifiedBy']['description']);
     }
 }

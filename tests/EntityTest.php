@@ -27,6 +27,8 @@ use IsyThl\EuropeanDigitalCredentials\Note;
 use IsyThl\EuropeanDigitalCredentials\EmailAddress;
 use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievement;
+use IsyThl\EuropeanDigitalCredentials\LearningActivity;
+use IsyThl\EuropeanDigitalCredentials\LearningActivitySpecification;
 use IsyThl\EuropeanDigitalCredentials\LearningAssessment;
 use IsyThl\EuropeanDigitalCredentials\LearningAssessmentSpecification;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
@@ -285,6 +287,48 @@ final class EntityTest extends TestCase {
 
         self::assertSame('Identifier', $achievement->toArray()['identifier'][0]['type']);
         self::assertSame('DS-001', $achievement->toArray()['identifier'][0]['notation']);
+    }
+
+    public function testLearningAchievementSerializesInfluencingActivity(): void {
+        $country = new Concept(
+            'http://example.test/country/DE',
+            new LocalizedString(['en' => 'Germany']),
+            new ConceptScheme('http://example.test/countries'),
+        );
+        $organisation = new Organisation(
+            'organisation-1',
+            new Location(
+                'location-1',
+                new Address(
+                    'address-1',
+                    $country,
+                    new Note('note-1', new LocalizedString(['en' => 'Berlin'])),
+                ),
+            ),
+            new LocalizedString(['en' => 'Example Authority']),
+        );
+        $activity = new LearningActivity(
+            'activity-1',
+            new LocalizedString(['en' => 'Digital micro-credential creation']),
+            new AwardingProcess('awarding-1', $organisation),
+            new LearningActivitySpecification(
+                'activity-spec-1',
+                new LocalizedString(['en' => 'Digital micro-credential creation']),
+            ),
+        );
+        $achievement = new LearningAchievement(
+            'achievement-1',
+            new LocalizedString(['en' => 'Digital Skills']),
+            new AwardingProcess('awarding-2', $organisation),
+            new LearningAchievementSpecification('specification-1', new LocalizedString(['en' => 'Digital Skills'])),
+            null,
+            [],
+            [],
+            [$activity],
+        );
+
+        self::assertSame('LearningActivity', $achievement->toArray()['influencedBy'][0]['type']);
+        self::assertSame('urn:epass:activity:activity-1', $achievement->toArray()['influencedBy'][0]['id']);
     }
 
     public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void {

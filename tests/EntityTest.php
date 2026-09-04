@@ -396,4 +396,45 @@ final class EntityTest extends TestCase
         self::assertSame('2', $specification->toArray()['creditPoint'][0]['point']);
         self::assertSame('Concept', $specification->toArray()['creditPoint'][0]['framework']['type']);
     }
+
+    public function testAchievementSpecificationSerializesLanguageCategoriesAndDurations(): void
+    {
+        $language = new Concept(
+            'http://publications.europa.eu/resource/authority/language/ENG',
+            new LocalizedString(['en' => 'English']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/language'),
+            'language',
+        );
+        $specification = new LearningAchievementSpecification(
+            'specification-1',
+            new LocalizedString(['en' => 'Digital skills']),
+            null,
+            [],
+            $language,
+            ['micro-module'],
+            'P1M',
+            'PT4H',
+        );
+
+        $data = $specification->toArray();
+        self::assertSame('ENG', substr($data['language'][0]['id'], -3));
+        self::assertSame(['micro-module'], $data['category']);
+        self::assertSame('P1M', $data['maximumDuration']);
+        self::assertSame('PT4H', $data['volumeOfLearning']);
+    }
+
+    public function testAchievementSpecificationRejectsMalformedDuration(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new LearningAchievementSpecification(
+            'specification-1',
+            new LocalizedString(['en' => 'Digital skills']),
+            null,
+            [],
+            null,
+            [],
+            'one month',
+        );
+    }
 }

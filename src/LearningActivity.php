@@ -14,8 +14,18 @@ final class LearningActivity extends Claim {
         public readonly AwardingProcess $awardedBy,
         public readonly LearningActivitySpecification $specifiedBy,
         public readonly ?LocalizedString $description = null,
+        /** @var list<LearningActivity> */
+        public readonly array $hasPart = [],
+        /** @var list<LearningActivity> */
+        public readonly array $isPartOf = [],
     ) {
         parent::__construct($id);
+        if (array_filter($hasPart, static fn ($activity): bool => !$activity instanceof self) !== []) {
+            throw new InvalidCredentialException('Activity parts must be LearningActivity objects.');
+        }
+        if (array_filter($isPartOf, static fn ($activity): bool => !$activity instanceof self) !== []) {
+            throw new InvalidCredentialException('Activity parents must be LearningActivity objects.');
+        }
     }
 
     /** @return array<string, mixed> */
@@ -29,6 +39,18 @@ final class LearningActivity extends Claim {
         ];
         if ($this->description !== null) {
             $data['description'] = $this->description->toArray();
+        }
+        if ($this->hasPart !== []) {
+            $data['hasPart'] = array_map(
+                static fn (self $activity): array => $activity->toArray(),
+                $this->hasPart,
+            );
+        }
+        if ($this->isPartOf !== []) {
+            $data['isPartOf'] = array_map(
+                static fn (self $activity): array => $activity->toArray(),
+                $this->isPartOf,
+            );
         }
 
         return $data;

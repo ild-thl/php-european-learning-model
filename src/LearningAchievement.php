@@ -22,6 +22,10 @@ final class LearningAchievement extends Claim {
         public readonly array $influencedBy = [],
         /** @var list<LearningEntitlement> */
         public readonly array $entitlesTo = [],
+        /** @var list<LearningAchievement> */
+        public readonly array $hasPart = [],
+        /** @var list<LearningAchievement> */
+        public readonly array $isPartOf = [],
     ) {
         parent::__construct($id);
         $invalidAssessments = array_filter(
@@ -54,6 +58,12 @@ final class LearningAchievement extends Claim {
         );
         if ($invalidEntitlements !== []) {
             throw new InvalidCredentialException('Achievement entitlements must be LearningEntitlement objects.');
+        }
+        if (array_filter($hasPart, static fn ($achievement): bool => !$achievement instanceof self) !== []) {
+            throw new InvalidCredentialException('Achievement parts must be LearningAchievement objects.');
+        }
+        if (array_filter($isPartOf, static fn ($achievement): bool => !$achievement instanceof self) !== []) {
+            throw new InvalidCredentialException('Achievement parents must be LearningAchievement objects.');
         }
     }
 
@@ -91,6 +101,18 @@ final class LearningAchievement extends Claim {
             $data['entitlesTo'] = array_map(
                 static fn (LearningEntitlement $entitlement): array => $entitlement->toArray(),
                 $this->entitlesTo,
+            );
+        }
+        if ($this->hasPart !== []) {
+            $data['hasPart'] = array_map(
+                static fn (self $achievement): array => $achievement->toArray(),
+                $this->hasPart,
+            );
+        }
+        if ($this->isPartOf !== []) {
+            $data['isPartOf'] = array_map(
+                static fn (self $achievement): array => $achievement->toArray(),
+                $this->isPartOf,
             );
         }
         return $data;

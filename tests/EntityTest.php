@@ -245,6 +245,14 @@ final class EntityTest extends TestCase {
             new Note('grade-1', new LocalizedString(['en' => 'Pass'])),
             $assessmentType,
             $specification,
+            [new LearningAssessment(
+                'assessment-part-1',
+                new AwardingProcess('awarding-2', $organisation),
+                new LocalizedString(['en' => 'Evidence review']),
+                new Note('grade-part-1', new LocalizedString(['en' => 'Pass'])),
+                $assessmentType,
+                $specification,
+            )],
         );
         $achievement = new LearningAchievement(
             'achievement-1',
@@ -257,6 +265,10 @@ final class EntityTest extends TestCase {
 
         self::assertSame('LearningAssessment', $achievement->toArray()['provenBy'][0]['type']);
         self::assertSame('Pass', $achievement->toArray()['provenBy'][0]['grade']['noteLiteral']['en'][0]);
+        self::assertSame(
+            'urn:epass:learningAssessment:assessment-part-1',
+            $achievement->toArray()['provenBy'][0]['hasPart'][0]['id'],
+        );
     }
 
     public function testLearningAchievementSerializesIdentifiers(): void {
@@ -317,6 +329,16 @@ final class EntityTest extends TestCase {
                 'activity-spec-1',
                 new LocalizedString(['en' => 'Digital micro-credential creation']),
             ),
+            null,
+            [new LearningActivity(
+                'activity-part-1',
+                new LocalizedString(['en' => 'Preparation']),
+                new AwardingProcess('awarding-1', $organisation),
+                new LearningActivitySpecification(
+                    'activity-spec-part-1',
+                    new LocalizedString(['en' => 'Preparation']),
+                ),
+            )],
         );
         $achievement = new LearningAchievement(
             'achievement-1',
@@ -331,6 +353,10 @@ final class EntityTest extends TestCase {
 
         self::assertSame('LearningActivity', $achievement->toArray()['influencedBy'][0]['type']);
         self::assertSame('urn:epass:activity:activity-1', $achievement->toArray()['influencedBy'][0]['id']);
+        self::assertSame(
+            'urn:epass:activity:activity-part-1',
+            $achievement->toArray()['influencedBy'][0]['hasPart'][0]['id'],
+        );
     }
 
     public function testLearningAchievementSerializesEntitlement(): void {

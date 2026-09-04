@@ -1,0 +1,115 @@
+<?php
+
+declare(strict_types=1);
+
+namespace IsyThl\EuropeanDigitalCredentials\Tests;
+
+use IsyThl\EuropeanDigitalCredentials\Entity;
+use IsyThl\EuropeanDigitalCredentials\Concept;
+use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
+use IsyThl\EuropeanDigitalCredentials\Claim;
+use IsyThl\EuropeanDigitalCredentials\Credential;
+use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
+use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
+use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+use IsyThl\EuropeanDigitalCredentials\LocalizedString;
+use PHPUnit\Framework\TestCase;
+
+final class EntityTest extends TestCase
+{
+    public function testSerializationIsDeterministicAndPreservesUnicode(): void
+    {
+        $entity = new class ('urn:test:credential') extends Entity {
+            public function toArray(): array
+            {
+                return ['id' => $this->id, 'label' => ['en' => ['Zoë']]];
+            }
+        };
+
+        $expected = '{"id":"urn:test:credential","label":{"en":["Zoë"]}}';
+
+        self::assertSame($expected, $entity->toJson());
+        self::assertSame($expected, $entity->toJson());
+    }
+
+    public function testGeneratedIdentifiersHaveCredentialUrnFormat(): void
+    {
+        $entity = new class extends Entity {
+            public function toArray(): array
+            {
+                return ['id' => $this->id];
+            }
+        };
+
+        self::assertMatchesRegularExpression('/^urn:credential:[0-9a-f]{32}$/', $entity->id);
+    }
+
+    public function testLocalizedValuesKeepLanguageMapAndArrayShape(): void
+    {
+        $localized = new LocalizedString(['en' => 'Course completion', 'de' => ['Kursabschluss']]);
+
+        self::assertSame([
+            'en' => ['Course completion'],
+            'de' => ['Kursabschluss'],
+        ], $localized->toArray());
+    }
+
+    public function testLocalizedValuesRejectMalformedLanguages(): void
+    {
+        $this->expectException(InvalidCredentialException::class);
+
+        new LocalizedString(['english' => 'Course completion']);
+    }
+
+    public function testConceptRoundTripsItsJsonLdShape(): void
+    {
+        $concept = new Concept(
+            'http://example.test/concept/one',
+            new LocalizedString(['en' => 'One']),
+            new ConceptScheme('http://example.test/scheme'),
+            'one',
+        );
+
+        self::assertSame($concept->toArray(), Concept::fromArray($concept->toArray())->toArray());
+    }
+
+    public function testConceptRejectsMissingProfileFields(): void
+    {
+        $this->expectException(InvalidCredentialException::class);
+
+        Concept::fromArray(['id' => 'http://example.test/concept/one']);
+    }
+
+    public function testCredentialIncludesTheGenericProfileByDefault(): void
+    {
+        $subject = new CredentialSubject(
+            'subject-1',
+            new LocalizedString(['en' => 'Ada']),
+            new LocalizedString(['en' => 'Lovelace']),
+            new LocalizedString(['en' => 'Ada Lovelace']),
+            [new class ('claim-1') extends Claim {
+                public function toArray(): array
+                {
+                    return ['id' => $this->id, 'type' => 'Claim'];
+                }
+            }],
+        );
+        $language = new Concept(
+            'http://publications.europa.eu/resource/authority/language/ENG',
+            new LocalizedString(['en' => 'English']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/language'),
+            'language',
+        );
+        $credential = new Credential(
+            'credential-1',
+            $subject,
+            new DisplayParameter('display-1', $language, $language, new LocalizedString(['en' => 'Title'])),
+            new \DateTimeImmutable('2024-01-01T00:00:00+01:00'),
+        );
+
+        self::assertSame(
+            'http://data.europa.eu/snb/credential/e34929035b',
+            $credential->toArray()['credentialProfiles'][0]['id'],
+        );
+    }
+}

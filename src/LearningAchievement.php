@@ -12,6 +12,8 @@ final class LearningAchievement extends Claim {
         public readonly AwardingProcess $awardedBy,
         public readonly LearningAchievementSpecification $specifiedBy,
         public readonly ?CreditPoint $creditReceived = null,
+        /** @var list<LearningAssessment> */
+        public readonly array $provenBy = [],
     ) {
         parent::__construct($id);
     }
@@ -26,6 +28,12 @@ final class LearningAchievement extends Claim {
         ];
         if ($this->creditReceived !== null) {
             $data['creditReceived'] = $this->creditReceived->toArray();
+        }
+        if ($this->provenBy !== []) {
+            $data['provenBy'] = array_map(
+                static fn (LearningAssessment $assessment): array => $assessment->toArray(),
+                $this->provenBy,
+            );
         }
         return $data;
     }

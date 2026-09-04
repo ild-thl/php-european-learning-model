@@ -27,10 +27,13 @@ use IsyThl\EuropeanDigitalCredentials\Note;
 use IsyThl\EuropeanDigitalCredentials\EmailAddress;
 use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievement;
+use IsyThl\EuropeanDigitalCredentials\LearningAssessment;
+use IsyThl\EuropeanDigitalCredentials\LearningAssessmentSpecification;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
 use IsyThl\EuropeanDigitalCredentials\LearningOutcome;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
 use IsyThl\EuropeanDigitalCredentials\Qualification;
+use IsyThl\EuropeanDigitalCredentials\GradingScheme;
 use IsyThl\EuropeanDigitalCredentials\WebResource;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
@@ -189,6 +192,67 @@ final class EntityTest extends TestCase {
 
         self::assertSame('Bachelor', $specification->toArray()['educationLevel'][0]['prefLabel']['en'][0]);
         self::assertSame('Computing', $specification->toArray()['educationSubject'][0]['prefLabel']['en'][0]);
+    }
+
+    public function testLearningAchievementSerializesProvenByAssessment(): void {
+        $country = new Concept(
+            'http://example.test/country/DE',
+            new LocalizedString(['en' => 'Germany']),
+            new ConceptScheme('http://example.test/countries'),
+        );
+        $organisation = new Organisation(
+            'organisation-1',
+            new Location(
+                'location-1',
+                new Address(
+                    'address-1',
+                    $country,
+                    new Note('note-1', new LocalizedString(['en' => 'Berlin'])),
+                ),
+            ),
+            new LocalizedString(['en' => 'Example Authority']),
+        );
+        $assessmentType = new Concept(
+            'http://example.test/assessment/exam',
+            new LocalizedString(['en' => 'Exam']),
+            new ConceptScheme('http://example.test/assessment-types'),
+        );
+        $language = new Concept(
+            'http://example.test/language/en',
+            new LocalizedString(['en' => 'English']),
+            new ConceptScheme('http://example.test/languages'),
+        );
+        $specification = new LearningAssessmentSpecification(
+            'assessment-spec-1',
+            new LocalizedString(['en' => 'Digital artefact assessment']),
+            $assessmentType,
+            new GradingScheme(
+                'grading-1',
+                new LocalizedString(['en' => 'Pass or fail']),
+                new LocalizedString(['en' => 'Simple grading']),
+            ),
+            $language,
+            $assessmentType,
+        );
+        $assessment = new LearningAssessment(
+            'assessment-1',
+            new AwardingProcess('awarding-2', $organisation),
+            new LocalizedString(['en' => 'Digital artefact assessment']),
+            new Note('grade-1', new LocalizedString(['en' => 'Pass'])),
+            $assessmentType,
+            $specification,
+        );
+        $achievement = new LearningAchievement(
+            'achievement-1',
+            new LocalizedString(['en' => 'Digital Skills']),
+            new AwardingProcess('awarding-1', $organisation),
+            new LearningAchievementSpecification('specification-1', new LocalizedString(['en' => 'Digital Skills'])),
+            null,
+            [$assessment],
+        );
+
+        self::assertSame('LearningAssessment', $achievement->toArray()['provenBy'][0]['type']);
+        self::assertSame('Pass', $achievement->toArray()['provenBy'][0]['grade']['noteLiteral']['en'][0]);
     }
 
     public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void {

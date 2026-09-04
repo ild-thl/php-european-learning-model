@@ -16,10 +16,12 @@ use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
 use IsyThl\EuropeanDigitalCredentials\DisplayDetail;
 use IsyThl\EuropeanDigitalCredentials\IndividualDisplay;
 use IsyThl\EuropeanDigitalCredentials\Identifier;
+use IsyThl\EuropeanDigitalCredentials\Issuer;
 use IsyThl\EuropeanDigitalCredentials\LegalIdentifier;
 use IsyThl\EuropeanDigitalCredentials\MediaObject;
 use IsyThl\EuropeanDigitalCredentials\Note;
 use IsyThl\EuropeanDigitalCredentials\EmailAddress;
+use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use PHPUnit\Framework\TestCase;
@@ -324,5 +326,25 @@ final class EntityTest extends TestCase
         self::assertSame('ContactPoint', $data['contactPoint'][0]['type']);
         self::assertSame('ana.andromeda@example.com', substr($data['contactPoint'][0]['emailAddress'][0]['id'], 7));
         self::assertSame(['en' => ['Via da Vinci, 12']], $data['contactPoint'][0]['address'][0]['fullAddress']['noteLiteral']);
+    }
+
+    public function testCredentialSerializesIssuerWithRegistrationAndRawIssuerId(): void
+    {
+        $country = new Concept(
+            'http://publications.europa.eu/resource/authority/country/DEU',
+            new LocalizedString(['en' => 'Germany']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/country'),
+            'country',
+        );
+        $address = new Address('address-1', $country, new Note('note-1', new LocalizedString(['en' => 'Berlin'])));
+        $issuer = new Issuer(
+            'did:example:issuer',
+            new Location('location-1', $address),
+            new LocalizedString(['en' => 'Example Authority']),
+            new LegalIdentifier('legal-1', 'DE-123', $country),
+        );
+
+        self::assertSame('did:example:issuer', $issuer->toArray()['id']);
+        self::assertSame('DE-123', $issuer->toArray()['registration']['notation']);
     }
 }

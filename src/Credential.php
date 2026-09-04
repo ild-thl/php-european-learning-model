@@ -24,6 +24,7 @@ final class Credential extends Entity
         public readonly ?DateTimeImmutable $issuanceDate = null,
         public readonly ?DateTimeImmutable $issued = null,
         public readonly ?DateTimeImmutable $validUntil = null,
+        public readonly ?Issuer $issuer = null,
     ) {
         parent::__construct($id);
         $this->credentialProfile = $credentialProfile ?? new Concept(
@@ -52,6 +53,9 @@ final class Credential extends Entity
         ];
         if ($this->expirationDate !== null) {
             $data['expirationDate'] = $this->formatDate($this->expirationDate);
+        }
+        if ($this->issuer !== null) {
+            $data['issuer'] = $this->issuer->toArray();
         }
         if ($this->issuanceDate !== null) {
             $data['issuanceDate'] = $this->formatDate($this->issuanceDate);

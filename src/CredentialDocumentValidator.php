@@ -62,6 +62,16 @@ final class CredentialDocumentValidator {
             if (($profile['type'] ?? null) !== 'Concept') {
                 throw new InvalidCredentialException('Credential profiles must be Concept objects.');
             }
+            if (
+                !is_string($profile['id'] ?? null)
+                || $profile['id'] === ''
+                || !is_array($profile['prefLabel'] ?? null)
+                || $profile['prefLabel'] === []
+            ) {
+                throw new InvalidCredentialException(
+                    'Credential profiles must contain id and prefLabel fields.',
+                );
+            }
             $profileScheme = $profile['inScheme'] ?? null;
             if (
                 !is_array($profileScheme)

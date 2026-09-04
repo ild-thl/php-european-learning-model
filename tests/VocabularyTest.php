@@ -13,6 +13,7 @@ use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyProvider;
 use IsyThl\EuropeanDigitalCredentials\JsonLdVocabularyProvider;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\RdfVocabularyProvider;
+use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
 use IsyThl\EuropeanDigitalCredentials\VocabularyResourceFetcher;
 use IsyThl\EuropeanDigitalCredentials\VocabularyScheme;
 use IsyThl\EuropeanDigitalCredentials\VocabularyProvider;
@@ -42,6 +43,21 @@ final class VocabularyTest extends TestCase {
         self::assertSame($concept, $provider->getConceptByNotation('one', $scheme->id));
         self::assertTrue($snapshot->contains($concept));
         self::assertSame('Eins', $snapshot->toArray()['concept'][0]['prefLabel']['de'][0]);
+    }
+
+    public function testProfileSchemeRegistryContainsStableIdentifiers(): void {
+        self::assertSame(
+            'http://publications.europa.eu/resource/authority/language',
+            ElmVocabularySchemes::LANGUAGE,
+        );
+        self::assertSame(
+            'http://data.europa.eu/snb/credential/25831c2',
+            ElmVocabularySchemes::CREDENTIAL,
+        );
+        self::assertSame(
+            'http://data.europa.eu/snb/assessment/25831c2',
+            ElmVocabularySchemes::ASSESSMENT,
+        );
     }
 
     public function testVocabularyRejectsConceptFromAnotherScheme(): void {

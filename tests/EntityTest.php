@@ -112,4 +112,43 @@ final class EntityTest extends TestCase
             $credential->toArray()['credentialProfiles'][0]['id'],
         );
     }
+
+    public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void
+    {
+        $subject = new CredentialSubject(
+            'subject-1',
+            new LocalizedString(['en' => 'Ada']),
+            new LocalizedString(['en' => 'Lovelace']),
+            new LocalizedString(['en' => 'Ada Lovelace']),
+            [new class ('claim-1') extends Claim {
+                public function toArray(): array
+                {
+                    return ['id' => $this->id, 'type' => 'Claim'];
+                }
+            }],
+        );
+        $language = new Concept(
+            'http://example.test/language/en',
+            new LocalizedString(['en' => 'English']),
+            new ConceptScheme('http://example.test/languages'),
+        );
+        $credential = new Credential(
+            'credential-1',
+            $subject,
+            new DisplayParameter('display-1', $language, $language, new LocalizedString(['en' => 'Title'])),
+            new \DateTimeImmutable('2024-01-01T00:00:00+01:00'),
+            null,
+            null,
+            new \DateTimeImmutable('2024-01-02T01:00:00+02:00'),
+            new \DateTimeImmutable('2024-01-03T03:00:00+03:00'),
+            new \DateTimeImmutable('2024-01-04T04:00:00+04:00'),
+        );
+
+        $data = $credential->toArray();
+        self::assertSame('2023-12-31T23:00:00Z', $data['validFrom']);
+        self::assertSame('2024-01-01T23:00:00Z', $data['issuanceDate']);
+        self::assertSame('2024-01-03T00:00:00Z', $data['issued']);
+        self::assertSame('2024-01-04T00:00:00Z', $data['validUntil']);
+        self::assertArrayNotHasKey('expirationDate', $data);
+    }
 }

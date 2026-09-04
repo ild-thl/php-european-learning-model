@@ -12,6 +12,7 @@ use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyCache;
 use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyProvider;
 use IsyThl\EuropeanDigitalCredentials\JsonLdVocabularyProvider;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
+use IsyThl\EuropeanDigitalCredentials\RdfVocabularyProvider;
 use IsyThl\EuropeanDigitalCredentials\VocabularyResourceFetcher;
 use IsyThl\EuropeanDigitalCredentials\VocabularyScheme;
 use PHPUnit\Framework\TestCase;
@@ -96,6 +97,50 @@ final class VocabularyTest extends TestCase {
         self::assertNotNull($scheme);
         self::assertSame('One', $scheme->concepts[0]->prefLabel->toArray()['en'][0]);
         self::assertSame('one', $provider->getConcept('http://example.test/concept/one', $schemeId)?->notation);
+    }
+
+    public function testRdfProviderParsesBrowseableScheme(): void {
+        $schemeId = 'http://example.test/scheme';
+        $fetcher = new class implements VocabularyResourceFetcher {
+            public function fetch(string $resource): string {
+                return <<<XML
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <skos:ConceptScheme rdf:about="{$resource}">
+        <skos:prefLabel xml:lang="en">Example</skos:prefLabel>
+    </skos:ConceptScheme>
+    <skos:Concept rdf:about="http://example.test/concept/one">
+        <skos:inScheme rdf:resource="{$resource}"/>
+        <skos:prefLabel xml:lang="en">One</skos:prefLabel>
+        <skos:prefLabel xml:lang="de">Eins</skos:prefLabel>
+        <skos:notation>one</skos:notation>
+    </skos:Concept>
+</rdf:RDF>
+XML;
+            }
+        };
+        $provider = new RdfVocabularyProvider($fetcher);
+
+        $scheme = $provider->getScheme($schemeId);
+
+        self::assertNotNull($scheme);
+        self::assertSame('Example', $scheme->title?->toArray()['en'][0]);
+        self::assertSame('Eins', $scheme->concepts[0]->prefLabel->toArray()['de'][0]);
+        self::assertSame('one', $scheme->concepts[0]->notation);
+    }
+
+    public function testRdfProviderRejectsMalformedXml(): void {
+        $fetcher = new class implements VocabularyResourceFetcher {
+            public function fetch(string $resource): string {
+                return '<rdf:RDF';
+            }
+        };
+        $provider = new RdfVocabularyProvider($fetcher);
+
+        $this->expectException(InvalidCredentialException::class);
+
+        $provider->getScheme('http://example.test/scheme');
     }
 
     public function testCachedProviderUsesTheCachedScheme(): void {

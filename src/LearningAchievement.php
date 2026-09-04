@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanDigitalCredentials;
 
+use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+
 final class LearningAchievement extends Claim {
 
     public function __construct(
@@ -14,8 +16,27 @@ final class LearningAchievement extends Claim {
         public readonly ?CreditPoint $creditReceived = null,
         /** @var list<LearningAssessment> */
         public readonly array $provenBy = [],
+        /** @var list<Identifier|LegalIdentifier> */
+        public readonly array $identifiers = [],
     ) {
         parent::__construct($id);
+        $invalidAssessments = array_filter(
+            $provenBy,
+            static fn ($assessment): bool => !$assessment instanceof LearningAssessment,
+        );
+        if ($invalidAssessments !== []) {
+            throw new InvalidCredentialException('Achievement assessments must be LearningAssessment objects.');
+        }
+        $invalidIdentifiers = array_filter(
+            $identifiers,
+            static fn ($identifier): bool => (
+                !$identifier instanceof Identifier
+                && !$identifier instanceof LegalIdentifier
+            ),
+        );
+        if ($invalidIdentifiers !== []) {
+            throw new InvalidCredentialException('Achievement identifiers must be Identifier objects.');
+        }
     }
 
     public function toArray(): array {
@@ -33,6 +54,12 @@ final class LearningAchievement extends Claim {
             $data['provenBy'] = array_map(
                 static fn (LearningAssessment $assessment): array => $assessment->toArray(),
                 $this->provenBy,
+            );
+        }
+        if ($this->identifiers !== []) {
+            $data['identifier'] = array_map(
+                static fn (Identifier|LegalIdentifier $identifier): array => $identifier->toArray(),
+                $this->identifiers,
             );
         }
         return $data;

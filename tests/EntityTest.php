@@ -255,6 +255,38 @@ final class EntityTest extends TestCase {
         self::assertSame('Pass', $achievement->toArray()['provenBy'][0]['grade']['noteLiteral']['en'][0]);
     }
 
+    public function testLearningAchievementSerializesIdentifiers(): void {
+        $country = new Concept(
+            'http://example.test/country/DE',
+            new LocalizedString(['en' => 'Germany']),
+            new ConceptScheme('http://example.test/countries'),
+        );
+        $organisation = new Organisation(
+            'organisation-1',
+            new Location(
+                'location-1',
+                new Address(
+                    'address-1',
+                    $country,
+                    new Note('note-1', new LocalizedString(['en' => 'Berlin'])),
+                ),
+            ),
+            new LocalizedString(['en' => 'Example Authority']),
+        );
+        $achievement = new LearningAchievement(
+            'achievement-1',
+            new LocalizedString(['en' => 'Digital Skills']),
+            new AwardingProcess('awarding-1', $organisation),
+            new LearningAchievementSpecification('specification-1', new LocalizedString(['en' => 'Digital Skills'])),
+            null,
+            [],
+            [new Identifier('achievement-code-1', 'DS-001', 'Achievement registry')],
+        );
+
+        self::assertSame('Identifier', $achievement->toArray()['identifier'][0]['type']);
+        self::assertSame('DS-001', $achievement->toArray()['identifier'][0]['notation']);
+    }
+
     public function testCredentialSerializesOptionalDatesInUtcAndOmitsUnsetDates(): void {
         $subject = new CredentialSubject(
             'subject-1',

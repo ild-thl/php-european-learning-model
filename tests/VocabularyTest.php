@@ -39,6 +39,7 @@ final class VocabularyTest extends TestCase {
 
         self::assertSame([$concept], $provider->getScheme($scheme->id)?->concepts);
         self::assertSame($concept, $provider->getConcept($concept->id, $scheme->id));
+        self::assertSame($concept, $provider->getConceptByNotation('one', $scheme->id));
         self::assertTrue($snapshot->contains($concept));
         self::assertSame('Eins', $snapshot->toArray()['concept'][0]['prefLabel']['de'][0]);
     }
@@ -171,6 +172,10 @@ XML;
 
             public function getConcept(string $conceptId, string $schemeId): ?Concept {
                 return $this->getScheme($schemeId)?->find($conceptId);
+            }
+
+            public function getConceptByNotation(string $notation, string $schemeId): ?Concept {
+                return $this->getScheme($schemeId)?->findByNotation($notation);
             }
         };
         $cached = new CachedVocabularyProvider($source, new InMemoryVocabularyCache());

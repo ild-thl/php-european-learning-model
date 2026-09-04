@@ -32,4 +32,8 @@ final class CachedVocabularyProvider implements VocabularyProvider {
     public function getConcept(string $conceptId, string $schemeId): ?Concept {
         return $this->getScheme($schemeId)?->find($conceptId);
     }
+
+    public function getConceptByNotation(string $notation, string $schemeId): ?Concept {
+        return $this->getScheme($schemeId)?->findByNotation($notation);
+    }
 }

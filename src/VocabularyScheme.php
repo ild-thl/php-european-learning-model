@@ -70,6 +70,16 @@ final class VocabularyScheme extends Entity {
         return null;
     }
 
+    public function findByNotation(string $notation): ?Concept {
+        foreach ($this->concepts as $concept) {
+            if ($concept->notation === $notation) {
+                return $concept;
+            }
+        }
+
+        return null;
+    }
+
     /** @return list<string> */
     private function conceptIds(): array {
         return array_map(static fn (Concept $concept): string => $concept->id, $this->concepts);

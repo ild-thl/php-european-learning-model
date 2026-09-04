@@ -59,6 +59,10 @@ final class RdfVocabularyProvider implements VocabularyProvider {
         return $this->getScheme($schemeId)?->find($conceptId);
     }
 
+    public function getConceptByNotation(string $notation, string $schemeId): ?Concept {
+        return $this->getScheme($schemeId)?->findByNotation($notation);
+    }
+
     private function parseXml(string $document): SimpleXMLElement {
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($document, SimpleXMLElement::class, LIBXML_NONET);

@@ -33,4 +33,8 @@ final class InMemoryVocabularyProvider implements VocabularyProvider {
     public function getConcept(string $conceptId, string $schemeId): ?Concept {
         return $this->schemes[$schemeId]?->find($conceptId);
     }
+
+    public function getConceptByNotation(string $notation, string $schemeId): ?Concept {
+        return $this->schemes[$schemeId]?->findByNotation($notation);
+    }
 }

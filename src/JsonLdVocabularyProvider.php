@@ -37,6 +37,10 @@ final class JsonLdVocabularyProvider implements VocabularyProvider {
         return $this->getScheme($schemeId)?->find($conceptId);
     }
 
+    public function getConceptByNotation(string $notation, string $schemeId): ?Concept {
+        return $this->getScheme($schemeId)?->findByNotation($notation);
+    }
+
     /** @param array<string, mixed> $data */
     private function parseScheme(string $schemeId, array $data): ?VocabularyScheme {
         $nodes = $data['@graph'] ?? $data['graph'] ?? [];

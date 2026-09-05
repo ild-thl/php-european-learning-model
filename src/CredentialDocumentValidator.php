@@ -17,6 +17,7 @@ final class CredentialDocumentValidator {
 
         $requiredFields = [
             '@context',
+            'id',
             'type',
             'credentialProfiles',
             'credentialSchema',
@@ -30,6 +31,9 @@ final class CredentialDocumentValidator {
                     sprintf('Credential document is missing required field "%s".', $field),
                 );
             }
+        }
+        if (!is_string($document['id']) || $document['id'] === '') {
+            throw new InvalidCredentialException('Credential document requires a non-empty id.');
         }
 
         $expectedContext = [

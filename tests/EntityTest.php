@@ -369,6 +369,7 @@ final class EntityTest extends TestCase {
 
     public function testCredentialDocumentValidatorRejectsProfileFromAnotherScheme(): void {
         $document = [
+            'id' => 'urn:credential:test-1',
             '@context' => [
                 'https://www.w3.org/2018/credentials/v1',
                 'http://data.europa.eu/snb/model/context/edc-ap',
@@ -406,6 +407,7 @@ final class EntityTest extends TestCase {
         $this->expectExceptionMessage('credentialProfiles');
 
         (new CredentialDocumentValidator())->validate([
+            'id' => 'urn:credential:test-2',
             '@context' => [
                 'https://www.w3.org/2018/credentials/v1',
                 'http://data.europa.eu/snb/model/context/edc-ap',
@@ -414,10 +416,45 @@ final class EntityTest extends TestCase {
         ]);
     }
 
+    public function testCredentialDocumentValidatorRejectsMissingIdentifier(): void {
+        $this->expectExceptionMessage('missing required field "id"');
+
+        (new CredentialDocumentValidator())->validate([
+            '@context' => [
+                'https://www.w3.org/2018/credentials/v1',
+                'http://data.europa.eu/snb/model/context/edc-ap',
+            ],
+            'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
+            'credentialProfiles' => [[
+                'id' => 'http://data.europa.eu/snb/credential/e34929035b',
+                'type' => 'Concept',
+                'inScheme' => ['id' => 'http://data.europa.eu/snb/credential/25831c2'],
+                'prefLabel' => ['en' => ['Generic']],
+            ]],
+            'credentialSchema' => [
+                'id' => 'http://data.europa.eu/snb/model/ap/edc-generic-full',
+                'type' => 'ShaclValidator2017',
+            ],
+            'credentialSubject' => [
+                'id' => 'subject-1', 'type' => 'Person',
+                'givenName' => ['en' => ['Ada']], 'familyName' => ['en' => ['Lovelace']],
+                'fullName' => ['en' => ['Ada Lovelace']],
+                'hasClaim' => [['id' => 'claim-1', 'type' => 'Claim']],
+            ],
+            'displayParameter' => [
+                'id' => 'display-1', 'type' => 'DisplayParameter',
+                'language' => ['id' => 'language-1'], 'primaryLanguage' => ['id' => 'language-1'],
+                'title' => ['en' => ['Title']],
+            ],
+            'validFrom' => '2026-01-01T00:00:00Z',
+        ]);
+    }
+
     public function testCredentialDocumentValidatorRejectsMalformedDates(): void {
         $this->expectExceptionMessage('validFrom');
 
         (new CredentialDocumentValidator())->validate([
+            'id' => 'urn:credential:test-3',
             '@context' => [
                 'https://www.w3.org/2018/credentials/v1',
                 'http://data.europa.eu/snb/model/context/edc-ap',
@@ -451,6 +488,7 @@ final class EntityTest extends TestCase {
         $this->expectExceptionMessage('credentialSubject');
 
         (new CredentialDocumentValidator())->validate([
+            'id' => 'urn:credential:test-4',
             '@context' => [
                 'https://www.w3.org/2018/credentials/v1',
                 'http://data.europa.eu/snb/model/context/edc-ap',
@@ -484,6 +522,7 @@ final class EntityTest extends TestCase {
         $this->expectExceptionMessage('issuer');
 
         (new CredentialDocumentValidator())->validate([
+            'id' => 'urn:credential:test-5',
             '@context' => [
                 'https://www.w3.org/2018/credentials/v1',
                 'http://data.europa.eu/snb/model/context/edc-ap',
@@ -518,6 +557,7 @@ final class EntityTest extends TestCase {
         $this->expectExceptionMessage('hasClaim');
 
         (new CredentialDocumentValidator())->validate([
+            'id' => 'urn:credential:test-6',
             '@context' => [
                 'https://www.w3.org/2018/credentials/v1',
                 'http://data.europa.eu/snb/model/context/edc-ap',
@@ -551,6 +591,7 @@ final class EntityTest extends TestCase {
         $this->expectExceptionMessage('hasClaim');
 
         (new CredentialDocumentValidator())->validate([
+            'id' => 'urn:credential:test-7',
             '@context' => [
                 'https://www.w3.org/2018/credentials/v1',
                 'http://data.europa.eu/snb/model/context/edc-ap',

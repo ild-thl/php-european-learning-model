@@ -7,6 +7,7 @@ namespace IsyThl\EuropeanDigitalCredentials\Tests;
 use IsyThl\EuropeanDigitalCredentials\Concept;
 use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
 use IsyThl\EuropeanDigitalCredentials\CachedVocabularyProvider;
+use IsyThl\EuropeanDigitalCredentials\Clock;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyCache;
 use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyProvider;
@@ -480,6 +481,26 @@ XML;
         $cached->getScheme($schemeId);
 
         self::assertSame(1, $source->calls);
+    }
+
+    public function testInMemoryCacheExpiresEntriesAtTheConfiguredTtl(): void {
+        $clock = new class implements Clock {
+            public int $timestamp = 100;
+
+            public function now(): int {
+                return $this->timestamp;
+            }
+        };
+        $schemeId = 'http://example.test/scheme';
+        $scheme = new VocabularyScheme($schemeId, new ConceptScheme($schemeId));
+        $cache = new InMemoryVocabularyCache($clock);
+
+        $cache->set($schemeId, $scheme, 10);
+        self::assertSame($scheme, $cache->get($schemeId));
+
+        $clock->timestamp = 110;
+
+        self::assertNull($cache->get($schemeId));
     }
 
     public function testJsonLdProviderRejectsOversizedResponse(): void {

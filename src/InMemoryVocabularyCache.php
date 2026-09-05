@@ -6,6 +6,9 @@ namespace IsyThl\EuropeanDigitalCredentials;
 
 final class InMemoryVocabularyCache implements VocabularyCache {
 
+    public function __construct(private readonly Clock $clock = new SystemClock()) {
+    }
+
     /** @var array<string, array{scheme: VocabularyScheme, expiresAt: int}> */
     private array $entries = [];
 
@@ -14,7 +17,7 @@ final class InMemoryVocabularyCache implements VocabularyCache {
         if ($entry === null) {
             return null;
         }
-        if ($entry['expiresAt'] <= time()) {
+        if ($entry['expiresAt'] <= $this->clock->now()) {
             unset($this->entries[$key]);
             return null;
         }
@@ -25,7 +28,7 @@ final class InMemoryVocabularyCache implements VocabularyCache {
     public function set(string $key, VocabularyScheme $scheme, int $ttlSeconds): void {
         $this->entries[$key] = [
             'scheme' => $scheme,
-            'expiresAt' => time() + $ttlSeconds,
+            'expiresAt' => $this->clock->now() + $ttlSeconds,
         ];
     }
 }

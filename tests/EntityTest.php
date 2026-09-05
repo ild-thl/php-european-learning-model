@@ -133,6 +133,37 @@ final class EntityTest extends TestCase {
         (new CredentialDocumentValidator())->validateJson($credential->toJson());
     }
 
+    public function testEquivalentCredentialsSerializeToIdenticalUnsignedBytes(): void {
+        $createCredential = static function (): Credential {
+            $subject = new CredentialSubject(
+                'subject-1',
+                new LocalizedString(['en' => 'Ada']),
+                new LocalizedString(['en' => 'Lovelace']),
+                new LocalizedString(['en' => 'Ada Lovelace']),
+                [new class ('claim-1') extends Claim {
+                    public function toArray(): array {
+                        return ['id' => $this->id, 'type' => 'Claim'];
+                    }
+                }],
+            );
+            $language = new Concept(
+                'http://publications.europa.eu/resource/authority/language/ENG',
+                new LocalizedString(['en' => 'English']),
+                new ConceptScheme(ElmVocabularySchemes::LANGUAGE),
+                'language',
+            );
+
+            return new Credential(
+                'credential-1',
+                $subject,
+                new DisplayParameter('display-1', $language, $language, new LocalizedString(['en' => 'Title'])),
+                new \DateTimeImmutable('2024-01-01T00:00:00+01:00'),
+            );
+        };
+
+        self::assertSame($createCredential()->toJson(), $createCredential()->toJson());
+    }
+
     public function testCredentialRejectsProfileFromAnotherScheme(): void {
         $this->expectException(\IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException::class);
 

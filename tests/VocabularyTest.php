@@ -226,7 +226,17 @@ final class VocabularyTest extends TestCase {
             'http://data.europa.eu/snb/assessment/25831c2',
             ElmVocabularySchemes::ASSESSMENT,
         );
-        self::assertCount(24, ElmVocabularySchemes::all());
+        self::assertCount(23, ElmVocabularySchemes::all());
+    }
+
+    public function testEveryRegisteredSchemeHasAnOwnershipClassification(): void {
+        $schemes = ElmVocabularySchemes::all();
+        $ownership = ElmVocabularySchemes::ownership();
+
+        self::assertSame(array_keys($schemes), array_keys($ownership));
+        self::assertNotContains('ACCREDITATION', array_keys($schemes));
+        self::assertContains('model-enforced', $ownership);
+        self::assertContains('search-backed', $ownership);
     }
 
     public function testRdfProviderParsesEveryRegisteredSchemeWithTheSameContract(): void {

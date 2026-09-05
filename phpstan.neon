@@ -3,6 +3,4 @@ parameters:
     treatPhpDocTypesAsCertain: false
     paths:
         - src
-    excludePaths:
-        - src/Legacy
     tmpDir: build/phpstan

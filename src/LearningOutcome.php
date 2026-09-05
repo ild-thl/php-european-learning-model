@@ -28,6 +28,11 @@ final class LearningOutcome extends Entity {
         ) {
             throw new InvalidCredentialException('Learning outcome skills must be concepts.');
         }
+        ConceptAssertions::assertSchemes(
+            $relatedSkills,
+            ElmVocabularySchemes::DCF_SKILLS,
+            'relatedSkills',
+        );
         if (
             array_filter(
                 $additionalNotes,

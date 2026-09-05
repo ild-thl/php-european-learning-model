@@ -223,6 +223,36 @@ final class EntityTest extends TestCase {
         self::assertSame('http://example.test/workshop', $specification->toArray()['dcType']['id']);
     }
 
+    public function testLearningOutcomeUsesTheDcfSkillsScheme(): void {
+        $skill = new Concept(
+            'http://example.test/skill',
+            new LocalizedString(['en' => 'Skill']),
+            new ConceptScheme(ElmVocabularySchemes::DCF_SKILLS),
+        );
+
+        $outcome = new LearningOutcome(
+            'outcome-1',
+            new LocalizedString(['en' => 'Outcome']),
+            relatedSkills: [$skill],
+        );
+
+        self::assertSame('http://example.test/skill', $outcome->toArray()['relatedSkills'][0]['id']);
+    }
+
+    public function testLearningOutcomeRejectsSkillsFromAnotherScheme(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new LearningOutcome(
+            'outcome-1',
+            new LocalizedString(['en' => 'Outcome']),
+            relatedSkills: [new Concept(
+                'http://example.test/skill',
+                new LocalizedString(['en' => 'Skill']),
+                new ConceptScheme(ElmVocabularySchemes::ESCO_SKILLS),
+            )],
+        );
+    }
+
     public function testAccreditationSerializesControlledConceptFields(): void {
         $concept = static function (string $id, string $scheme): Concept {
             return new Concept(
@@ -991,7 +1021,7 @@ final class EntityTest extends TestCase {
         $skill = new Concept(
             'http://example.test/skill/one',
             new LocalizedString(['en' => 'Problem solving']),
-            new ConceptScheme('http://example.test/skills'),
+            new ConceptScheme(ElmVocabularySchemes::DCF_SKILLS),
         );
         $specification = new LearningAchievementSpecification(
             'specification-1',

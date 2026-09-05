@@ -15,7 +15,6 @@ final class ElmVocabularySchemes {
     public const string LEARNING_ACTIVITY = 'http://data.europa.eu/snb/learning-activity/25831c2';
     public const string ASSESSMENT = 'http://data.europa.eu/snb/assessment/25831c2';
     public const string ISCED_F = 'http://data.europa.eu/snb/isced-f/25831c2';
-    public const string ACCREDITATION = 'http://data.europa.eu/snb/accreditation/25831c2';
     public const string ENTITLEMENT = 'http://data.europa.eu/snb/entitlement/25831c2';
     public const string ESCO_SKILLS = 'http://data.europa.eu/esco/concept-scheme/skills';
     public const string ACCREDITATION_DECISION = 'http://data.europa.eu/snb/accreditation-decision/25831c2';
@@ -43,7 +42,6 @@ final class ElmVocabularySchemes {
             'LEARNING_ACTIVITY' => self::LEARNING_ACTIVITY,
             'ASSESSMENT' => self::ASSESSMENT,
             'ISCED_F' => self::ISCED_F,
-            'ACCREDITATION' => self::ACCREDITATION,
             'ENTITLEMENT' => self::ENTITLEMENT,
             'ESCO_SKILLS' => self::ESCO_SKILLS,
             'ACCREDITATION_DECISION' => self::ACCREDITATION_DECISION,
@@ -73,5 +71,34 @@ final class ElmVocabularySchemes {
             self::DCF_SKILLS,
             self::OCCUPATIONS,
         ], true);
+    }
+
+    /** @return array<string, 'model-enforced'|'search-backed'> */
+    public static function ownership(): array {
+        return [
+            'LANGUAGE' => 'search-backed',
+            'COUNTRY' => 'search-backed',
+            'CREDENTIAL' => 'model-enforced',
+            'EQF' => 'model-enforced',
+            'QDR' => 'search-backed',
+            'LEARNING_SETTING' => 'model-enforced',
+            'LEARNING_ACTIVITY' => 'model-enforced',
+            'ASSESSMENT' => 'model-enforced',
+            'ISCED_F' => 'search-backed',
+            'ENTITLEMENT' => 'model-enforced',
+            'ESCO_SKILLS' => 'search-backed',
+            'ACCREDITATION_DECISION' => 'model-enforced',
+            'ACCREDITATION_STATUS' => 'model-enforced',
+            'ATU' => 'search-backed',
+            'CONTENT_ENCODING' => 'model-enforced',
+            'CONTENT_TYPE' => 'search-backed',
+            'EDUCATION_CREDIT' => 'model-enforced',
+            'LEARNING_OPPORTUNITY' => 'model-enforced',
+            'SKILL_REUSE_LEVEL' => 'model-enforced',
+            'SUPERVISION_VERIFICATION' => 'model-enforced',
+            'TARGET_GROUP' => 'model-enforced',
+            'DCF_SKILLS' => 'search-backed',
+            'OCCUPATIONS' => 'search-backed',
+        ];
     }
 }

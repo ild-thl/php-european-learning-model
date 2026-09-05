@@ -55,6 +55,12 @@ final class CredentialDocumentValidator {
         $this->assertEntityShape($document['credentialSchema'], 'credentialSchema', 'ShaclValidator2017');
         $this->assertEntityShape($document['credentialSubject'], 'credentialSubject', 'Person');
         $this->assertEntityShape($document['displayParameter'], 'displayParameter', 'DisplayParameter');
+        if (array_key_exists('issuer', $document)) {
+            if (!is_array($document['issuer']) || array_is_list($document['issuer'])) {
+                throw new InvalidCredentialException('Credential field "issuer" has an invalid shape.');
+            }
+            $this->assertEntityShape($document['issuer'], 'issuer', 'Organisation');
+        }
         if ($document['credentialSchema']['id'] !== 'http://data.europa.eu/snb/model/ap/edc-generic-full') {
             throw new InvalidCredentialException('Credential schema has an unsupported identifier.');
         }

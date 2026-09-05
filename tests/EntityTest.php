@@ -456,6 +456,32 @@ final class EntityTest extends TestCase {
         ]);
     }
 
+    public function testCredentialDocumentValidatorRejectsMalformedIssuer(): void {
+        $this->expectExceptionMessage('issuer');
+
+        (new CredentialDocumentValidator())->validate([
+            '@context' => [
+                'https://www.w3.org/2018/credentials/v1',
+                'http://data.europa.eu/snb/model/context/edc-ap',
+            ],
+            'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
+            'credentialProfiles' => [[
+                'id' => 'http://data.europa.eu/snb/credential/e34929035b',
+                'type' => 'Concept',
+                'inScheme' => ['id' => 'http://data.europa.eu/snb/credential/25831c2'],
+                'prefLabel' => ['en' => ['Generic']],
+            ]],
+            'credentialSchema' => [
+                'id' => 'http://data.europa.eu/snb/model/ap/edc-generic-full',
+                'type' => 'ShaclValidator2017',
+            ],
+            'credentialSubject' => ['id' => 'subject-1', 'type' => 'Person'],
+            'displayParameter' => ['id' => 'display-1', 'type' => 'DisplayParameter'],
+            'issuer' => ['id' => 'issuer-1', 'type' => 'Person'],
+            'validFrom' => '2026-01-01T00:00:00Z',
+        ]);
+    }
+
     public function testRepresentativeFixtureSharesStableElmProfileFields(): void {
         $fixture = json_decode(
             (string) file_get_contents(__DIR__ . '/../resources/profile/AA-Annex1-MC-unsigned.json'),

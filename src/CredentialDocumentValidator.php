@@ -55,6 +55,22 @@ final class CredentialDocumentValidator {
         $this->assertEntityShape($document['credentialSchema'], 'credentialSchema', 'ShaclValidator2017');
         $this->assertEntityShape($document['credentialSubject'], 'credentialSubject', 'Person');
         $this->assertEntityShape($document['displayParameter'], 'displayParameter', 'DisplayParameter');
+        $this->assertRequiredFields(
+            $document['credentialSubject'],
+            'credentialSubject',
+            ['givenName', 'familyName', 'fullName', 'hasClaim'],
+        );
+        if (
+            !is_array($document['credentialSubject']['hasClaim'])
+            || $document['credentialSubject']['hasClaim'] === []
+        ) {
+            throw new InvalidCredentialException('Credential subject must contain at least one claim.');
+        }
+        $this->assertRequiredFields(
+            $document['displayParameter'],
+            'displayParameter',
+            ['language', 'primaryLanguage', 'title'],
+        );
         if (array_key_exists('issuer', $document)) {
             if (!is_array($document['issuer']) || array_is_list($document['issuer'])) {
                 throw new InvalidCredentialException('Credential field "issuer" has an invalid shape.');
@@ -136,6 +152,20 @@ final class CredentialDocumentValidator {
             throw new InvalidCredentialException(
                 sprintf('Credential field "%s" must be a %s object with an id.', $field, $type),
             );
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $entity
+     * @param list<string> $fields
+     */
+    private function assertRequiredFields(array $entity, string $entityName, array $fields): void {
+        foreach ($fields as $field) {
+            if (!array_key_exists($field, $entity) || !is_array($entity[$field]) || $entity[$field] === []) {
+                throw new InvalidCredentialException(
+                    sprintf('Credential %s is missing required field "%s".', $entityName, $field),
+                );
+            }
         }
     }
 }

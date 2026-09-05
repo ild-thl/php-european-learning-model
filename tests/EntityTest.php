@@ -380,9 +380,12 @@ final class EntityTest extends TestCase {
                 'inScheme' => ['id' => 'http://example.test/wrong-scheme'],
                 'prefLabel' => ['en' => ['Profile']],
             ]],
-            'credentialSchema' => ['id' => 'schema-1'],
-            'credentialSubject' => ['id' => 'subject-1'],
-            'displayParameter' => ['id' => 'display-1'],
+            'credentialSchema' => [
+                'id' => 'http://data.europa.eu/snb/model/ap/edc-generic-full',
+                'type' => 'ShaclValidator2017',
+            ],
+            'credentialSubject' => ['id' => 'subject-1', 'type' => 'Person'],
+            'displayParameter' => ['id' => 'display-1', 'type' => 'DisplayParameter'],
             'validFrom' => '2026-01-01T00:00:00Z',
         ];
 
@@ -418,10 +421,38 @@ final class EntityTest extends TestCase {
                 'inScheme' => ['id' => 'http://data.europa.eu/snb/credential/25831c2'],
                 'prefLabel' => ['en' => ['Generic']],
             ]],
-            'credentialSchema' => ['id' => 'schema-1'],
-            'credentialSubject' => ['id' => 'subject-1'],
-            'displayParameter' => ['id' => 'display-1'],
+            'credentialSchema' => [
+                'id' => 'http://data.europa.eu/snb/model/ap/edc-generic-full',
+                'type' => 'ShaclValidator2017',
+            ],
+            'credentialSubject' => ['id' => 'subject-1', 'type' => 'Person'],
+            'displayParameter' => ['id' => 'display-1', 'type' => 'DisplayParameter'],
             'validFrom' => '2026-01-01',
+        ]);
+    }
+
+    public function testCredentialDocumentValidatorRejectsInvalidNestedEntityTypes(): void {
+        $this->expectExceptionMessage('credentialSubject');
+
+        (new CredentialDocumentValidator())->validate([
+            '@context' => [
+                'https://www.w3.org/2018/credentials/v1',
+                'http://data.europa.eu/snb/model/context/edc-ap',
+            ],
+            'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
+            'credentialProfiles' => [[
+                'id' => 'http://data.europa.eu/snb/credential/e34929035b',
+                'type' => 'Concept',
+                'inScheme' => ['id' => 'http://data.europa.eu/snb/credential/25831c2'],
+                'prefLabel' => ['en' => ['Generic']],
+            ]],
+            'credentialSchema' => [
+                'id' => 'http://data.europa.eu/snb/model/ap/edc-generic-full',
+                'type' => 'ShaclValidator2017',
+            ],
+            'credentialSubject' => ['id' => 'subject-1', 'type' => 'Organisation'],
+            'displayParameter' => ['id' => 'display-1', 'type' => 'DisplayParameter'],
+            'validFrom' => '2026-01-01T00:00:00Z',
         ]);
     }
 

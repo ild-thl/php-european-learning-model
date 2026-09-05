@@ -52,6 +52,12 @@ final class CredentialDocumentValidator {
                 throw new InvalidCredentialException(sprintf('Credential field "%s" has an invalid shape.', $field));
             }
         }
+        $this->assertEntityShape($document['credentialSchema'], 'credentialSchema', 'ShaclValidator2017');
+        $this->assertEntityShape($document['credentialSubject'], 'credentialSubject', 'Person');
+        $this->assertEntityShape($document['displayParameter'], 'displayParameter', 'DisplayParameter');
+        if ($document['credentialSchema']['id'] !== 'http://data.europa.eu/snb/model/ap/edc-generic-full') {
+            throw new InvalidCredentialException('Credential schema has an unsupported identifier.');
+        }
         if ($document['credentialProfiles'] === []) {
             throw new InvalidCredentialException('Credential profiles must contain at least one profile.');
         }
@@ -116,5 +122,14 @@ final class CredentialDocumentValidator {
         );
 
         return $date !== false && $date->format('Y-m-d\TH:i:s\Z') === $value;
+    }
+
+    /** @param array<string, mixed> $entity */
+    private function assertEntityShape(array $entity, string $field, string $type): void {
+        if (!is_string($entity['id'] ?? null) || $entity['id'] === '' || ($entity['type'] ?? null) !== $type) {
+            throw new InvalidCredentialException(
+                sprintf('Credential field "%s" must be a %s object with an id.', $field, $type),
+            );
+        }
     }
 }

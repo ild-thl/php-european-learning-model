@@ -146,7 +146,10 @@ The package is not yet concept-complete. Remaining legacy controlled fields
 include application-specific qualification-code schemes. Achievement
 specification, learning-outcome, entitlement-occupation, and accreditation
 controlled fields currently present in the package enforce their corresponding
-scheme rules at construction time.
+scheme rules at construction time. Qualification codes are therefore accepted
+as typed concepts with an explicit scheme supplied by the application; the
+package preserves that scheme and does not claim a universal qualification
+framework URI.
 
 Vocabulary responsibilities are deliberately split:
 

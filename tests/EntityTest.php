@@ -1051,6 +1051,12 @@ final class EntityTest extends TestCase {
             new LocalizedString(['en' => 'National level 4']),
             new ConceptScheme('http://data.europa.eu/snb/qdr/c_ef113b94'),
         );
+        $qualificationCode = new Concept(
+            'http://example.test/qualification-framework/code-123',
+            new LocalizedString(['en' => 'Example qualification code']),
+            new ConceptScheme('http://example.test/qualification-framework'),
+            'code-123',
+        );
         $qualification = new Qualification(
             'qualification-1',
             new LocalizedString(['en' => 'Qualification']),
@@ -1061,14 +1067,18 @@ final class EntityTest extends TestCase {
             null,
             null,
             null,
-            [],
-            $eqf,
-            [$nqf],
+            qualificationCodes: [$qualificationCode],
+            eqfLevel: $eqf,
+            nqfLevels: [$nqf],
         );
 
         $data = $qualification->toArray();
         self::assertSame('http://data.europa.eu/snb/eqf/level-4', $data['eqfLevel']['id']);
         self::assertSame('http://example.test/nqf/level-4', $data['nqfLevel'][0]['id']);
+        self::assertSame(
+            'http://example.test/qualification-framework',
+            $data['qualificationCodes'][0]['inScheme']['id'],
+        );
     }
 
     public function testLearningOutcomeAndSpecificationSerializeAdditionalNotes(): void {

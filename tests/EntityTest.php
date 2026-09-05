@@ -814,6 +814,23 @@ final class EntityTest extends TestCase {
         self::assertArrayNotHasKey('@context', $credential);
     }
 
+    public function testBundledElmProfileResourceContainsExpectedShaclShapes(): void {
+        $profile = (string) file_get_contents(__DIR__ . '/../resources/profile/EDC-generic-full.rdf');
+
+        self::assertStringContainsString(
+            'http://data.europa.eu/snb/model/ap/edc-generic-full',
+            $profile,
+        );
+        self::assertStringContainsString(
+            'http://data.europa.eu/snb/model/ap/edc-generic-full/EuropeanDigitalCredentialShapeCV',
+            $profile,
+        );
+        self::assertStringContainsString(
+            'http://data.europa.eu/snb/model/ap/edc-generic-full/DisplayParameterCV',
+            $profile,
+        );
+    }
+
     public function testSpecificationSerializesEducationConcepts(): void {
         $level = new Concept(
             'http://example.test/education-level/6',

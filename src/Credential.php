@@ -38,6 +38,17 @@ final class Credential extends Entity {
                 'Credential profile must belong to the ELM credential profile scheme.',
             );
         }
+        $dates = [
+            'expirationDate' => $expirationDate,
+            'issuanceDate' => $issuanceDate,
+            'issued' => $issued,
+            'validUntil' => $validUntil,
+        ];
+        foreach ($dates as $field => $date) {
+            if ($date !== null && $date < $validFrom) {
+                throw new InvalidCredentialException(sprintf('Credential %s must not precede validFrom.', $field));
+            }
+        }
     }
 
     public readonly Concept $credentialProfile;

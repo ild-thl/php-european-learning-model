@@ -205,6 +205,41 @@ final class EntityTest extends TestCase {
         );
     }
 
+    public function testCredentialRejectsOptionalDateBeforeValidFrom(): void {
+        $this->expectExceptionMessage('expirationDate must not precede validFrom');
+
+        new Credential(
+            'credential-1',
+            new CredentialSubject(
+                'subject-1',
+                new LocalizedString(['en' => 'Ada']),
+                new LocalizedString(['en' => 'Lovelace']),
+                new LocalizedString(['en' => 'Ada Lovelace']),
+                [new class ('claim-1') extends Claim {
+                    public function toArray(): array {
+                        return ['id' => $this->id, 'type' => 'Claim'];
+                    }
+                }],
+            ),
+            new DisplayParameter(
+                'display-1',
+                new Concept(
+                    'http://publications.europa.eu/resource/authority/language/ENG',
+                    new LocalizedString(['en' => 'English']),
+                    new ConceptScheme(ElmVocabularySchemes::LANGUAGE),
+                ),
+                new Concept(
+                    'http://publications.europa.eu/resource/authority/language/ENG',
+                    new LocalizedString(['en' => 'English']),
+                    new ConceptScheme(ElmVocabularySchemes::LANGUAGE),
+                ),
+                new LocalizedString(['en' => 'Title']),
+            ),
+            new \DateTimeImmutable('2026-01-02T00:00:00Z'),
+            expirationDate: new \DateTimeImmutable('2026-01-01T00:00:00Z'),
+        );
+    }
+
     public function testCredentialDocumentValidatorRejectsJsonArrays(): void {
         $this->expectException(InvalidCredentialException::class);
 

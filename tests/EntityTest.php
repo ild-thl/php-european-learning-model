@@ -456,6 +456,27 @@ final class EntityTest extends TestCase {
         ]);
     }
 
+    public function testRepresentativeFixtureSharesStableElmProfileFields(): void {
+        $fixture = json_decode(
+            (string) file_get_contents(__DIR__ . '/../resources/profile/AA-Annex1-MC-unsigned.json'),
+            true,
+            512,
+            JSON_THROW_ON_ERROR,
+        );
+        $credential = $fixture['credential'];
+
+        self::assertSame(['VerifiableCredential', 'EuropeanDigitalCredential'], $credential['type']);
+        self::assertSame(
+            'http://data.europa.eu/snb/model/ap/edc-generic-full',
+            $credential['credentialSchema'][0]['id'],
+        );
+        self::assertSame('ShaclValidator2017', $credential['credentialSchema'][0]['type']);
+        self::assertSame('Person', $credential['credentialSubject']['type']);
+        self::assertSame('DisplayParameter', $credential['displayParameter']['type']);
+        self::assertSame('2024-01-01T00:00:00+01:00', $credential['validFrom']);
+        self::assertArrayNotHasKey('@context', $credential);
+    }
+
     public function testSpecificationSerializesEducationConcepts(): void {
         $level = new Concept(
             'http://example.test/education-level/6',

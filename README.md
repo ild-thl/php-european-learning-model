@@ -136,6 +136,11 @@ membership policies are enforced for credential profiles, languages, countries,
 education credits, EQF/NQF, assessments, verification, entitlements, media,
 and ISCED-F subjects. Complete SHACL validation is still being extracted.
 
+The supplied `AA-Annex1-MC-unsigned.json` is retained as profile evidence. Its
+legacy `credential` wrapper, schema array, missing JSON-LD context, and offset
+date are intentional fixture differences; generated package documents use the
+strict top-level ELM shape, context, schema object, and UTC date representation.
+
 The legacy concept classes are represented as ordinary `Concept` values with
 field-owned scheme assertions rather than empty package subclasses. This
 preserves the ELM JSON-LD shape while rejecting a concept from the wrong

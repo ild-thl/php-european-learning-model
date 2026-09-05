@@ -81,6 +81,11 @@ final class CredentialDocumentValidator {
             'displayParameter',
             ['language', 'primaryLanguage', 'title'],
         );
+        $this->assertConceptReference($document['displayParameter']['language'], 'displayParameter.language');
+        $this->assertConceptReference(
+            $document['displayParameter']['primaryLanguage'],
+            'displayParameter.primaryLanguage',
+        );
         if (array_key_exists('issuer', $document)) {
             if (!is_array($document['issuer']) || array_is_list($document['issuer'])) {
                 throw new InvalidCredentialException('Credential field "issuer" has an invalid shape.');
@@ -203,6 +208,26 @@ final class CredentialDocumentValidator {
             || $entity['type'] === ''
         ) {
             throw new InvalidCredentialException(sprintf('Credential field "%s" must contain id and type.', $field));
+        }
+    }
+
+    /** @param mixed $value */
+    private function assertConceptReference(mixed $value, string $field): void {
+        if (!is_array($value) || array_is_list($value) || !is_string($value['id'] ?? null) || $value['id'] === '') {
+            throw new InvalidCredentialException(sprintf('Credential field "%s" must contain a concept id.', $field));
+        }
+
+        if (array_key_exists('inScheme', $value)) {
+            $scheme = $value['inScheme'];
+            if (
+                !is_array($scheme)
+                || array_is_list($scheme)
+                || ($scheme['id'] ?? null) !== ElmVocabularySchemes::LANGUAGE
+            ) {
+                throw new InvalidCredentialException(
+                    sprintf('Credential field "%s" must use the ELM language scheme.', $field),
+                );
+            }
         }
     }
 

@@ -119,7 +119,8 @@ final class CredentialDocumentValidator {
                 throw new InvalidCredentialException('Credential profiles must use the ELM credential profile scheme.');
             }
         }
-        if (!$this->isUtcDate($document['validFrom'])) {
+        $validFrom = $this->parseUtcDate($document['validFrom']);
+        if ($validFrom === null) {
             throw new InvalidCredentialException('Credential validFrom must be a UTC date in ELM format.');
         }
         foreach (['givenName', 'familyName', 'fullName'] as $field) {
@@ -127,9 +128,18 @@ final class CredentialDocumentValidator {
         }
         $this->assertLocalizedLanguageMap($document['displayParameter']['title'], 'displayParameter.title');
         foreach (['expirationDate', 'issuanceDate', 'issued', 'validUntil'] as $field) {
-            if (array_key_exists($field, $document) && !$this->isUtcDate($document[$field])) {
+            if (!array_key_exists($field, $document)) {
+                continue;
+            }
+            $date = $this->parseUtcDate($document[$field]);
+            if ($date === null) {
                 throw new InvalidCredentialException(
                     sprintf('Credential %s must be a UTC date in ELM format.', $field),
+                );
+            }
+            if ($date < $validFrom) {
+                throw new InvalidCredentialException(
+                    sprintf('Credential %s must not precede validFrom.', $field),
                 );
             }
         }
@@ -147,9 +157,9 @@ final class CredentialDocumentValidator {
         $this->validate($document);
     }
 
-    private function isUtcDate(mixed $value): bool {
+    private function parseUtcDate(mixed $value): ?DateTimeImmutable {
         if (!is_string($value)) {
-            return false;
+            return null;
         }
 
         $date = DateTimeImmutable::createFromFormat(
@@ -158,7 +168,7 @@ final class CredentialDocumentValidator {
             new DateTimeZone('UTC'),
         );
 
-        return $date !== false && $date->format('Y-m-d\TH:i:s\Z') === $value;
+        return $date !== false && $date->format('Y-m-d\TH:i:s\Z') === $value ? $date : null;
     }
 
     /** @param array<string, mixed> $entity */

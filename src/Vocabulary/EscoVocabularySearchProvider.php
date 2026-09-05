@@ -52,6 +52,9 @@ final class EscoVocabularySearchProvider implements VocabularySearchProvider {
             }
             /** @var array<string, mixed> $data */
             $data = json_decode($document, true, 512, JSON_THROW_ON_ERROR);
+            if (array_is_list($data)) {
+                throw new InvalidCredentialException('ESCO search response must be a JSON object.');
+            }
             $embedded = $data['_embedded'] ?? null;
             $rawResults = is_array($embedded) ? ($embedded['results'] ?? null) : null;
             if (!is_array($rawResults)) {

@@ -44,6 +44,9 @@ final class JsonVocabularySearchProvider implements VocabularySearchProvider {
             }
             /** @var array<string, mixed> $data */
             $data = json_decode($document, true, 512, JSON_THROW_ON_ERROR);
+            if (array_is_list($data)) {
+                throw new InvalidCredentialException('Vocabulary search response must be a JSON object.');
+            }
             $rawConcepts = $data['concepts'] ?? [];
             if (!is_array($rawConcepts)) {
                 throw new InvalidCredentialException('Vocabulary search concepts must be an array.');

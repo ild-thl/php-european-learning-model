@@ -129,6 +129,29 @@ final class VocabularyTest extends TestCase {
         self::assertSame('page-2', $page->nextCursor);
     }
 
+    public function testJsonSearchProviderRejectsArrayResponse(): void {
+        $fetcher = new class implements VocabularySearchResourceFetcher {
+            public function search(
+                string $schemeId,
+                string $query,
+                string $language,
+                int $limit,
+                ?string $cursor,
+                array $fallbackLanguages = [],
+            ): string {
+                return '[]';
+            }
+        };
+
+        $this->expectExceptionMessage('must be a JSON object');
+
+        (new JsonVocabularySearchProvider($fetcher))->searchConcepts(
+            'http://example.test/activities',
+            '',
+            'en',
+        );
+    }
+
     public function testEscoSearchProviderParsesSkillsAndPreservesNextLink(): void {
         $fetcher = new class implements VocabularySearchResourceFetcher {
             public function search(
@@ -196,6 +219,29 @@ final class VocabularyTest extends TestCase {
 
         $this->expectException(InvalidCredentialException::class);
         $provider->searchConcepts(ElmVocabularySchemes::LANGUAGE, 'English', 'en');
+    }
+
+    public function testEscoSearchProviderRejectsArrayResponse(): void {
+        $fetcher = new class implements VocabularySearchResourceFetcher {
+            public function search(
+                string $schemeId,
+                string $query,
+                string $language,
+                int $limit,
+                ?string $cursor,
+                array $fallbackLanguages = [],
+            ): string {
+                return '[]';
+            }
+        };
+
+        $this->expectExceptionMessage('must be a JSON object');
+
+        (new EscoVocabularySearchProvider($fetcher))->searchConcepts(
+            ElmVocabularySchemes::ESCO_SKILLS,
+            '',
+            'en',
+        );
     }
 
     public function testVocabularyReportsMembershipFailure(): void {

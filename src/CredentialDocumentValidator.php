@@ -110,6 +110,7 @@ final class CredentialDocumentValidator {
                     'Credential profiles must contain id and prefLabel fields.',
                 );
             }
+            $this->assertLocalizedLanguageMap($profile['prefLabel'], 'credentialProfiles.prefLabel');
             $profileScheme = $profile['inScheme'] ?? null;
             if (
                 !is_array($profileScheme)
@@ -121,6 +122,10 @@ final class CredentialDocumentValidator {
         if (!$this->isUtcDate($document['validFrom'])) {
             throw new InvalidCredentialException('Credential validFrom must be a UTC date in ELM format.');
         }
+        foreach (['givenName', 'familyName', 'fullName'] as $field) {
+            $this->assertLocalizedLanguageMap($document['credentialSubject'][$field], 'credentialSubject.' . $field);
+        }
+        $this->assertLocalizedLanguageMap($document['displayParameter']['title'], 'displayParameter.title');
         foreach (['expirationDate', 'issuanceDate', 'issued', 'validUntil'] as $field) {
             if (array_key_exists($field, $document) && !$this->isUtcDate($document[$field])) {
                 throw new InvalidCredentialException(
@@ -188,6 +193,31 @@ final class CredentialDocumentValidator {
             || $entity['type'] === ''
         ) {
             throw new InvalidCredentialException(sprintf('Credential field "%s" must contain id and type.', $field));
+        }
+    }
+
+    /** @param mixed $value */
+    private function assertLocalizedLanguageMap(mixed $value, string $field): void {
+        if (!is_array($value) || $value === [] || array_is_list($value)) {
+            throw new InvalidCredentialException(sprintf('Credential field "%s" must be a language map.', $field));
+        }
+
+        foreach ($value as $language => $translations) {
+            if (
+                !is_string($language)
+                || preg_match('/^[a-z]{2,3}(?:-[A-Z][a-z]{3})?(?:-[A-Z]{2}|-[0-9]{3})?$/', $language) !== 1
+                || !is_array($translations)
+                || $translations === []
+                || !array_is_list($translations)
+                || array_filter(
+                    $translations,
+                    static fn (mixed $translation): bool => !is_string($translation) || $translation === '',
+                ) !== []
+            ) {
+                throw new InvalidCredentialException(
+                    sprintf('Credential field "%s" must contain non-empty localized string arrays.', $field),
+                );
+            }
         }
     }
 }

@@ -387,7 +387,7 @@ final class EntityTest extends TestCase {
             'credentialSubject' => [
                 'id' => 'subject-1', 'type' => 'Person',
                 'givenName' => ['en' => ['Ada']], 'familyName' => ['en' => ['Lovelace']],
-                'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [['id' => 'claim-1']],
+                'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [['id' => 'claim-1', 'type' => 'Claim']],
             ],
             'displayParameter' => [
                 'id' => 'display-1', 'type' => 'DisplayParameter',
@@ -436,7 +436,7 @@ final class EntityTest extends TestCase {
             'credentialSubject' => [
                 'id' => 'subject-1', 'type' => 'Person',
                 'givenName' => ['en' => ['Ada']], 'familyName' => ['en' => ['Lovelace']],
-                'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [['id' => 'claim-1']],
+                'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [['id' => 'claim-1', 'type' => 'Claim']],
             ],
             'displayParameter' => [
                 'id' => 'display-1', 'type' => 'DisplayParameter',
@@ -469,7 +469,7 @@ final class EntityTest extends TestCase {
             'credentialSubject' => [
                 'id' => 'subject-1', 'type' => 'Organisation',
                 'givenName' => ['en' => ['Ada']], 'familyName' => ['en' => ['Lovelace']],
-                'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [['id' => 'claim-1']],
+                'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [['id' => 'claim-1', 'type' => 'Claim']],
             ],
             'displayParameter' => [
                 'id' => 'display-1', 'type' => 'DisplayParameter',
@@ -502,7 +502,7 @@ final class EntityTest extends TestCase {
             'credentialSubject' => [
                 'id' => 'subject-1', 'type' => 'Person',
                 'givenName' => ['en' => ['Ada']], 'familyName' => ['en' => ['Lovelace']],
-                'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [['id' => 'claim-1']],
+                'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [['id' => 'claim-1', 'type' => 'Claim']],
             ],
             'displayParameter' => [
                 'id' => 'display-1', 'type' => 'DisplayParameter',
@@ -537,6 +537,39 @@ final class EntityTest extends TestCase {
                 'id' => 'subject-1', 'type' => 'Person',
                 'givenName' => ['en' => ['Ada']], 'familyName' => ['en' => ['Lovelace']],
                 'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [],
+            ],
+            'displayParameter' => [
+                'id' => 'display-1', 'type' => 'DisplayParameter',
+                'language' => ['id' => 'language-1'], 'primaryLanguage' => ['id' => 'language-1'],
+                'title' => ['en' => ['Title']],
+            ],
+            'validFrom' => '2026-01-01T00:00:00Z',
+        ]);
+    }
+
+    public function testCredentialDocumentValidatorRejectsUntypedClaim(): void {
+        $this->expectExceptionMessage('hasClaim');
+
+        (new CredentialDocumentValidator())->validate([
+            '@context' => [
+                'https://www.w3.org/2018/credentials/v1',
+                'http://data.europa.eu/snb/model/context/edc-ap',
+            ],
+            'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
+            'credentialProfiles' => [[
+                'id' => 'http://data.europa.eu/snb/credential/e34929035b',
+                'type' => 'Concept',
+                'inScheme' => ['id' => 'http://data.europa.eu/snb/credential/25831c2'],
+                'prefLabel' => ['en' => ['Generic']],
+            ]],
+            'credentialSchema' => [
+                'id' => 'http://data.europa.eu/snb/model/ap/edc-generic-full',
+                'type' => 'ShaclValidator2017',
+            ],
+            'credentialSubject' => [
+                'id' => 'subject-1', 'type' => 'Person',
+                'givenName' => ['en' => ['Ada']], 'familyName' => ['en' => ['Lovelace']],
+                'fullName' => ['en' => ['Ada Lovelace']], 'hasClaim' => [['id' => 'claim-1']],
             ],
             'displayParameter' => [
                 'id' => 'display-1', 'type' => 'DisplayParameter',

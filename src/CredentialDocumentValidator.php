@@ -66,6 +66,12 @@ final class CredentialDocumentValidator {
         ) {
             throw new InvalidCredentialException('Credential subject must contain at least one claim.');
         }
+        foreach ($document['credentialSubject']['hasClaim'] as $claim) {
+            if (!is_array($claim) || array_is_list($claim)) {
+                throw new InvalidCredentialException('Credential subject claims must be objects.');
+            }
+            $this->assertEntityReference($claim, 'credentialSubject.hasClaim');
+        }
         $this->assertRequiredFields(
             $document['displayParameter'],
             'displayParameter',
@@ -166,6 +172,18 @@ final class CredentialDocumentValidator {
                     sprintf('Credential %s is missing required field "%s".', $entityName, $field),
                 );
             }
+        }
+    }
+
+    /** @param array<string, mixed> $entity */
+    private function assertEntityReference(array $entity, string $field): void {
+        if (
+            !is_string($entity['id'] ?? null)
+            || $entity['id'] === ''
+            || !is_string($entity['type'] ?? null)
+            || $entity['type'] === ''
+        ) {
+            throw new InvalidCredentialException(sprintf('Credential field "%s" must contain id and type.', $field));
         }
     }
 }

@@ -96,6 +96,12 @@ final class VocabularyTest extends TestCase {
         self::assertSame($concepts[2], $provider->getConceptByNotation('seminar', $scheme->id));
     }
 
+    public function testVocabularyPageRejectsEmptyCursor(): void {
+        $this->expectExceptionMessage('must not be empty');
+
+        new \IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularyConceptPage([], '');
+    }
+
     public function testJsonSearchProviderParsesPagedConcepts(): void {
         $schemeId = 'http://example.test/activities';
         $fetcher = new class implements VocabularySearchResourceFetcher {

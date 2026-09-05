@@ -18,6 +18,9 @@ final class VocabularyConceptPage {
         if (array_filter($concepts, static fn ($concept): bool => !$concept instanceof Concept) !== []) {
             throw new \InvalidArgumentException('Vocabulary pages accept Concept objects.');
         }
+        if ($nextCursor === '') {
+            throw new \InvalidArgumentException('Vocabulary page cursors must not be empty.');
+        }
     }
 
     public function hasMore(): bool {

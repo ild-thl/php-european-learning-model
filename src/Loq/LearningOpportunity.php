@@ -15,7 +15,7 @@ use IsyThl\EuropeanLearningModel\Location;
 use IsyThl\EuropeanLearningModel\MediaObject;
 use IsyThl\EuropeanLearningModel\Core\Note;
 use IsyThl\EuropeanLearningModel\Organisation;
-use IsyThl\EuropeanLearningModel\WebResource;
+use IsyThl\EuropeanLearningModel\Core\WebResource;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 use IsyThl\EuropeanLearningModel\Core\PriceDetail;
 use IsyThl\EuropeanLearningModel\Core\Grant;

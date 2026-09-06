@@ -31,7 +31,7 @@ use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
 use IsyThl\EuropeanLearningModel\MediaObject as CoreMediaObject;
 use IsyThl\EuropeanLearningModel\Organisation as CoreOrganisation;
 use IsyThl\EuropeanLearningModel\EmailAddress as CoreEmailAddress;
-use IsyThl\EuropeanLearningModel\WebResource as CoreWebResource;
+use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\FilesystemProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidationResult;
@@ -100,7 +100,7 @@ final class ValidationContractTest extends TestCase {
         $resource = new CoreWebResource('core-resource', 'https://example.test/resource');
 
         self::assertInstanceOf(CoreNote::class, $note);
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\WebResource::class, $resource);
+        self::assertInstanceOf(CoreWebResource::class, $resource);
         self::assertSame([
             'id' => 'urn:epass:note:core-note',
             'type' => 'Note',

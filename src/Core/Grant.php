@@ -7,7 +7,7 @@ namespace IsyThl\EuropeanLearningModel\Core;
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-use IsyThl\EuropeanLearningModel\WebResource;
+use IsyThl\EuropeanLearningModel\Core\WebResource;
 
 final class Grant {
 

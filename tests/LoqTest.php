@@ -21,7 +21,7 @@ use IsyThl\EuropeanLearningModel\Core\Note;
 use IsyThl\EuropeanLearningModel\Organisation;
 use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
-use IsyThl\EuropeanLearningModel\WebResource;
+use IsyThl\EuropeanLearningModel\Core\WebResource;
 use IsyThl\EuropeanLearningModel\Loq\LearningOpportunity;
 use IsyThl\EuropeanLearningModel\Loq\LearningOpportunityDocument;
 use IsyThl\EuropeanLearningModel\Loq\LoqDatasetDocument;

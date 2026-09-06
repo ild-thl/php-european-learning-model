@@ -39,7 +39,7 @@ use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
 use IsyThl\EuropeanLearningModel\Organisation;
 use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\GradingScheme;
-use IsyThl\EuropeanLearningModel\WebResource;
+use IsyThl\EuropeanLearningModel\Core\WebResource;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;

@@ -25,7 +25,7 @@ use IsyThl\EuropeanLearningModel\Issuer;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\MediaObject;
 use IsyThl\EuropeanLearningModel\Core\Note;
-use IsyThl\EuropeanLearningModel\EmailAddress;
+use IsyThl\EuropeanLearningModel\Core\EmailAddress;
 use IsyThl\EuropeanLearningModel\Core\Location;
 use IsyThl\EuropeanLearningModel\LearningAchievement;
 use IsyThl\EuropeanLearningModel\LearningActivity;

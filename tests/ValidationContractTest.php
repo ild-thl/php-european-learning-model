@@ -30,7 +30,7 @@ use IsyThl\EuropeanLearningModel\LearningActivitySpecification as CoreLearningAc
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
 use IsyThl\EuropeanLearningModel\MediaObject as CoreMediaObject;
 use IsyThl\EuropeanLearningModel\Organisation as CoreOrganisation;
-use IsyThl\EuropeanLearningModel\EmailAddress as CoreEmailAddress;
+use IsyThl\EuropeanLearningModel\Core\EmailAddress as CoreEmailAddress;
 use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\FilesystemProfileResourceRegistry;
@@ -138,7 +138,7 @@ final class ValidationContractTest extends TestCase {
         $email = new CoreEmailAddress('core@example.test');
         $contactPoint = new CoreContactPoint('core-contact', emailAddress: $email);
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\EmailAddress::class, $email);
+        self::assertInstanceOf(CoreEmailAddress::class, $email);
         self::assertInstanceOf(\IsyThl\EuropeanLearningModel\ContactPoint::class, $contactPoint);
         self::assertSame([
             'id' => 'urn:epass:contactPoint:core-contact',

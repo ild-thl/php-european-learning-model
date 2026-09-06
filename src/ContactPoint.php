@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\Address;
+use IsyThl\EuropeanLearningModel\Core\EmailAddress;
 
 final class ContactPoint extends \IsyThl\EuropeanLearningModel\Core\Entity {
 

@@ -12,6 +12,7 @@ use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
+use IsyThl\EuropeanLearningModel\Core\Validation\FilesystemProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidationResult;
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidatorInterface;
 use IsyThl\EuropeanLearningModel\Loq\LoqDocumentValidator;
@@ -54,6 +55,17 @@ final class ValidationContractTest extends TestCase {
             LoqProfile::LOQ_CONSTRAINTS->value,
         );
         self::assertSame('LOQ-constraints.rdf', LoqProfile::LOQ_CONSTRAINTS->resourceName());
+    }
+
+    public function testFilesystemRegistryReadsOnlyCallerSelectedLocalFiles(): void {
+        $registry = new FilesystemProfileResourceRegistry(__DIR__ . '/../resources/profile');
+
+        self::assertStringContainsString(
+            'loq-constraints',
+            $registry->get(LoqProfile::LOQ_CONSTRAINTS->resourceName()),
+        );
+        $this->expectException(\InvalidArgumentException::class);
+        $registry->get('../composer.json');
     }
 
     public function testLoqDocumentValidatorDelegatesToInjectedStandardsValidator(): void {

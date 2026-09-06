@@ -6,6 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\Clock;
 use IsyThl\EuropeanLearningModel\Core\SystemClock;
+use IsyThl\EuropeanLearningModel\Core\VocabularyCache;
 use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
 
 final class InMemoryVocabularyCache implements VocabularyCache {

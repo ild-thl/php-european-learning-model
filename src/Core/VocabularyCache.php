@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
-
-use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
+namespace IsyThl\EuropeanLearningModel\Core;
 
 interface VocabularyCache {
 

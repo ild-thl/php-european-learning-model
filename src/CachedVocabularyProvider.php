@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\Concept;
+use IsyThl\EuropeanLearningModel\Core\VocabularyCache;
+use IsyThl\EuropeanLearningModel\Core\VocabularyProvider;
 use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
 use IsyThl\EuropeanLearningModel\Vocabulary\VocabularyConceptPage;
 use IsyThl\EuropeanLearningModel\Vocabulary\VocabularySearchProvider;

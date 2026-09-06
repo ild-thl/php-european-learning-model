@@ -20,7 +20,7 @@ use IsyThl\EuropeanLearningModel\Vocabulary\JsonVocabularySearchProvider;
 use IsyThl\EuropeanLearningModel\Vocabulary\EscoVocabularySearchProvider;
 use IsyThl\EuropeanLearningModel\Vocabulary\VocabularySearchResourceFetcher;
 use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
-use IsyThl\EuropeanLearningModel\VocabularyProvider;
+use IsyThl\EuropeanLearningModel\Core\VocabularyProvider;
 use PHPUnit\Framework\TestCase;
 
 final class VocabularyTest extends TestCase {

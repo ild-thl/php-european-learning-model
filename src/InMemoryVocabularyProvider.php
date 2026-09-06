@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\Concept;
+use IsyThl\EuropeanLearningModel\Core\VocabularyProvider;
 use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Vocabulary\VocabularyConceptPage;

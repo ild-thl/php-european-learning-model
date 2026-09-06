@@ -22,6 +22,7 @@ use IsyThl\EuropeanLearningModel\Loq\LearningOpportunityDocument;
 use IsyThl\EuropeanLearningModel\Loq\LoqDatasetDocument;
 use IsyThl\EuropeanLearningModel\Loq\QualificationReference;
 use IsyThl\EuropeanLearningModel\Loq\QualificationDocument;
+use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 use PHPUnit\Framework\TestCase;
 
 final class LoqTest extends TestCase {
@@ -102,6 +103,28 @@ final class LoqTest extends TestCase {
         );
     }
 
+    public function testLearningOpportunitySerializesTemporalCoverageInUtc(): void {
+        $opportunity = $this->opportunityWithTemporal(new PeriodOfTime(
+            new \DateTimeImmutable('2026-01-01T12:00:00+02:00'),
+            new \DateTimeImmutable('2026-01-02T12:00:00+02:00'),
+        ));
+
+        self::assertSame([
+            'type' => 'PeriodOfTime',
+            'startDate' => '2026-01-01T10:00:00Z',
+            'endDate' => '2026-01-02T10:00:00Z',
+        ], $opportunity->toArray()['temporal']);
+    }
+
+    public function testPeriodOfTimeRejectsReverseDates(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new PeriodOfTime(
+            new \DateTimeImmutable('2026-01-02T00:00:00Z'),
+            new \DateTimeImmutable('2026-01-01T00:00:00Z'),
+        );
+    }
+
     public function testQualificationDocumentRejectsMissingProfileFields(): void {
         $qualification = new Qualification(
             'qualification-1',
@@ -162,6 +185,25 @@ final class LoqTest extends TestCase {
     private function opportunityWithSpecification(
         LearningAchievementSpecification|Qualification $specification,
     ): LearningOpportunity {
+        return $this->opportunityWithSpecificationAndTemporal($specification, null);
+    }
+
+    private function opportunityWithTemporal(
+        PeriodOfTime $temporal,
+    ): LearningOpportunity {
+        return $this->opportunityWithSpecificationAndTemporal(
+            new LearningAchievementSpecification(
+                'https://example.test/specification/1',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            $temporal,
+        );
+    }
+
+    private function opportunityWithSpecificationAndTemporal(
+        LearningAchievementSpecification|Qualification $specification,
+        ?PeriodOfTime $temporal,
+    ): LearningOpportunity {
         $language = $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en');
         $country = $this->countryConcept();
         $provider = new Organisation(
@@ -181,6 +223,7 @@ final class LoqTest extends TestCase {
             new WebResource('homepage-1', 'https://example.test/opportunity/1'),
             [$provider],
             $specification,
+            temporal: $temporal,
         );
     }
 

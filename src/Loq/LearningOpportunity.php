@@ -10,6 +10,7 @@ use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
 use IsyThl\EuropeanDigitalCredentials\WebResource;
+use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 
 final class LearningOpportunity {
 
@@ -22,6 +23,7 @@ final class LearningOpportunity {
         public readonly array $providedBy,
         public readonly LearningAchievementSpecification|QualificationReference $learningAchievementSpecification,
         public readonly ?Organisation $publisher = null,
+        public readonly ?PeriodOfTime $temporal = null,
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -48,6 +50,9 @@ final class LearningOpportunity {
         ];
         if ($this->publisher !== null) {
             $data['publisher'] = $this->publisher->toArray();
+        }
+        if ($this->temporal !== null) {
+            $data['temporal'] = $this->temporal->toArray();
         }
         return $data;
     }

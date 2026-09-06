@@ -8,6 +8,7 @@ use IsyThl\EuropeanDigitalCredentials\Concept;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
+use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
 use IsyThl\EuropeanDigitalCredentials\WebResource;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
@@ -25,6 +26,7 @@ final class LearningOpportunity {
         public readonly ?Organisation $publisher = null,
         public readonly ?PeriodOfTime $temporal = null,
         public readonly ?Concept $learningSchedule = null,
+        public readonly ?Location $location = null,
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -57,6 +59,9 @@ final class LearningOpportunity {
         }
         if ($this->learningSchedule !== null) {
             $data['learningSchedule'] = $this->learningSchedule->toArray();
+        }
+        if ($this->location !== null) {
+            $data['location'] = $this->location->toArray();
         }
         return $data;
     }

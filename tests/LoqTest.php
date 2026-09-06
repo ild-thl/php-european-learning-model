@@ -138,6 +138,21 @@ final class LoqTest extends TestCase {
         self::assertSame($schedule->toArray(), $opportunity->toArray()['learningSchedule']);
     }
 
+    public function testLearningOpportunitySerializesLocationAndAddress(): void {
+        $location = new Location(
+            'location-2',
+            new Address(
+                'address-2',
+                $this->countryConcept(),
+                new Note('address-note-2', new LocalizedString(['en' => 'Antwerp'])),
+            ),
+        );
+
+        $opportunity = $this->opportunityWithLocation($location);
+
+        self::assertSame($location->toArray(), $opportunity->toArray()['location']);
+    }
+
     public function testQualificationDocumentRejectsMissingProfileFields(): void {
         $qualification = new Qualification(
             'qualification-1',
@@ -223,6 +238,18 @@ final class LoqTest extends TestCase {
         );
     }
 
+    private function opportunityWithLocation(Location $location): LearningOpportunity {
+        return $this->opportunityWithSpecificationTemporalScheduleAndLocation(
+            new LearningAchievementSpecification(
+                'https://example.test/specification/1',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            null,
+            null,
+            $location,
+        );
+    }
+
     private function opportunityWithSpecificationAndTemporal(
         LearningAchievementSpecification|Qualification $specification,
         ?PeriodOfTime $temporal,
@@ -234,6 +261,20 @@ final class LoqTest extends TestCase {
         LearningAchievementSpecification|Qualification $specification,
         ?PeriodOfTime $temporal,
         ?Concept $schedule,
+    ): LearningOpportunity {
+        return $this->opportunityWithSpecificationTemporalScheduleAndLocation(
+            $specification,
+            $temporal,
+            $schedule,
+            null,
+        );
+    }
+
+    private function opportunityWithSpecificationTemporalScheduleAndLocation(
+        LearningAchievementSpecification|Qualification $specification,
+        ?PeriodOfTime $temporal,
+        ?Concept $schedule,
+        ?Location $location,
     ): LearningOpportunity {
         $language = $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en');
         $country = $this->countryConcept();
@@ -256,6 +297,7 @@ final class LoqTest extends TestCase {
             $specification,
             temporal: $temporal,
             learningSchedule: $schedule,
+            location: $location,
         );
     }
 

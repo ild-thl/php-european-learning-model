@@ -23,6 +23,8 @@ use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome as CoreLearningOutcome;
+use IsyThl\EuropeanLearningModel\Core\LearningActivity as CoreLearningActivity;
+use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification as CoreLearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\MediaObject as CoreMediaObject;
 use IsyThl\EuropeanLearningModel\Core\Organisation as CoreOrganisation;
 use IsyThl\EuropeanLearningModel\Core\EmailAddress as CoreEmailAddress;
@@ -222,6 +224,45 @@ final class ValidationContractTest extends TestCase {
         self::assertSame('6', $creditPoint->toArray()['point']);
         self::assertSame('LearningOutcome', $outcome->toArray()['type']);
         self::assertCount(1, $outcome->toArray()['relatedSkills']);
+    }
+
+    public function testCoreLearningActivityAliasesPreserveNestedGraphValues(): void {
+        $organisation = new CoreOrganisation(
+            'core-organisation',
+            new CoreLocation(
+                'core-location',
+                new CoreAddress(
+                    'core-address',
+                    new CoreConcept(
+                        'https://example.test/country/be',
+                        new CoreLocalizedString(['en' => 'Belgium']),
+                        new CoreConceptScheme(ElmVocabularySchemes::COUNTRY),
+                    ),
+                    new CoreNote('core-note', new CoreLocalizedString(['en' => 'Core address'])),
+                ),
+            ),
+            new CoreLocalizedString(['en' => 'Core organisation']),
+        );
+        $specification = new CoreLearningActivitySpecification(
+            'core-activity-spec',
+            new CoreLocalizedString(['en' => 'Core activity']),
+        );
+        $activity = new CoreLearningActivity(
+            'core-activity',
+            new CoreLocalizedString(['en' => 'Core activity']),
+            new CoreAwardingProcess('core-awarding-process', $organisation),
+            $specification,
+            hasPart: [new CoreLearningActivity(
+                'core-sub-activity',
+                new CoreLocalizedString(['en' => 'Core sub-activity']),
+                new CoreAwardingProcess('core-sub-awarding-process', $organisation),
+                $specification,
+            )],
+        );
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\LearningActivity::class, $activity);
+        self::assertSame('LearningActivity', $activity->toArray()['type']);
+        self::assertCount(1, $activity->toArray()['hasPart']);
     }
 
     public function testProfileResourceRegistryIsAnExplicitResolutionBoundary(): void {

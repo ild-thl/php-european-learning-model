@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+
 final class Issuer extends Organisation {
 
     public function __construct(

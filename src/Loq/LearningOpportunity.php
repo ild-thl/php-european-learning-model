@@ -10,7 +10,7 @@ use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\LearningActivitySpecification;
-use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Location;
 use IsyThl\EuropeanLearningModel\MediaObject;
 use IsyThl\EuropeanLearningModel\Note;

@@ -12,7 +12,7 @@ use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\InMemoryVocabularyCache;
 use IsyThl\EuropeanLearningModel\InMemoryVocabularyProvider;
 use IsyThl\EuropeanLearningModel\JsonLdVocabularyProvider;
-use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\RdfVocabularyProvider;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\VocabularyResourceFetcher;

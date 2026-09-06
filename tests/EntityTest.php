@@ -41,7 +41,7 @@ use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\GradingScheme;
 use IsyThl\EuropeanLearningModel\WebResource;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
-use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
 use PHPUnit\Framework\TestCase;
 
@@ -207,7 +207,7 @@ final class EntityTest extends TestCase {
             new \DateTimeImmutable('2024-01-01T00:00:00+00:00'),
             credentialProfile: new Concept(
                 'http://example.test/profile',
-                new \IsyThl\EuropeanLearningModel\LocalizedString(['en' => 'Profile']),
+                new \IsyThl\EuropeanLearningModel\Core\LocalizedString(['en' => 'Profile']),
                 new ConceptScheme('http://example.test/wrong-scheme'),
             ),
         );

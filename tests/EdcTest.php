@@ -12,7 +12,7 @@ use IsyThl\EuropeanLearningModel\Credential;
 use IsyThl\EuropeanLearningModel\CredentialSubject;
 use IsyThl\EuropeanLearningModel\DisplayParameter;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Edc\EdcDocumentValidator;
 use IsyThl\EuropeanLearningModel\Edc\EdcProfile;
 use PHPUnit\Framework\TestCase;

@@ -8,7 +8,7 @@ use IsyThl\EuropeanLearningModel\Concept;
 use IsyThl\EuropeanLearningModel\ConceptScheme;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
-use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 
 final class EscoVocabularySearchProvider implements VocabularySearchProvider {
 

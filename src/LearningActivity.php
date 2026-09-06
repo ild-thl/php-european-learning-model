@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LearningActivity extends Claim {

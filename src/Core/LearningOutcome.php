@@ -8,7 +8,7 @@ use IsyThl\EuropeanLearningModel\Concept;
 use IsyThl\EuropeanLearningModel\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
-use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Note;
 
 final class LearningOutcome extends \IsyThl\EuropeanLearningModel\Core\Entity {

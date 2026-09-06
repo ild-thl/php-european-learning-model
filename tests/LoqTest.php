@@ -15,7 +15,7 @@ use IsyThl\EuropeanLearningModel\Identifier;
 use IsyThl\EuropeanLearningModel\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\LearningActivity;
 use IsyThl\EuropeanLearningModel\LearningActivitySpecification;
-use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Location;
 use IsyThl\EuropeanLearningModel\Note;
 use IsyThl\EuropeanLearningModel\Organisation;

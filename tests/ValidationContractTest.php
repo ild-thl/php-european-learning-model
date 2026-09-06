@@ -11,12 +11,14 @@ use IsyThl\EuropeanDigitalCredentials\LearningOutcome;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
+use IsyThl\EuropeanLearningModel\Core\Address as CoreAddress;
 use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
+use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
 use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\FilesystemProfileResourceRegistry;
@@ -97,6 +99,27 @@ final class ValidationContractTest extends TestCase {
             'type' => 'WebResource',
             'contentURL' => 'https://example.test/resource',
         ], $resource->toArray());
+    }
+
+    public function testCoreAddressAndLocationAliasesPreserveNestedSerialization(): void {
+        $address = new CoreAddress(
+            'core-address',
+            new CoreConcept(
+                'http://publications.europa.eu/resource/authority/country/BEL',
+                new CoreLocalizedString(['en' => 'Belgium']),
+                new CoreConceptScheme(ElmVocabularySchemes::COUNTRY),
+            ),
+            new CoreNote('core-address-note', new CoreLocalizedString(['en' => 'Brussels'])),
+        );
+        $location = new CoreLocation('core-location', $address);
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Address::class, $address);
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Location::class, $location);
+        self::assertSame([
+            'id' => 'urn:epass:location:core-location',
+            'type' => 'Location',
+            'address' => $address->toArray(),
+        ], $location->toArray());
     }
 
     public function testProfileResourceRegistryIsAnExplicitResolutionBoundary(): void {

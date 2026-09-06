@@ -8,7 +8,6 @@ use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
-use IsyThl\EuropeanLearningModel\Qualification;
 
 final class LoqProfileValidator {
 

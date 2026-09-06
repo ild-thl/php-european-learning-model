@@ -26,7 +26,7 @@ unsupported profile entities are not silently accepted.
 ## Usage
 
 ```php
-use IsyThl\EuropeanLearningModel\Credential;
+use IsyThl\EuropeanLearningModel\Edc\Credential;
 
 $credential = new Credential(
 	'credential-1',

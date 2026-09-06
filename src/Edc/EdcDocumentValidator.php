@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Edc;
 
-use IsyThl\EuropeanLearningModel\CredentialDocumentValidator;
-
 final class EdcDocumentValidator {
 
     private readonly CredentialDocumentValidator $validator;

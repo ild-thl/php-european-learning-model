@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Edc;
 
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
-use IsyThl\EuropeanLearningModel\Edc\Issuer;
-use IsyThl\EuropeanLearningModel\Edc\DisplayParameter;
-use IsyThl\EuropeanLearningModel\Edc\CredentialSubject;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use DateTimeImmutable;
 use DateTimeZone;

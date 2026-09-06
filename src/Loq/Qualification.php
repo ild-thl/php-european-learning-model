@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Loq;
 
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\Accreditation;

@@ -8,7 +8,7 @@ use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-use IsyThl\EuropeanLearningModel\Qualification;
+use IsyThl\EuropeanLearningModel\Loq\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
 use IsyThl\EuropeanLearningModel\Core\Address as CoreAddress;
 use IsyThl\EuropeanLearningModel\Core\AwardingProcess as CoreAwardingProcess;

@@ -125,6 +125,19 @@ final class LoqTest extends TestCase {
         );
     }
 
+    public function testLearningOpportunitySerializesProviderLearningScheduleConcept(): void {
+        $schedule = new Concept(
+            'https://example.test/schedule/evenings',
+            new LocalizedString(['en' => 'Evenings']),
+            new ConceptScheme('https://example.test/vocabulary/learning-schedule'),
+            'evenings',
+        );
+
+        $opportunity = $this->opportunityWithSchedule($schedule);
+
+        self::assertSame($schedule->toArray(), $opportunity->toArray()['learningSchedule']);
+    }
+
     public function testQualificationDocumentRejectsMissingProfileFields(): void {
         $qualification = new Qualification(
             'qualification-1',
@@ -200,9 +213,27 @@ final class LoqTest extends TestCase {
         );
     }
 
+    private function opportunityWithSchedule(Concept $schedule): LearningOpportunity {
+        return $this->opportunityWithSpecificationAndSchedule(
+            new LearningAchievementSpecification(
+                'https://example.test/specification/1',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            $schedule,
+        );
+    }
+
     private function opportunityWithSpecificationAndTemporal(
         LearningAchievementSpecification|Qualification $specification,
         ?PeriodOfTime $temporal,
+    ): LearningOpportunity {
+        return $this->opportunityWithSpecificationTemporalAndSchedule($specification, $temporal, null);
+    }
+
+    private function opportunityWithSpecificationTemporalAndSchedule(
+        LearningAchievementSpecification|Qualification $specification,
+        ?PeriodOfTime $temporal,
+        ?Concept $schedule,
     ): LearningOpportunity {
         $language = $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en');
         $country = $this->countryConcept();
@@ -224,7 +255,15 @@ final class LoqTest extends TestCase {
             [$provider],
             $specification,
             temporal: $temporal,
+            learningSchedule: $schedule,
         );
+    }
+
+    private function opportunityWithSpecificationAndSchedule(
+        LearningAchievementSpecification|Qualification $specification,
+        Concept $schedule,
+    ): LearningOpportunity {
+        return $this->opportunityWithSpecificationTemporalAndSchedule($specification, null, $schedule);
     }
 
     public function testDocumentSerializationIsDeterministic(): void {

@@ -24,6 +24,7 @@ final class LearningOpportunity {
         public readonly LearningAchievementSpecification|QualificationReference $learningAchievementSpecification,
         public readonly ?Organisation $publisher = null,
         public readonly ?PeriodOfTime $temporal = null,
+        public readonly ?Concept $learningSchedule = null,
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -53,6 +54,9 @@ final class LearningOpportunity {
         }
         if ($this->temporal !== null) {
             $data['temporal'] = $this->temporal->toArray();
+        }
+        if ($this->learningSchedule !== null) {
+            $data['learningSchedule'] = $this->learningSchedule->toArray();
         }
         return $data;
     }

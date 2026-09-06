@@ -11,7 +11,10 @@ use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
 final class QualificationDocument {
 
     /** @param list<Qualification> $qualifications */
-    public function __construct(private readonly array $qualifications) {
+    public function __construct(
+        private readonly array $qualifications,
+        private readonly LoqProfileValidator $validator = new LoqProfileValidator(),
+    ) {
         if ($qualifications === []) {
             throw new InvalidCredentialException('A qualification document requires at least one root.');
         }
@@ -19,7 +22,7 @@ final class QualificationDocument {
             if (!$qualification instanceof Qualification) {
                 throw new InvalidCredentialException('Qualification document roots must be typed qualifications.');
             }
-            self::validate($qualification);
+            $this->validator->validateQualification($qualification);
         }
     }
 
@@ -36,20 +39,5 @@ final class QualificationDocument {
 
     public function toJson(): string {
         return JsonLdEncoder::encode($this->toArray());
-    }
-
-    private static function validate(Qualification $qualification): void {
-        if ($qualification->eqfLevel === null) {
-            throw new InvalidCredentialException('A LOQ qualification requires one EQF level.');
-        }
-        if ($qualification->nqfLevels === []) {
-            throw new InvalidCredentialException('A LOQ qualification requires at least one NQF level.');
-        }
-        if ($qualification->educationSubjects === []) {
-            throw new InvalidCredentialException('A LOQ qualification requires at least one ISCED-F subject.');
-        }
-        if ($qualification->learningOutcomes === []) {
-            throw new InvalidCredentialException('A LOQ qualification requires at least one learning outcome.');
-        }
     }
 }

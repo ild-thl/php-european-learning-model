@@ -87,7 +87,7 @@ final class LoqTest extends TestCase {
             new LocalizedString(['en' => 'Example Provider']),
         );
         $specification = new LearningAchievementSpecification(
-            'specification-1',
+            'https://example.test/specifications/1',
             new LocalizedString(['en' => 'Example qualification']),
         );
         $opportunity = new LearningOpportunity(

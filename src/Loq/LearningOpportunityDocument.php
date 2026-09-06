@@ -10,7 +10,10 @@ use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
 final class LearningOpportunityDocument {
 
     /** @param list<LearningOpportunity> $opportunities */
-    public function __construct(private readonly array $opportunities) {
+    public function __construct(
+        private readonly array $opportunities,
+        private readonly LoqProfileValidator $validator = new LoqProfileValidator(),
+    ) {
         if ($opportunities === []) {
             throw new InvalidCredentialException('A learning opportunity document requires at least one root.');
         }
@@ -18,6 +21,7 @@ final class LearningOpportunityDocument {
             if (!$opportunity instanceof LearningOpportunity) {
                 throw new InvalidCredentialException('Learning opportunity document roots must be typed objects.');
             }
+            $this->validator->validateLearningOpportunity($opportunity);
         }
     }
 

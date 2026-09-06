@@ -10,6 +10,7 @@ use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note;
+use IsyThl\EuropeanLearningModel\Core\LearningAssessmentSpecification;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LearningAssessment extends Claim {

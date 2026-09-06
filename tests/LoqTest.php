@@ -81,6 +81,27 @@ final class LoqTest extends TestCase {
         self::assertCount(2, $dataset->toArray()['@graph']);
     }
 
+    public function testLearningOpportunityAcceptsEmbeddedQualification(): void {
+        $qualification = new Qualification(
+            'https://example.test/qualification/embedded',
+            new LocalizedString(['en' => 'Embedded qualification']),
+            eqfLevel: $this->concept(ElmVocabularySchemes::EQF, 'https://example.test/eqf/4'),
+            nqfLevels: [$this->concept(ElmVocabularySchemes::QDR_BASE, 'https://example.test/nqf/4')],
+            learningOutcomes: [new \IsyThl\EuropeanDigitalCredentials\LearningOutcome(
+                'https://example.test/outcome/embedded',
+                new LocalizedString(['en' => 'Embedded outcome']),
+            )],
+            educationSubjects: [$this->concept(ElmVocabularySchemes::ISCED_F, 'https://example.test/isced/1')],
+        );
+
+        $opportunity = $this->opportunityWithSpecification($qualification);
+
+        self::assertSame(
+            $qualification->toArray(),
+            $opportunity->toArray()['learningAchievementSpecification'],
+        );
+    }
+
     public function testQualificationDocumentRejectsMissingProfileFields(): void {
         $qualification = new Qualification(
             'qualification-1',
@@ -132,6 +153,15 @@ final class LoqTest extends TestCase {
     }
 
     private function opportunity(): LearningOpportunity {
+        return $this->opportunityWithSpecification(new LearningAchievementSpecification(
+            'https://example.test/specification/1',
+            new LocalizedString(['en' => 'Specification']),
+        ));
+    }
+
+    private function opportunityWithSpecification(
+        LearningAchievementSpecification|Qualification $specification,
+    ): LearningOpportunity {
         $language = $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en');
         $country = $this->countryConcept();
         $provider = new Organisation(
@@ -150,10 +180,7 @@ final class LoqTest extends TestCase {
             $language,
             new WebResource('homepage-1', 'https://example.test/opportunity/1'),
             [$provider],
-            new LearningAchievementSpecification(
-                'https://example.test/specification/1',
-                new LocalizedString(['en' => 'Specification']),
-            ),
+            $specification,
         );
     }
 

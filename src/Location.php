@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\Address;
+
 final class Location extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(string $id, public readonly Address $address) {

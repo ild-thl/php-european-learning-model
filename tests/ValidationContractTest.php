@@ -10,7 +10,7 @@ use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
-use IsyThl\EuropeanLearningModel\Address as CoreAddress;
+use IsyThl\EuropeanLearningModel\Core\Address as CoreAddress;
 use IsyThl\EuropeanLearningModel\AwardingProcess as CoreAwardingProcess;
 use IsyThl\EuropeanLearningModel\ContactPoint as CoreContactPoint;
 use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
@@ -125,7 +125,7 @@ final class ValidationContractTest extends TestCase {
         );
         $location = new CoreLocation('core-location', $address);
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Address::class, $address);
+        self::assertInstanceOf(CoreAddress::class, $address);
         self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Location::class, $location);
         self::assertSame([
             'id' => 'urn:epass:location:core-location',

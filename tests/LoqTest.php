@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanLearningModel\Address;
+use IsyThl\EuropeanLearningModel\Core\Address;
 use IsyThl\EuropeanLearningModel\AwardingOpportunity;
 use IsyThl\EuropeanLearningModel\AwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\Concept;

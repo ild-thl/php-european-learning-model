@@ -8,7 +8,7 @@ use IsyThl\EuropeanLearningModel\Core\Entity;
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Claim;
-use IsyThl\EuropeanLearningModel\Address;
+use IsyThl\EuropeanLearningModel\Core\Address;
 use IsyThl\EuropeanLearningModel\Accreditation;
 use IsyThl\EuropeanLearningModel\AwardingProcess;
 use IsyThl\EuropeanLearningModel\ContactPoint;

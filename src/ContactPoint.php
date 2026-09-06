@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\Address;
+
 final class ContactPoint extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(

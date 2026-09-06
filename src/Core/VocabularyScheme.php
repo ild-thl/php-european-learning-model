@@ -2,14 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
-use IsyThl\EuropeanLearningModel\Core\Concept;
-use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class VocabularyScheme extends \IsyThl\EuropeanLearningModel\Core\Entity {
+final class VocabularyScheme extends Entity {
 
     /**
      * @param list<Concept> $concepts

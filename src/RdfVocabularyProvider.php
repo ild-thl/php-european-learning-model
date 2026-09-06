@@ -7,6 +7,7 @@ namespace IsyThl\EuropeanLearningModel;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use SimpleXMLElement;
 

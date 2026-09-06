@@ -11,11 +11,13 @@ use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Location;
+use IsyThl\EuropeanDigitalCredentials\MediaObject;
 use IsyThl\EuropeanDigitalCredentials\Note;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
 use IsyThl\EuropeanDigitalCredentials\WebResource;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 use IsyThl\EuropeanLearningModel\Core\PriceDetail;
+use IsyThl\EuropeanLearningModel\Core\Grant;
 
 final class LearningOpportunity {
 
@@ -41,6 +43,8 @@ final class LearningOpportunity {
         public readonly ?Note $admissionProcedure = null,
         public readonly ?Note $scheduleInformation = null,
         public readonly ?Concept $status = null,
+        public readonly ?Grant $grant = null,
+        public readonly ?MediaObject $bannerImage = null,
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -129,6 +133,12 @@ final class LearningOpportunity {
         }
         if ($this->status !== null) {
             $data['status'] = $this->status->toArray();
+        }
+        if ($this->grant !== null) {
+            $data['grant'] = $this->grant->toArray();
+        }
+        if ($this->bannerImage !== null) {
+            $data['bannerImage'] = $this->bannerImage->toArray();
         }
         return $data;
     }

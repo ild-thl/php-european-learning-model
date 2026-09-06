@@ -297,6 +297,38 @@ final class LoqTest extends TestCase {
         );
     }
 
+    public function testLearningOpportunitySerializesGrantAndBannerImage(): void {
+        $grant = new Grant(new LocalizedString(['en' => 'Study grant']));
+        $bannerImage = new \IsyThl\EuropeanDigitalCredentials\MediaObject(
+            'banner-image',
+            'base64-image-data',
+            $this->concept(
+                ElmVocabularySchemes::CONTENT_ENCODING,
+                'https://example.test/encoding/base64',
+            ),
+            $this->concept(
+                ElmVocabularySchemes::CONTENT_TYPE,
+                'https://example.test/file-type/png',
+            ),
+        );
+        $opportunity = new LearningOpportunity(
+            'https://example.test/opportunity/grant',
+            new LocalizedString(['en' => 'Opportunity with grant']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-grant', 'https://example.test/opportunity/grant'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/grant',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            grant: $grant,
+            bannerImage: $bannerImage,
+        );
+
+        self::assertSame($grant->toArray(), $opportunity->toArray()['grant']);
+        self::assertSame($bannerImage->toArray(), $opportunity->toArray()['bannerImage']);
+    }
+
     public function testPriceDetailSerializesDecimalAmountAndCurrency(): void {
         $currency = new Concept(
             'http://publications.europa.eu/resource/authority/currency/EUR',

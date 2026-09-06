@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel\Loq;
 
 use IsyThl\EuropeanDigitalCredentials\Concept;
+use IsyThl\EuropeanDigitalCredentials\ConceptAssertions;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Location;
@@ -36,6 +38,9 @@ final class LearningOpportunity {
         public readonly array $supplementaryDocuments = [],
         /** @var list<Note> */
         public readonly array $additionalNotes = [],
+        public readonly ?Note $admissionProcedure = null,
+        public readonly ?Note $scheduleInformation = null,
+        public readonly ?Concept $status = null,
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -54,6 +59,9 @@ final class LearningOpportunity {
         }
         if (array_filter($additionalNotes, static fn ($note): bool => !$note instanceof Note) !== []) {
             throw new InvalidCredentialException('Additional notes must be Note objects.');
+        }
+        if ($status !== null) {
+            ConceptAssertions::assertScheme($status, ElmVocabularySchemes::ACCREDITATION_STATUS, 'status');
         }
         if (
             $duration !== null
@@ -112,6 +120,15 @@ final class LearningOpportunity {
                 static fn (Note $note): array => $note->toArray(),
                 $this->additionalNotes,
             );
+        }
+        if ($this->admissionProcedure !== null) {
+            $data['admissionProcedure'] = $this->admissionProcedure->toArray();
+        }
+        if ($this->scheduleInformation !== null) {
+            $data['scheduleInformation'] = $this->scheduleInformation->toArray();
+        }
+        if ($this->status !== null) {
+            $data['status'] = $this->status->toArray();
         }
         return $data;
     }

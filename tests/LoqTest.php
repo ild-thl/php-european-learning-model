@@ -247,6 +247,56 @@ final class LoqTest extends TestCase {
         );
     }
 
+    public function testLearningOpportunitySerializesAdmissionScheduleAndStatus(): void {
+        $admissionProcedure = new Note(
+            'admission-procedure',
+            new LocalizedString(['en' => 'Apply online before the deadline.']),
+        );
+        $scheduleInformation = new Note(
+            'schedule-information',
+            new LocalizedString(['en' => 'Mondays at 16:00.']),
+        );
+        $status = $this->concept(
+            ElmVocabularySchemes::ACCREDITATION_STATUS,
+            'https://example.test/status/active',
+        );
+        $opportunity = new LearningOpportunity(
+            'https://example.test/opportunity/admission',
+            new LocalizedString(['en' => 'Opportunity with admission details']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-admission', 'https://example.test/opportunity/admission'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/admission',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            admissionProcedure: $admissionProcedure,
+            scheduleInformation: $scheduleInformation,
+            status: $status,
+        );
+
+        self::assertSame($admissionProcedure->toArray(), $opportunity->toArray()['admissionProcedure']);
+        self::assertSame($scheduleInformation->toArray(), $opportunity->toArray()['scheduleInformation']);
+        self::assertSame($status->toArray(), $opportunity->toArray()['status']);
+    }
+
+    public function testLearningOpportunityRejectsStatusFromWrongVocabulary(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new LearningOpportunity(
+            'https://example.test/opportunity/invalid-status',
+            new LocalizedString(['en' => 'Invalid status']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-invalid-status', 'https://example.test/opportunity/invalid-status'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/invalid-status',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            status: $this->concept(ElmVocabularySchemes::ASSESSMENT, 'https://example.test/status/wrong'),
+        );
+    }
+
     public function testPriceDetailSerializesDecimalAmountAndCurrency(): void {
         $currency = new Concept(
             'http://publications.europa.eu/resource/authority/currency/EUR',

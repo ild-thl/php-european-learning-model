@@ -29,6 +29,8 @@ final class LearningOpportunity {
         public readonly ?Concept $learningSchedule = null,
         public readonly ?Location $location = null,
         public readonly ?PriceDetail $priceDetail = null,
+        public readonly ?string $duration = null,
+        public readonly ?Concept $mode = null,
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -36,6 +38,15 @@ final class LearningOpportunity {
         }
         if (array_filter($providedBy, static fn ($provider): bool => !$provider instanceof Organisation) !== []) {
             throw new InvalidCredentialException('Learning opportunity providers must be organisations.');
+        }
+        if (
+            $duration !== null
+            && preg_match(
+                '/^P(?:\d+Y)?(?:\d+M)?(?:\d+D)?(?:T(?=\d)(?:\d+H)?(?:\d+M)?(?:\d+(?:\.\d+)?S)?)?$/',
+                $duration,
+            ) !== 1
+        ) {
+            throw new InvalidCredentialException('Learning opportunity duration must use ISO 8601 format.');
         }
     }
 
@@ -67,6 +78,12 @@ final class LearningOpportunity {
         }
         if ($this->priceDetail !== null) {
             $data['priceDetail'] = $this->priceDetail->toArray();
+        }
+        if ($this->duration !== null) {
+            $data['duration'] = $this->duration;
+        }
+        if ($this->mode !== null) {
+            $data['mode'] = $this->mode->toArray();
         }
         return $data;
     }

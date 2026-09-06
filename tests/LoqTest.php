@@ -168,6 +168,47 @@ final class LoqTest extends TestCase {
         self::assertSame($priceDetail->toArray(), $opportunity->toArray()['priceDetail']);
     }
 
+    public function testLearningOpportunitySerializesDurationAndMode(): void {
+        $mode = new Concept(
+            'https://example.test/mode/blended',
+            new LocalizedString(['en' => 'Blended learning']),
+            new ConceptScheme('https://example.test/vocabulary/modes'),
+        );
+        $opportunity = new LearningOpportunity(
+            'https://example.test/opportunity/duration',
+            new LocalizedString(['en' => 'Opportunity with duration']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-duration', 'https://example.test/opportunity/duration'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/duration',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            duration: 'P3M',
+            mode: $mode,
+        );
+
+        self::assertSame('P3M', $opportunity->toArray()['duration']);
+        self::assertSame($mode->toArray(), $opportunity->toArray()['mode']);
+    }
+
+    public function testLearningOpportunityRejectsMalformedDuration(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new LearningOpportunity(
+            'https://example.test/opportunity/invalid-duration',
+            new LocalizedString(['en' => 'Invalid duration']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-invalid-duration', 'https://example.test/opportunity/invalid-duration'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/invalid-duration',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            duration: 'three months',
+        );
+    }
+
     public function testPriceDetailSerializesDecimalAmountAndCurrency(): void {
         $currency = new Concept(
             'http://publications.europa.eu/resource/authority/currency/EUR',

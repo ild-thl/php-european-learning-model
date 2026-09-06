@@ -10,7 +10,7 @@ use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Claim;
 use IsyThl\EuropeanLearningModel\Core\Address;
 use IsyThl\EuropeanLearningModel\Accreditation;
-use IsyThl\EuropeanLearningModel\AwardingProcess;
+use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\ContactPoint;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint;
 use IsyThl\EuropeanLearningModel\Credential;

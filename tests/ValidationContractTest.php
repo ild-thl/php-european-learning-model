@@ -11,7 +11,7 @@ use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
 use IsyThl\EuropeanLearningModel\Core\Address as CoreAddress;
-use IsyThl\EuropeanLearningModel\AwardingProcess as CoreAwardingProcess;
+use IsyThl\EuropeanLearningModel\Core\AwardingProcess as CoreAwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\ContactPoint as CoreContactPoint;
 use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
@@ -173,7 +173,7 @@ final class ValidationContractTest extends TestCase {
         $process = new CoreAwardingProcess('core-awarding-process', $organisation);
 
         self::assertInstanceOf(CoreOrganisation::class, $organisation);
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\AwardingProcess::class, $process);
+        self::assertInstanceOf(CoreAwardingProcess::class, $process);
         self::assertSame([
             'id' => 'urn:epass:awardingProcess:core-awarding-process',
             'type' => 'AwardingProcess',

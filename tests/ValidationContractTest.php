@@ -17,6 +17,9 @@ use IsyThl\EuropeanLearningModel\Core\ContactPoint as CoreContactPoint;
 use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint as CoreCreditPoint;
+use IsyThl\EuropeanLearningModel\Core\DisplayDetail as CoreDisplayDetail;
+use IsyThl\EuropeanLearningModel\Core\DisplayParameter as CoreDisplayParameter;
+use IsyThl\EuropeanLearningModel\Core\GradingScheme as CoreGradingScheme;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
@@ -263,6 +266,50 @@ final class ValidationContractTest extends TestCase {
         self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\LearningActivity::class, $activity);
         self::assertSame('LearningActivity', $activity->toArray()['type']);
         self::assertCount(1, $activity->toArray()['hasPart']);
+    }
+
+    public function testCoreDisplayAndGradingAliasesPreserveProfileValues(): void {
+        $gradingScheme = new CoreGradingScheme(
+            'core-grading-scheme',
+            new CoreLocalizedString(['en' => 'How grades are described']),
+            new CoreLocalizedString(['en' => 'Core grading']),
+        );
+        $language = new CoreConcept(
+            'https://publications.europa.eu/resource/authority/language/ENG',
+            new CoreLocalizedString(['en' => 'English']),
+            new CoreConceptScheme(ElmVocabularySchemes::LANGUAGE),
+        );
+        $displayParameter = new CoreDisplayParameter(
+            'core-display-parameter',
+            $language,
+            $language,
+            new CoreLocalizedString(['en' => 'Core credential']),
+        );
+        $displayDetail = new CoreDisplayDetail(
+            'core-display-detail',
+            1,
+            new CoreMediaObject(
+                'core-display-image',
+                'aW1hZ2U=',
+                new CoreConcept(
+                    'https://example.test/encoding/base64',
+                    new CoreLocalizedString(['en' => 'Base64']),
+                    new CoreConceptScheme(ElmVocabularySchemes::CONTENT_ENCODING),
+                ),
+                new CoreConcept(
+                    'https://example.test/content-type/image',
+                    new CoreLocalizedString(['en' => 'Image']),
+                    new CoreConceptScheme(ElmVocabularySchemes::CONTENT_TYPE),
+                ),
+            ),
+        );
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\GradingScheme::class, $gradingScheme);
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\DisplayParameter::class, $displayParameter);
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\DisplayDetail::class, $displayDetail);
+        self::assertSame('GradingScheme', $gradingScheme->toArray()['type']);
+        self::assertSame(1, $displayDetail->toArray()['page']);
+        self::assertArrayNotHasKey('description', $displayParameter->toArray());
     }
 
     public function testProfileResourceRegistryIsAnExplicitResolutionBoundary(): void {

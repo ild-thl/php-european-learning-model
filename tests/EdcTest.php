@@ -11,7 +11,7 @@ use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Credential;
 use IsyThl\EuropeanLearningModel\CredentialSubject;
 use IsyThl\EuropeanLearningModel\DisplayParameter;
-use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Edc\EdcDocumentValidator;
 use IsyThl\EuropeanLearningModel\Edc\EdcProfile;

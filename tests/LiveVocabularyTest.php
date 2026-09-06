@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\RdfVocabularyProvider;
 use IsyThl\EuropeanLearningModel\Vocabulary\EscoVocabularySearchProvider;
 use IsyThl\EuropeanLearningModel\VocabularyResourceFetcher;

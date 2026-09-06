@@ -10,7 +10,7 @@ use IsyThl\EuropeanLearningModel\AwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
-use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\LearningActivity;

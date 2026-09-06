@@ -6,7 +6,7 @@ namespace IsyThl\EuropeanLearningModel\Loq;
 
 use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
-use IsyThl\EuropeanLearningModel\LegalIdentifier;
+use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
 
 final class QualificationReference {

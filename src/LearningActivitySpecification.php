@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
+
 final class LearningActivitySpecification extends LearningAchievementSpecification {
 
     protected static function typeScheme(): string {

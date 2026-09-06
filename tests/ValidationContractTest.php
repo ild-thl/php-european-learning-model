@@ -6,7 +6,7 @@ namespace IsyThl\EuropeanLearningModel\Tests;
 
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
-use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
@@ -20,7 +20,7 @@ use IsyThl\EuropeanLearningModel\DisplayDetail as CoreDisplayDetail;
 use IsyThl\EuropeanLearningModel\DisplayParameter as CoreDisplayParameter;
 use IsyThl\EuropeanLearningModel\GradingScheme as CoreGradingScheme;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
-use IsyThl\EuropeanLearningModel\LegalIdentifier as CoreLegalIdentifier;
+use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Location as CoreLocation;
@@ -57,7 +57,7 @@ final class ValidationContractTest extends TestCase {
         );
 
         self::assertInstanceOf(CoreIdentifier::class, $identifier);
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\LegalIdentifier::class, $legalIdentifier);
+        self::assertInstanceOf(CoreLegalIdentifier::class, $legalIdentifier);
         self::assertSame([
             'id' => 'urn:epass:identifier:core-id',
             'type' => 'Identifier',

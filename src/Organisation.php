@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 
 class Organisation extends \IsyThl\EuropeanLearningModel\Core\Entity {

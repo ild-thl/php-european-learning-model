@@ -6,6 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
+use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\Note;
 
 final class Address extends \IsyThl\EuropeanLearningModel\Core\Entity {

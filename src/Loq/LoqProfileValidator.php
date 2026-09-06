@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel\Loq;
 
 use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
-use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\Qualification;

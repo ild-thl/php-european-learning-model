@@ -42,6 +42,7 @@ use IsyThl\EuropeanDigitalCredentials\GradingScheme;
 use IsyThl\EuropeanDigitalCredentials\WebResource;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
 use PHPUnit\Framework\TestCase;
 
 final class EntityTest extends TestCase {
@@ -57,6 +58,13 @@ final class EntityTest extends TestCase {
 
         self::assertSame($expected, $entity->toJson());
         self::assertSame($expected, $entity->toJson());
+    }
+
+    public function testCoreJsonLdEncoderUsesThePackageEncodingContract(): void {
+        self::assertSame(
+            '{"id":"urn:test:core","label":{"en":["Zoë"]}}',
+            JsonLdEncoder::encode(['id' => 'urn:test:core', 'label' => ['en' => ['Zoë']]]),
+        );
     }
 
     public function testGeneratedIdentifiersHaveCredentialUrnFormat(): void {

@@ -1,6 +1,6 @@
 {
-    "name": "isy-thl/european-digital-credentials",
-    "description": "Framework-independent European Digital Credential document model and serializer.",
+    "name": "isy-thl/european-learning-model",
+    "description": "Framework-independent European Learning Model document models and deterministic serializers.",
     "type": "library",
     "license": "GPL-3.0-or-later",
     "require": {
@@ -9,6 +9,7 @@
     },
     "autoload": {
         "psr-4": {
+            "IsyThl\\EuropeanLearningModel\\": "src/",
             "IsyThl\\EuropeanDigitalCredentials\\": "src/"
         }
     },

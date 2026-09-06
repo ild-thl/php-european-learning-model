@@ -1,6 +1,13 @@
-# European Digital Credentials
+# European Learning Model
 
-Framework-independent ELM/EDC document models and deterministic unsigned JSON-LD serialization.
+Framework-independent ELM document models and deterministic unsigned JSON-LD serialization, including European Digital Credential compatibility.
+
+The Composer package is `isy-thl/european-learning-model`. The existing
+`IsyThl\EuropeanDigitalCredentials` namespace remains available temporarily
+while the shared `Core`, `Edc`, and `Loq` namespaces are introduced. New code
+should use the new namespaces where available; the legacy namespace is a
+compatibility surface and will receive an explicit migration policy before the
+first public release.
 
 This package owns the ELM format boundary only. It does not contain Moodle,
 Laravel, DSS, CSC, HTTP, certificate, or signing code. It produces unsigned

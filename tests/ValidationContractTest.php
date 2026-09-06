@@ -16,11 +16,13 @@ use IsyThl\EuropeanLearningModel\Core\AwardingProcess as CoreAwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\ContactPoint as CoreContactPoint;
 use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
+use IsyThl\EuropeanLearningModel\Core\CreditPoint as CoreCreditPoint;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
+use IsyThl\EuropeanLearningModel\Core\LearningOutcome as CoreLearningOutcome;
 use IsyThl\EuropeanLearningModel\Core\MediaObject as CoreMediaObject;
 use IsyThl\EuropeanLearningModel\Core\Organisation as CoreOrganisation;
 use IsyThl\EuropeanLearningModel\Core\EmailAddress as CoreEmailAddress;
@@ -193,6 +195,33 @@ final class ValidationContractTest extends TestCase {
         self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\MediaObject::class, $media);
         self::assertSame('MediaObject', $media->toArray()['type']);
         self::assertSame('aGVsbG8=', $media->toArray()['content']);
+    }
+
+    public function testCoreCreditPointAndLearningOutcomeAliasesPreserveProfileValues(): void {
+        $creditPoint = new CoreCreditPoint(
+            'core-credit-point',
+            new CoreConcept(
+                'https://example.test/credit-framework/ects',
+                new CoreLocalizedString(['en' => 'ECTS']),
+                new CoreConceptScheme(ElmVocabularySchemes::EDUCATION_CREDIT),
+            ),
+            '6',
+        );
+        $outcome = new CoreLearningOutcome(
+            'core-outcome',
+            new CoreLocalizedString(['en' => 'Core learning outcome']),
+            relatedSkills: [new CoreConcept(
+                'https://example.test/skill/1',
+                new CoreLocalizedString(['en' => 'Skill']),
+                new CoreConceptScheme(ElmVocabularySchemes::DCF_SKILLS),
+            )],
+        );
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\CreditPoint::class, $creditPoint);
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\LearningOutcome::class, $outcome);
+        self::assertSame('6', $creditPoint->toArray()['point']);
+        self::assertSame('LearningOutcome', $outcome->toArray()['type']);
+        self::assertCount(1, $outcome->toArray()['relatedSkills']);
     }
 
     public function testProfileResourceRegistryIsAnExplicitResolutionBoundary(): void {

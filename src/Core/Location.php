@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\Address;
-
-final class Location extends \IsyThl\EuropeanLearningModel\Core\Entity {
+final class Location extends Entity {
 
     public function __construct(string $id, public readonly Address $address) {
         parent::__construct($id);

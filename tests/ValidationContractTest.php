@@ -23,7 +23,7 @@ use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
-use IsyThl\EuropeanLearningModel\Location as CoreLocation;
+use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome as CoreLearningOutcome;
 use IsyThl\EuropeanLearningModel\LearningActivity as CoreLearningActivity;
 use IsyThl\EuropeanLearningModel\LearningActivitySpecification as CoreLearningActivitySpecification;
@@ -126,7 +126,7 @@ final class ValidationContractTest extends TestCase {
         $location = new CoreLocation('core-location', $address);
 
         self::assertInstanceOf(CoreAddress::class, $address);
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Location::class, $location);
+        self::assertInstanceOf(CoreLocation::class, $location);
         self::assertSame([
             'id' => 'urn:epass:location:core-location',
             'type' => 'Location',

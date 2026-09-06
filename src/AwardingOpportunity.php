@@ -6,6 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
+use IsyThl\EuropeanLearningModel\Core\Location;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 

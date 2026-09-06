@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Edc;
 
 use IsyThl\EuropeanLearningModel\Core\Organisation;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;

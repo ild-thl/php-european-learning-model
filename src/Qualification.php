@@ -38,6 +38,10 @@ final class Qualification extends LearningAchievementSpecification {
         public readonly ?Note $entryRequirement = null,
         public readonly ?Qualification $specialisationOf = null,
         public readonly ?Qualification $generalisationOf = null,
+        /** @var list<Qualification> */
+        public readonly array $hasPart = [],
+        /** @var list<Qualification> */
+        public readonly array $isPartOf = [],
     ) {
         parent::__construct(
             $id,
@@ -69,6 +73,12 @@ final class Qualification extends LearningAchievementSpecification {
         }
         if ($eqfLevel !== null) {
             ConceptAssertions::assertScheme($eqfLevel, ElmVocabularySchemes::EQF, 'eqfLevel');
+        }
+        if (array_filter($hasPart, static fn ($part): bool => !$part instanceof self) !== []) {
+            throw new InvalidCredentialException('Qualification parts must be Qualification objects.');
+        }
+        if (array_filter($isPartOf, static fn ($parent): bool => !$parent instanceof self) !== []) {
+            throw new InvalidCredentialException('Qualification parents must be Qualification objects.');
         }
         foreach ($nqfLevels as $nqfLevel) {
             ConceptAssertions::assertSchemePrefix($nqfLevel, ElmVocabularySchemes::QDR_BASE, 'nqfLevels');
@@ -126,6 +136,18 @@ final class Qualification extends LearningAchievementSpecification {
         }
         if ($this->generalisationOf !== null) {
             $data['generalisationOf'] = $this->generalisationOf->toArray();
+        }
+        if ($this->hasPart !== []) {
+            $data['hasPart'] = array_map(
+                static fn (self $part): array => $part->toArray(),
+                $this->hasPart,
+            );
+        }
+        if ($this->isPartOf !== []) {
+            $data['isPartOf'] = array_map(
+                static fn (self $parent): array => $parent->toArray(),
+                $this->isPartOf,
+            );
         }
         return $data;
     }

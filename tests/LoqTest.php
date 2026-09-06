@@ -496,6 +496,33 @@ final class LoqTest extends TestCase {
         self::assertSame($baseQualification->toArray(), $data['generalisationOf']);
     }
 
+    public function testQualificationSerializesPartRelations(): void {
+        $part = new Qualification(
+            'https://example.test/qualification/part',
+            new LocalizedString(['en' => 'Qualification part']),
+        );
+        $parent = new Qualification(
+            'https://example.test/qualification/parent',
+            new LocalizedString(['en' => 'Parent qualification']),
+            hasPart: [$part],
+            isPartOf: [$part],
+        );
+
+        $data = $parent->toArray();
+        self::assertSame([$part->toArray()], $data['hasPart']);
+        self::assertSame([$part->toArray()], $data['isPartOf']);
+    }
+
+    public function testQualificationRejectsInvalidPartRelations(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new Qualification(
+            'https://example.test/qualification/invalid-part',
+            new LocalizedString(['en' => 'Invalid qualification']),
+            hasPart: ['invalid'],
+        );
+    }
+
     public function testQualificationSerializesQualificationCodeUsingProfilePropertyName(): void {
         $qualificationCode = $this->concept(
             'https://example.test/qualification-code/1',

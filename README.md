@@ -17,7 +17,8 @@ JSON-LD bytes that an application may pass unchanged to a signing boundary.
 
 The package currently includes credential, issuer, subject, display,
 achievement, awarding, qualification, accreditation, concept, localization,
-identifier, date, note, credit-point, supplementary web-resource, and
+identifier, date, note, credit-point, supplementary web-resource, LOQ learning
+opportunity, qualification-reference, awarding-opportunity, and
 vocabulary-snapshot models. `InMemoryVocabularyProvider` can enumerate allowed
 concepts and look them up by scheme, identifier, or notation without network
 access. `ElmVocabularySchemes` provides stable identifiers for the profile-owned
@@ -141,7 +142,32 @@ decorator for authoritative vocabulary browsing. The package never handles
 signatures, keys, certificates, or transport configuration. Field-specific
 membership policies are enforced for credential profiles, languages, countries,
 education credits, EQF/NQF, assessments, verification, entitlements, media,
-and ISCED-F subjects. Complete SHACL validation is still being extracted.
+and ISCED-F subjects. Complete standards-based SHACL validation remains an
+injectable adapter boundary; the package does not claim full SHACL execution
+from its PHP preflight validators.
+
+### LOQ documents
+
+LOQ roots are available through the `Loq` namespace and serialize to
+deterministic unsigned JSON-LD:
+
+```php
+use IsyThl\EuropeanLearningModel\Loq\LoqDatasetDocument;
+use IsyThl\EuropeanLearningModel\Loq\QualificationReference;
+
+$reference = new QualificationReference($identifier, $datasetNamespace);
+$dataset = new LoqDatasetDocument([$qualification, $learningOpportunity]);
+$unsignedJsonLd = $dataset->toJson();
+```
+
+Qualifications support profile-backed entry requirements, qualification
+relations, influencing activities, awarding opportunities, EQF/NQF and
+ISCED-F concepts. Learning opportunities support embedded specifications or a
+`QualificationReference`, publishers, schedules, locations, prices, grants,
+deadlines, and graph relations. Required profile fields are checked before
+serialization; optional values are omitted when unset. `datasetNamespace` is
+a validated persistent URI supplied by the application and is not a QDR
+transport or hosting configuration.
 
 The supplied `AA-Annex1-MC-unsigned.json` is retained as profile evidence. Its
 legacy `credential` wrapper, schema array, missing JSON-LD context, and offset

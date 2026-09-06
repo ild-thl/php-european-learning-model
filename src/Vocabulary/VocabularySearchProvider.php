@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials\Vocabulary;
+namespace IsyThl\EuropeanLearningModel\Vocabulary;
 
 interface VocabularySearchProvider {
 

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use IsyThl\EuropeanDigitalCredentials\Concept;
-use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\GradingScheme;
-use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyProvider;
-use IsyThl\EuropeanDigitalCredentials\LearningActivitySpecification;
-use IsyThl\EuropeanDigitalCredentials\LearningAssessmentSpecification;
-use IsyThl\EuropeanDigitalCredentials\LocalizedString;
-use IsyThl\EuropeanDigitalCredentials\VocabularyScheme;
+use IsyThl\EuropeanLearningModel\Concept;
+use IsyThl\EuropeanLearningModel\ConceptScheme;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\GradingScheme;
+use IsyThl\EuropeanLearningModel\InMemoryVocabularyProvider;
+use IsyThl\EuropeanLearningModel\LearningActivitySpecification;
+use IsyThl\EuropeanLearningModel\LearningAssessmentSpecification;
+use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\VocabularyScheme;
 
 $languageScheme = new ConceptScheme(ElmVocabularySchemes::LANGUAGE);
 $languageEnglish = new Concept(

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials;
+namespace IsyThl\EuropeanLearningModel;
 
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularyConceptPage;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularySearchProvider;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\Vocabulary\VocabularyConceptPage;
+use IsyThl\EuropeanLearningModel\Vocabulary\VocabularySearchProvider;
 
 final class InMemoryVocabularyProvider implements VocabularyProvider, VocabularySearchProvider {
 

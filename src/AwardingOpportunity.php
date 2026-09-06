@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials;
+namespace IsyThl\EuropeanLearningModel;
 
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 
 final class AwardingOpportunity extends Entity {

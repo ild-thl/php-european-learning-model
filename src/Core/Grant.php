@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanDigitalCredentials\Concept;
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
-use IsyThl\EuropeanDigitalCredentials\LocalizedString;
-use IsyThl\EuropeanDigitalCredentials\WebResource;
+use IsyThl\EuropeanLearningModel\Concept;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\WebResource;
 
 final class Grant {
 

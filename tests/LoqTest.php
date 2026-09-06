@@ -2,25 +2,26 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials\Tests;
+namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanDigitalCredentials\Address;
-use IsyThl\EuropeanDigitalCredentials\AwardingOpportunity;
-use IsyThl\EuropeanDigitalCredentials\AwardingProcess;
-use IsyThl\EuropeanDigitalCredentials\Concept;
-use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\Identifier;
-use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
-use IsyThl\EuropeanDigitalCredentials\LearningActivity;
-use IsyThl\EuropeanDigitalCredentials\LearningActivitySpecification;
-use IsyThl\EuropeanDigitalCredentials\LocalizedString;
-use IsyThl\EuropeanDigitalCredentials\Location;
-use IsyThl\EuropeanDigitalCredentials\Note;
-use IsyThl\EuropeanDigitalCredentials\Organisation;
-use IsyThl\EuropeanDigitalCredentials\Qualification;
-use IsyThl\EuropeanDigitalCredentials\WebResource;
+use IsyThl\EuropeanLearningModel\Address;
+use IsyThl\EuropeanLearningModel\AwardingOpportunity;
+use IsyThl\EuropeanLearningModel\AwardingProcess;
+use IsyThl\EuropeanLearningModel\Concept;
+use IsyThl\EuropeanLearningModel\ConceptScheme;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Identifier;
+use IsyThl\EuropeanLearningModel\LearningAchievementSpecification;
+use IsyThl\EuropeanLearningModel\LearningActivity;
+use IsyThl\EuropeanLearningModel\LearningActivitySpecification;
+use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Location;
+use IsyThl\EuropeanLearningModel\Note;
+use IsyThl\EuropeanLearningModel\Organisation;
+use IsyThl\EuropeanLearningModel\Qualification;
+use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
+use IsyThl\EuropeanLearningModel\WebResource;
 use IsyThl\EuropeanLearningModel\Loq\LearningOpportunity;
 use IsyThl\EuropeanLearningModel\Loq\LearningOpportunityDocument;
 use IsyThl\EuropeanLearningModel\Loq\LoqDatasetDocument;
@@ -95,7 +96,7 @@ final class LoqTest extends TestCase {
             new LocalizedString(['en' => 'Qualification']),
             eqfLevel: $this->concept(ElmVocabularySchemes::EQF, 'https://example.test/eqf/4'),
             nqfLevels: [$this->concept(ElmVocabularySchemes::QDR_BASE, 'https://example.test/nqf/4')],
-            learningOutcomes: [new \IsyThl\EuropeanDigitalCredentials\LearningOutcome(
+            learningOutcomes: [new \IsyThl\EuropeanLearningModel\Core\LearningOutcome(
                 'https://example.test/outcome/1',
                 new LocalizedString(['en' => 'Outcome']),
             )],
@@ -114,7 +115,7 @@ final class LoqTest extends TestCase {
             new LocalizedString(['en' => 'Embedded qualification']),
             eqfLevel: $this->concept(ElmVocabularySchemes::EQF, 'https://example.test/eqf/4'),
             nqfLevels: [$this->concept(ElmVocabularySchemes::QDR_BASE, 'https://example.test/nqf/4')],
-            learningOutcomes: [new \IsyThl\EuropeanDigitalCredentials\LearningOutcome(
+            learningOutcomes: [new \IsyThl\EuropeanLearningModel\Core\LearningOutcome(
                 'https://example.test/outcome/embedded',
                 new LocalizedString(['en' => 'Embedded outcome']),
             )],
@@ -322,7 +323,7 @@ final class LoqTest extends TestCase {
 
     public function testLearningOpportunitySerializesGrantAndBannerImage(): void {
         $grant = new Grant(new LocalizedString(['en' => 'Study grant']));
-        $bannerImage = new \IsyThl\EuropeanDigitalCredentials\MediaObject(
+        $bannerImage = new \IsyThl\EuropeanLearningModel\MediaObject(
             'banner-image',
             'base64-image-data',
             $this->concept(
@@ -353,7 +354,7 @@ final class LoqTest extends TestCase {
     }
 
     public function testLearningOpportunitySerializesActivitySpecificationAndDeadlineInUtc(): void {
-        $activitySpecification = new \IsyThl\EuropeanDigitalCredentials\LearningActivitySpecification(
+        $activitySpecification = new \IsyThl\EuropeanLearningModel\LearningActivitySpecification(
             'https://example.test/activity-specification/1',
             new LocalizedString(['en' => 'Blended activity']),
         );
@@ -477,7 +478,7 @@ final class LoqTest extends TestCase {
             new LocalizedString(['en' => 'Qualification with summary']),
             eqfLevel: $this->concept(ElmVocabularySchemes::EQF, 'https://example.test/eqf/4'),
             nqfLevels: [$this->concept(ElmVocabularySchemes::QDR_BASE, 'https://example.test/nqf/4')],
-            learningOutcomes: [new \IsyThl\EuropeanDigitalCredentials\LearningOutcome(
+            learningOutcomes: [new \IsyThl\EuropeanLearningModel\Core\LearningOutcome(
                 'https://example.test/outcome/summary',
                 new LocalizedString(['en' => 'Outcome']),
             )],
@@ -724,7 +725,7 @@ final class LoqTest extends TestCase {
             new LocalizedString(['en' => 'Qualification']),
             eqfLevel: $this->concept(ElmVocabularySchemes::EQF, 'https://example.test/eqf/4'),
             nqfLevels: [$this->concept(ElmVocabularySchemes::QDR_BASE, 'https://example.test/nqf/4')],
-            learningOutcomes: [new \IsyThl\EuropeanDigitalCredentials\LearningOutcome(
+            learningOutcomes: [new \IsyThl\EuropeanLearningModel\Core\LearningOutcome(
                 'https://example.test/outcome/1',
                 new LocalizedString(['en' => 'Outcome']),
             )],

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials\Tests;
+namespace IsyThl\EuropeanLearningModel\Tests;
 
 use DateTimeImmutable;
-use IsyThl\EuropeanDigitalCredentials\Claim;
-use IsyThl\EuropeanDigitalCredentials\Concept;
-use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
-use IsyThl\EuropeanDigitalCredentials\Credential;
-use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
-use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\LocalizedString;
+use IsyThl\EuropeanLearningModel\Claim;
+use IsyThl\EuropeanLearningModel\Concept;
+use IsyThl\EuropeanLearningModel\ConceptScheme;
+use IsyThl\EuropeanLearningModel\Credential;
+use IsyThl\EuropeanLearningModel\CredentialSubject;
+use IsyThl\EuropeanLearningModel\DisplayParameter;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\LocalizedString;
 use IsyThl\EuropeanLearningModel\Edc\EdcDocumentValidator;
 use IsyThl\EuropeanLearningModel\Edc\EdcProfile;
 use PHPUnit\Framework\TestCase;

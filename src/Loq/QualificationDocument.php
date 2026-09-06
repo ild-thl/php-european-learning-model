@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Loq;
 
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
-use IsyThl\EuropeanDigitalCredentials\Qualification;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
 
 final class QualificationDocument {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials\Tests;
+namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\RdfVocabularyProvider;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\EscoVocabularySearchProvider;
-use IsyThl\EuropeanDigitalCredentials\VocabularyResourceFetcher;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularySearchResourceFetcher;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\RdfVocabularyProvider;
+use IsyThl\EuropeanLearningModel\Vocabulary\EscoVocabularySearchProvider;
+use IsyThl\EuropeanLearningModel\VocabularyResourceFetcher;
+use IsyThl\EuropeanLearningModel\Vocabulary\VocabularySearchResourceFetcher;
 use PHPUnit\Framework\TestCase;
 
 final class LiveVocabularyTest extends TestCase {

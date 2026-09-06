@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanDigitalCredentials\Concept;
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\Concept;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class Amount {
 

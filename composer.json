@@ -9,13 +9,12 @@
     },
     "autoload": {
         "psr-4": {
-            "IsyThl\\EuropeanLearningModel\\": "src/",
-            "IsyThl\\EuropeanDigitalCredentials\\": "src/"
+            "IsyThl\\EuropeanLearningModel\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "IsyThl\\EuropeanDigitalCredentials\\Tests\\": "tests/"
+            "IsyThl\\EuropeanLearningModel\\Tests\\": "tests/"
         }
     },
     "require-dev": {

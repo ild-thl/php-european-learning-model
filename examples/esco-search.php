@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\LearningOutcome;
-use IsyThl\EuropeanDigitalCredentials\LocalizedString;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\EscoVocabularySearchProvider;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularySearchResourceFetcher;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
+use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Vocabulary\EscoVocabularySearchProvider;
+use IsyThl\EuropeanLearningModel\Vocabulary\VocabularySearchResourceFetcher;
 
 $fetcher = new class implements VocabularySearchResourceFetcher {
     public function search(

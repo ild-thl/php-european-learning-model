@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Loq;
 
-use IsyThl\EuropeanDigitalCredentials\ConceptAssertions;
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
-use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
-use IsyThl\EuropeanDigitalCredentials\Qualification;
+use IsyThl\EuropeanLearningModel\ConceptAssertions;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\LearningAchievementSpecification;
+use IsyThl\EuropeanLearningModel\Qualification;
 
 final class LoqProfileValidator {
 

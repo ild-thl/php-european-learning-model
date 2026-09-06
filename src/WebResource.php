@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials;
+namespace IsyThl\EuropeanLearningModel;
 
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class WebResource extends Entity {
 

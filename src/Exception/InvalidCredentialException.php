@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials\Exception;
+namespace IsyThl\EuropeanLearningModel\Exception;
 
 final class InvalidCredentialException extends \InvalidArgumentException {
 

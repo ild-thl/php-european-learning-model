@@ -4,4 +4,33 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
-class_alias(\IsyThl\EuropeanDigitalCredentials\CreditPoint::class, __NAMESPACE__ . '\\CreditPoint');
+use IsyThl\EuropeanLearningModel\Concept;
+use IsyThl\EuropeanLearningModel\ConceptAssertions;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Entity;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+
+final class CreditPoint extends Entity {
+
+    public function __construct(
+        string $id,
+        public readonly Concept $framework,
+        public readonly string $point,
+    ) {
+        parent::__construct($id);
+        ConceptAssertions::assertScheme($framework, ElmVocabularySchemes::EDUCATION_CREDIT, 'framework');
+        if ($point === '') {
+            throw new InvalidCredentialException('A credit point requires a point value.');
+        }
+    }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array {
+        return [
+            'id' => 'urn:epass:creditPoint:' . $this->id,
+            'type' => 'CreditPoint',
+            'framework' => $this->framework->toArray(),
+            'point' => $this->point,
+        ];
+    }
+}

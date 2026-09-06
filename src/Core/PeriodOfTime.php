@@ -6,7 +6,7 @@ namespace IsyThl\EuropeanLearningModel\Core;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class PeriodOfTime {
 

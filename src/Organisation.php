@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials;
+namespace IsyThl\EuropeanLearningModel;
 
 class Organisation extends Entity {
 

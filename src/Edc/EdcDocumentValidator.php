@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Edc;
 
-use IsyThl\EuropeanDigitalCredentials\CredentialDocumentValidator;
+use IsyThl\EuropeanLearningModel\CredentialDocumentValidator;
 
 final class EdcDocumentValidator {
 

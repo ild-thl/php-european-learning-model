@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials;
+namespace IsyThl\EuropeanLearningModel;
 
 final class ContactPoint extends Entity {
 

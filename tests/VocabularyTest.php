@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials\Tests;
+namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanDigitalCredentials\Concept;
-use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
-use IsyThl\EuropeanDigitalCredentials\CachedVocabularyProvider;
-use IsyThl\EuropeanDigitalCredentials\Clock;
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
-use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyCache;
-use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyProvider;
-use IsyThl\EuropeanDigitalCredentials\JsonLdVocabularyProvider;
-use IsyThl\EuropeanDigitalCredentials\LocalizedString;
-use IsyThl\EuropeanDigitalCredentials\RdfVocabularyProvider;
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\VocabularyResourceFetcher;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\JsonVocabularySearchProvider;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\EscoVocabularySearchProvider;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularySearchResourceFetcher;
-use IsyThl\EuropeanDigitalCredentials\VocabularyScheme;
-use IsyThl\EuropeanDigitalCredentials\VocabularyProvider;
+use IsyThl\EuropeanLearningModel\Concept;
+use IsyThl\EuropeanLearningModel\ConceptScheme;
+use IsyThl\EuropeanLearningModel\CachedVocabularyProvider;
+use IsyThl\EuropeanLearningModel\Clock;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\InMemoryVocabularyCache;
+use IsyThl\EuropeanLearningModel\InMemoryVocabularyProvider;
+use IsyThl\EuropeanLearningModel\JsonLdVocabularyProvider;
+use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\RdfVocabularyProvider;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\VocabularyResourceFetcher;
+use IsyThl\EuropeanLearningModel\Vocabulary\JsonVocabularySearchProvider;
+use IsyThl\EuropeanLearningModel\Vocabulary\EscoVocabularySearchProvider;
+use IsyThl\EuropeanLearningModel\Vocabulary\VocabularySearchResourceFetcher;
+use IsyThl\EuropeanLearningModel\VocabularyScheme;
+use IsyThl\EuropeanLearningModel\VocabularyProvider;
 use PHPUnit\Framework\TestCase;
 
 final class VocabularyTest extends TestCase {
@@ -99,7 +99,7 @@ final class VocabularyTest extends TestCase {
     public function testVocabularyPageRejectsEmptyCursor(): void {
         $this->expectExceptionMessage('must not be empty');
 
-        new \IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularyConceptPage([], '');
+        new \IsyThl\EuropeanLearningModel\Vocabulary\VocabularyConceptPage([], '');
     }
 
     public function testJsonSearchProviderParsesPagedConcepts(): void {

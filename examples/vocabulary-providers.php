@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use IsyThl\EuropeanDigitalCredentials\CachedVocabularyProvider;
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\InMemoryVocabularyCache;
-use IsyThl\EuropeanDigitalCredentials\JsonLdVocabularyProvider;
-use IsyThl\EuropeanDigitalCredentials\RdfVocabularyProvider;
-use IsyThl\EuropeanDigitalCredentials\VocabularyResourceFetcher;
+use IsyThl\EuropeanLearningModel\CachedVocabularyProvider;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\InMemoryVocabularyCache;
+use IsyThl\EuropeanLearningModel\JsonLdVocabularyProvider;
+use IsyThl\EuropeanLearningModel\RdfVocabularyProvider;
+use IsyThl\EuropeanLearningModel\VocabularyResourceFetcher;
 
 $schemeId = ElmVocabularySchemes::LANGUAGE;
 $languageId = $schemeId . '/ENG';

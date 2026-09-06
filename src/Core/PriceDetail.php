@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanDigitalCredentials\LocalizedString;
-use IsyThl\EuropeanDigitalCredentials\Note;
+use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Note;
 
 final class PriceDetail {
 

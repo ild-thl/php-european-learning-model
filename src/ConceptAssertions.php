@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials;
+namespace IsyThl\EuropeanLearningModel;
 
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class ConceptAssertions {
     public static function assertScheme(Concept $concept, string $schemeId, string $field): void {

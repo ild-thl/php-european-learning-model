@@ -2,46 +2,46 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials\Tests;
+namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanDigitalCredentials\Entity;
-use IsyThl\EuropeanDigitalCredentials\Concept;
-use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
-use IsyThl\EuropeanDigitalCredentials\Claim;
-use IsyThl\EuropeanDigitalCredentials\Address;
-use IsyThl\EuropeanDigitalCredentials\Accreditation;
-use IsyThl\EuropeanDigitalCredentials\AwardingProcess;
-use IsyThl\EuropeanDigitalCredentials\ContactPoint;
-use IsyThl\EuropeanDigitalCredentials\CreditPoint;
-use IsyThl\EuropeanDigitalCredentials\Credential;
-use IsyThl\EuropeanDigitalCredentials\CredentialSubject;
-use IsyThl\EuropeanDigitalCredentials\CredentialDocumentValidator;
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\DisplayParameter;
-use IsyThl\EuropeanDigitalCredentials\DisplayDetail;
-use IsyThl\EuropeanDigitalCredentials\IndividualDisplay;
-use IsyThl\EuropeanDigitalCredentials\Identifier;
-use IsyThl\EuropeanDigitalCredentials\Issuer;
-use IsyThl\EuropeanDigitalCredentials\LegalIdentifier;
-use IsyThl\EuropeanDigitalCredentials\MediaObject;
-use IsyThl\EuropeanDigitalCredentials\Note;
-use IsyThl\EuropeanDigitalCredentials\EmailAddress;
-use IsyThl\EuropeanDigitalCredentials\Location;
-use IsyThl\EuropeanDigitalCredentials\LearningAchievement;
-use IsyThl\EuropeanDigitalCredentials\LearningActivity;
-use IsyThl\EuropeanDigitalCredentials\LearningActivitySpecification;
-use IsyThl\EuropeanDigitalCredentials\LearningEntitlement;
-use IsyThl\EuropeanDigitalCredentials\LearningEntitlementSpecification;
-use IsyThl\EuropeanDigitalCredentials\LearningAssessment;
-use IsyThl\EuropeanDigitalCredentials\LearningAssessmentSpecification;
-use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
-use IsyThl\EuropeanDigitalCredentials\LearningOutcome;
-use IsyThl\EuropeanDigitalCredentials\Organisation;
-use IsyThl\EuropeanDigitalCredentials\Qualification;
-use IsyThl\EuropeanDigitalCredentials\GradingScheme;
-use IsyThl\EuropeanDigitalCredentials\WebResource;
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
-use IsyThl\EuropeanDigitalCredentials\LocalizedString;
+use IsyThl\EuropeanLearningModel\Entity;
+use IsyThl\EuropeanLearningModel\Concept;
+use IsyThl\EuropeanLearningModel\ConceptScheme;
+use IsyThl\EuropeanLearningModel\Claim;
+use IsyThl\EuropeanLearningModel\Address;
+use IsyThl\EuropeanLearningModel\Accreditation;
+use IsyThl\EuropeanLearningModel\AwardingProcess;
+use IsyThl\EuropeanLearningModel\ContactPoint;
+use IsyThl\EuropeanLearningModel\Core\CreditPoint;
+use IsyThl\EuropeanLearningModel\Credential;
+use IsyThl\EuropeanLearningModel\CredentialSubject;
+use IsyThl\EuropeanLearningModel\CredentialDocumentValidator;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\DisplayParameter;
+use IsyThl\EuropeanLearningModel\DisplayDetail;
+use IsyThl\EuropeanLearningModel\IndividualDisplay;
+use IsyThl\EuropeanLearningModel\Identifier;
+use IsyThl\EuropeanLearningModel\Issuer;
+use IsyThl\EuropeanLearningModel\LegalIdentifier;
+use IsyThl\EuropeanLearningModel\MediaObject;
+use IsyThl\EuropeanLearningModel\Note;
+use IsyThl\EuropeanLearningModel\EmailAddress;
+use IsyThl\EuropeanLearningModel\Location;
+use IsyThl\EuropeanLearningModel\LearningAchievement;
+use IsyThl\EuropeanLearningModel\LearningActivity;
+use IsyThl\EuropeanLearningModel\LearningActivitySpecification;
+use IsyThl\EuropeanLearningModel\LearningEntitlement;
+use IsyThl\EuropeanLearningModel\LearningEntitlementSpecification;
+use IsyThl\EuropeanLearningModel\LearningAssessment;
+use IsyThl\EuropeanLearningModel\LearningAssessmentSpecification;
+use IsyThl\EuropeanLearningModel\LearningAchievementSpecification;
+use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
+use IsyThl\EuropeanLearningModel\Organisation;
+use IsyThl\EuropeanLearningModel\Qualification;
+use IsyThl\EuropeanLearningModel\GradingScheme;
+use IsyThl\EuropeanLearningModel\WebResource;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
 use PHPUnit\Framework\TestCase;
 
@@ -173,7 +173,7 @@ final class EntityTest extends TestCase {
     }
 
     public function testCredentialRejectsProfileFromAnotherScheme(): void {
-        $this->expectException(\IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException::class);
+        $this->expectException(\IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException::class);
 
         new Credential(
             'credential-1',
@@ -207,7 +207,7 @@ final class EntityTest extends TestCase {
             new \DateTimeImmutable('2024-01-01T00:00:00+00:00'),
             credentialProfile: new Concept(
                 'http://example.test/profile',
-                new \IsyThl\EuropeanDigitalCredentials\LocalizedString(['en' => 'Profile']),
+                new \IsyThl\EuropeanLearningModel\LocalizedString(['en' => 'Profile']),
                 new ConceptScheme('http://example.test/wrong-scheme'),
             ),
         );

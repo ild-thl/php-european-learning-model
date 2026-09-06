@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials\Vocabulary;
+namespace IsyThl\EuropeanLearningModel\Vocabulary;
 
-use IsyThl\EuropeanDigitalCredentials\Concept;
+use IsyThl\EuropeanLearningModel\Concept;
 
 final class VocabularyConceptPage {
 

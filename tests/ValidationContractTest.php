@@ -2,36 +2,36 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials\Tests;
+namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanDigitalCredentials\Concept;
-use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
-use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
-use IsyThl\EuropeanDigitalCredentials\LearningOutcome;
-use IsyThl\EuropeanDigitalCredentials\LocalizedString;
-use IsyThl\EuropeanDigitalCredentials\Qualification;
+use IsyThl\EuropeanLearningModel\Concept;
+use IsyThl\EuropeanLearningModel\ConceptScheme;
+use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\LocalizedString;
+use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
-use IsyThl\EuropeanLearningModel\Core\Address as CoreAddress;
-use IsyThl\EuropeanLearningModel\Core\AwardingProcess as CoreAwardingProcess;
-use IsyThl\EuropeanLearningModel\Core\ContactPoint as CoreContactPoint;
-use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
-use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
+use IsyThl\EuropeanLearningModel\Address as CoreAddress;
+use IsyThl\EuropeanLearningModel\AwardingProcess as CoreAwardingProcess;
+use IsyThl\EuropeanLearningModel\ContactPoint as CoreContactPoint;
+use IsyThl\EuropeanLearningModel\Concept as CoreConcept;
+use IsyThl\EuropeanLearningModel\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint as CoreCreditPoint;
-use IsyThl\EuropeanLearningModel\Core\DisplayDetail as CoreDisplayDetail;
-use IsyThl\EuropeanLearningModel\Core\DisplayParameter as CoreDisplayParameter;
-use IsyThl\EuropeanLearningModel\Core\GradingScheme as CoreGradingScheme;
-use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
-use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
-use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
-use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
-use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
+use IsyThl\EuropeanLearningModel\DisplayDetail as CoreDisplayDetail;
+use IsyThl\EuropeanLearningModel\DisplayParameter as CoreDisplayParameter;
+use IsyThl\EuropeanLearningModel\GradingScheme as CoreGradingScheme;
+use IsyThl\EuropeanLearningModel\Identifier as CoreIdentifier;
+use IsyThl\EuropeanLearningModel\LegalIdentifier as CoreLegalIdentifier;
+use IsyThl\EuropeanLearningModel\LocalizedString as CoreLocalizedString;
+use IsyThl\EuropeanLearningModel\Note as CoreNote;
+use IsyThl\EuropeanLearningModel\Location as CoreLocation;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome as CoreLearningOutcome;
-use IsyThl\EuropeanLearningModel\Core\LearningActivity as CoreLearningActivity;
-use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification as CoreLearningActivitySpecification;
-use IsyThl\EuropeanLearningModel\Core\MediaObject as CoreMediaObject;
-use IsyThl\EuropeanLearningModel\Core\Organisation as CoreOrganisation;
-use IsyThl\EuropeanLearningModel\Core\EmailAddress as CoreEmailAddress;
-use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
+use IsyThl\EuropeanLearningModel\LearningActivity as CoreLearningActivity;
+use IsyThl\EuropeanLearningModel\LearningActivitySpecification as CoreLearningActivitySpecification;
+use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
+use IsyThl\EuropeanLearningModel\MediaObject as CoreMediaObject;
+use IsyThl\EuropeanLearningModel\Organisation as CoreOrganisation;
+use IsyThl\EuropeanLearningModel\EmailAddress as CoreEmailAddress;
+use IsyThl\EuropeanLearningModel\WebResource as CoreWebResource;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\FilesystemProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidationResult;
@@ -56,8 +56,8 @@ final class ValidationContractTest extends TestCase {
             ),
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Identifier::class, $identifier);
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\LegalIdentifier::class, $legalIdentifier);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Identifier::class, $identifier);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\LegalIdentifier::class, $legalIdentifier);
         self::assertSame([
             'id' => 'urn:epass:identifier:core-id',
             'type' => 'Identifier',
@@ -91,7 +91,7 @@ final class ValidationContractTest extends TestCase {
         );
         $roundTrip = CoreConcept::fromArray($concept->toArray());
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Concept::class, $concept);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Concept::class, $concept);
         self::assertSame($concept->toArray(), $roundTrip->toArray());
     }
 
@@ -99,8 +99,8 @@ final class ValidationContractTest extends TestCase {
         $note = new CoreNote('core-note', new CoreLocalizedString(['en' => 'Core note']));
         $resource = new CoreWebResource('core-resource', 'https://example.test/resource');
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Note::class, $note);
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\WebResource::class, $resource);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Note::class, $note);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\WebResource::class, $resource);
         self::assertSame([
             'id' => 'urn:epass:note:core-note',
             'type' => 'Note',
@@ -125,8 +125,8 @@ final class ValidationContractTest extends TestCase {
         );
         $location = new CoreLocation('core-location', $address);
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Address::class, $address);
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Location::class, $location);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Address::class, $address);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Location::class, $location);
         self::assertSame([
             'id' => 'urn:epass:location:core-location',
             'type' => 'Location',
@@ -138,8 +138,8 @@ final class ValidationContractTest extends TestCase {
         $email = new CoreEmailAddress('core@example.test');
         $contactPoint = new CoreContactPoint('core-contact', emailAddress: $email);
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\EmailAddress::class, $email);
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\ContactPoint::class, $contactPoint);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\EmailAddress::class, $email);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\ContactPoint::class, $contactPoint);
         self::assertSame([
             'id' => 'urn:epass:contactPoint:core-contact',
             'type' => 'ContactPoint',
@@ -149,7 +149,7 @@ final class ValidationContractTest extends TestCase {
             ]],
         ], $contactPoint->toArray());
 
-        $this->expectException(\IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException::class);
+        $this->expectException(\IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException::class);
         new CoreEmailAddress('invalid email');
     }
 
@@ -172,8 +172,8 @@ final class ValidationContractTest extends TestCase {
         );
         $process = new CoreAwardingProcess('core-awarding-process', $organisation);
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Organisation::class, $organisation);
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\AwardingProcess::class, $process);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Organisation::class, $organisation);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\AwardingProcess::class, $process);
         self::assertSame([
             'id' => 'urn:epass:awardingProcess:core-awarding-process',
             'type' => 'AwardingProcess',
@@ -197,7 +197,7 @@ final class ValidationContractTest extends TestCase {
             ),
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\MediaObject::class, $media);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\MediaObject::class, $media);
         self::assertSame('MediaObject', $media->toArray()['type']);
         self::assertSame('aGVsbG8=', $media->toArray()['content']);
     }
@@ -222,8 +222,8 @@ final class ValidationContractTest extends TestCase {
             )],
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\CreditPoint::class, $creditPoint);
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\LearningOutcome::class, $outcome);
+        self::assertInstanceOf(CoreCreditPoint::class, $creditPoint);
+        self::assertInstanceOf(CoreLearningOutcome::class, $outcome);
         self::assertSame('6', $creditPoint->toArray()['point']);
         self::assertSame('LearningOutcome', $outcome->toArray()['type']);
         self::assertCount(1, $outcome->toArray()['relatedSkills']);
@@ -263,7 +263,7 @@ final class ValidationContractTest extends TestCase {
             )],
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\LearningActivity::class, $activity);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\LearningActivity::class, $activity);
         self::assertSame('LearningActivity', $activity->toArray()['type']);
         self::assertCount(1, $activity->toArray()['hasPart']);
     }
@@ -304,9 +304,9 @@ final class ValidationContractTest extends TestCase {
             ),
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\GradingScheme::class, $gradingScheme);
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\DisplayParameter::class, $displayParameter);
-        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\DisplayDetail::class, $displayDetail);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\GradingScheme::class, $gradingScheme);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\DisplayParameter::class, $displayParameter);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\DisplayDetail::class, $displayDetail);
         self::assertSame('GradingScheme', $gradingScheme->toArray()['type']);
         self::assertSame(1, $displayDetail->toArray()['page']);
         self::assertArrayNotHasKey('description', $displayParameter->toArray());

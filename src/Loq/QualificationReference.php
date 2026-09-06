@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Loq;
 
-use IsyThl\EuropeanDigitalCredentials\Identifier;
-use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
-use IsyThl\EuropeanDigitalCredentials\LegalIdentifier;
+use IsyThl\EuropeanLearningModel\Identifier;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+use IsyThl\EuropeanLearningModel\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
 
 final class QualificationReference {

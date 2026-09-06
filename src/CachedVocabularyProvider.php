@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanDigitalCredentials;
+namespace IsyThl\EuropeanLearningModel;
 
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularyConceptPage;
-use IsyThl\EuropeanDigitalCredentials\Vocabulary\VocabularySearchProvider;
+use IsyThl\EuropeanLearningModel\Vocabulary\VocabularyConceptPage;
+use IsyThl\EuropeanLearningModel\Vocabulary\VocabularySearchProvider;
 
 final class CachedVocabularyProvider implements VocabularyProvider, VocabularySearchProvider {
 

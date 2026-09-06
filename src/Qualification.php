@@ -12,6 +12,8 @@ final class Qualification extends LearningAchievementSpecification {
      * @param list<CreditPoint> $creditPoints
      * @param list<string> $category
      * @param list<Concept> $qualificationCodes
+    * @param list<LearningOutcome> $learningOutcomes
+    * @param list<Concept> $educationSubjects
      */
     public function __construct(
         string $id,
@@ -29,6 +31,8 @@ final class Qualification extends LearningAchievementSpecification {
         public readonly array $nqfLevels = [],
         /** @var list<Accreditation> */
         public readonly array $accreditations = [],
+        array $learningOutcomes = [],
+        array $educationSubjects = [],
     ) {
         parent::__construct(
             $id,
@@ -39,6 +43,8 @@ final class Qualification extends LearningAchievementSpecification {
             $category,
             $maximumDuration,
             $volumeOfLearning,
+            learningOutcomes: $learningOutcomes,
+            educationSubjects: $educationSubjects,
         );
         if (
             array_filter(

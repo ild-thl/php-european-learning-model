@@ -15,10 +15,12 @@ use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\Note;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
+use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanDigitalCredentials\WebResource;
 use IsyThl\EuropeanLearningModel\Loq\LearningOpportunity;
 use IsyThl\EuropeanLearningModel\Loq\LearningOpportunityDocument;
 use IsyThl\EuropeanLearningModel\Loq\QualificationReference;
+use IsyThl\EuropeanLearningModel\Loq\QualificationDocument;
 use PHPUnit\Framework\TestCase;
 
 final class LoqTest extends TestCase {
@@ -51,6 +53,17 @@ final class LoqTest extends TestCase {
         $this->expectException(InvalidCredentialException::class);
 
         new LearningOpportunityDocument([['type' => 'LearningOpportunity']]);
+    }
+
+    public function testQualificationDocumentRejectsMissingProfileFields(): void {
+        $qualification = new Qualification(
+            'qualification-1',
+            new LocalizedString(['en' => 'Incomplete qualification']),
+        );
+
+        $this->expectException(InvalidCredentialException::class);
+
+        new QualificationDocument([$qualification]);
     }
 
     public function testDocumentSerializationIsDeterministic(): void {

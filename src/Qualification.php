@@ -36,6 +36,8 @@ final class Qualification extends LearningAchievementSpecification {
         public readonly ?Organisation $publisher = null,
         public readonly ?Note $learningOutcomeSummary = null,
         public readonly ?Note $entryRequirement = null,
+        public readonly ?Qualification $specialisationOf = null,
+        public readonly ?Qualification $generalisationOf = null,
     ) {
         parent::__construct(
             $id,
@@ -118,6 +120,12 @@ final class Qualification extends LearningAchievementSpecification {
         }
         if ($this->entryRequirement !== null) {
             $data['entryRequirement'] = $this->entryRequirement->toArray();
+        }
+        if ($this->specialisationOf !== null) {
+            $data['specialisationOf'] = $this->specialisationOf->toArray();
+        }
+        if ($this->generalisationOf !== null) {
+            $data['generalisationOf'] = $this->generalisationOf->toArray();
         }
         return $data;
     }

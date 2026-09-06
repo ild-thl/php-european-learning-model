@@ -479,6 +479,23 @@ final class LoqTest extends TestCase {
         self::assertSame($entryRequirement->toArray(), $qualification->toArray()['entryRequirement']);
     }
 
+    public function testQualificationSerializesQualificationRelations(): void {
+        $baseQualification = new Qualification(
+            'https://example.test/qualification/base',
+            new LocalizedString(['en' => 'Base qualification']),
+        );
+        $qualification = new Qualification(
+            'https://example.test/qualification/specialised',
+            new LocalizedString(['en' => 'Specialised qualification']),
+            specialisationOf: $baseQualification,
+            generalisationOf: $baseQualification,
+        );
+
+        $data = $qualification->toArray();
+        self::assertSame($baseQualification->toArray(), $data['specialisationOf']);
+        self::assertSame($baseQualification->toArray(), $data['generalisationOf']);
+    }
+
     public function testQualificationSerializesQualificationCodeUsingProfilePropertyName(): void {
         $qualificationCode = $this->concept(
             'https://example.test/qualification-code/1',

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel\Vocabulary;
 
 use IsyThl\EuropeanLearningModel\Core\Concept;
-use IsyThl\EuropeanLearningModel\ConceptAssertions;
+use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class JsonVocabularySearchProvider implements VocabularySearchProvider {

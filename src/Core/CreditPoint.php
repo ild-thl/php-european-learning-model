@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel\Core;
 
 use IsyThl\EuropeanLearningModel\Core\Concept;
-use IsyThl\EuropeanLearningModel\ConceptAssertions;
+use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 

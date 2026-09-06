@@ -2,17 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\Identifier;
-use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
-use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
-use IsyThl\EuropeanLearningModel\Core\Location;
-use IsyThl\EuropeanLearningModel\Core\Organisation;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
-use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 
-final class AwardingOpportunity extends \IsyThl\EuropeanLearningModel\Core\Entity {
+final class AwardingOpportunity extends Entity {
 
     /**
      * @param list<Identifier|LegalIdentifier> $identifiers

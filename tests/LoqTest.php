@@ -19,6 +19,7 @@ use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanDigitalCredentials\WebResource;
 use IsyThl\EuropeanLearningModel\Loq\LearningOpportunity;
 use IsyThl\EuropeanLearningModel\Loq\LearningOpportunityDocument;
+use IsyThl\EuropeanLearningModel\Loq\LoqDatasetDocument;
 use IsyThl\EuropeanLearningModel\Loq\QualificationReference;
 use IsyThl\EuropeanLearningModel\Loq\QualificationDocument;
 use PHPUnit\Framework\TestCase;
@@ -53,6 +54,31 @@ final class LoqTest extends TestCase {
         $this->expectException(InvalidCredentialException::class);
 
         new LearningOpportunityDocument([['type' => 'LearningOpportunity']]);
+    }
+
+    public function testDatasetRejectsMalformedRootsBeforeSerialization(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new LoqDatasetDocument([['type' => 'Qualification']]);
+    }
+
+    public function testDatasetSerializesMixedTypedRootsDeterministically(): void {
+        $qualification = new Qualification(
+            'https://example.test/qualification/1',
+            new LocalizedString(['en' => 'Qualification']),
+            eqfLevel: $this->concept(ElmVocabularySchemes::EQF, 'https://example.test/eqf/4'),
+            nqfLevels: [$this->concept(ElmVocabularySchemes::QDR_BASE, 'https://example.test/nqf/4')],
+            learningOutcomes: [new \IsyThl\EuropeanDigitalCredentials\LearningOutcome(
+                'https://example.test/outcome/1',
+                new LocalizedString(['en' => 'Outcome']),
+            )],
+            educationSubjects: [$this->concept(ElmVocabularySchemes::ISCED_F, 'https://example.test/isced/1')],
+        );
+        $opportunity = $this->opportunity();
+        $dataset = new LoqDatasetDocument([$qualification, $opportunity]);
+
+        self::assertSame($dataset->toJson(), $dataset->toJson());
+        self::assertCount(2, $dataset->toArray()['@graph']);
     }
 
     public function testQualificationDocumentRejectsMissingProfileFields(): void {
@@ -104,6 +130,33 @@ final class LoqTest extends TestCase {
     private function concept(string $scheme, string $id): Concept {
         return new Concept($id, new LocalizedString(['en' => $id]), new ConceptScheme($scheme));
     }
+
+    private function opportunity(): LearningOpportunity {
+        $language = $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en');
+        $country = $this->countryConcept();
+        $provider = new Organisation(
+            'provider-1',
+            new Location('location-1', new Address(
+                'address-1',
+                $country,
+                new Note('address-note', new LocalizedString(['en' => 'Brussels'])),
+            )),
+            new LocalizedString(['en' => 'Example Provider']),
+        );
+
+        return new LearningOpportunity(
+            'https://example.test/opportunity/1',
+            new LocalizedString(['en' => 'Opportunity']),
+            $language,
+            new WebResource('homepage-1', 'https://example.test/opportunity/1'),
+            [$provider],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/1',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+        );
+    }
+
     public function testDocumentSerializationIsDeterministic(): void {
         $language = new Concept(
             'http://publications.europa.eu/resource/authority/language/ENG',

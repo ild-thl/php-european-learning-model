@@ -8,6 +8,7 @@ use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningEntitlementSpecification;
+use IsyThl\EuropeanLearningModel\Edc\Claim;
 use DateTimeImmutable;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 

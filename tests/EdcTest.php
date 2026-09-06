@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel\Tests;
 
 use DateTimeImmutable;
-use IsyThl\EuropeanLearningModel\Claim;
+use IsyThl\EuropeanLearningModel\Edc\Claim;
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Credential;
-use IsyThl\EuropeanLearningModel\CredentialSubject;
+use IsyThl\EuropeanLearningModel\Edc\CredentialSubject;
 use IsyThl\EuropeanLearningModel\Edc\DisplayParameter;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;

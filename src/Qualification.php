@@ -89,7 +89,7 @@ final class Qualification extends LearningAchievementSpecification {
             $data['isPartialQualification'] = $this->isPartialQualification;
         }
         if ($this->qualificationCodes !== []) {
-            $data['qualificationCodes'] = array_map(
+            $data['qualificationCode'] = array_map(
                 static fn (Concept $qualificationCode): array => $qualificationCode->toArray(),
                 $this->qualificationCodes,
             );

@@ -1428,7 +1428,7 @@ final class EntityTest extends TestCase {
         self::assertSame('Qualification', $data['type']);
         self::assertSame('urn:epass:qualification:qualification-1', $data['id']);
         self::assertFalse($data['isPartialQualification']);
-        self::assertSame('Example qualification', $data['qualificationCodes'][0]['prefLabel']['en'][0]);
+        self::assertSame('Example qualification', $data['qualificationCode'][0]['prefLabel']['en'][0]);
     }
 
     public function testSpecificationSerializesLearningOutcomeAndRelatedSkills(): void {
@@ -1491,7 +1491,7 @@ final class EntityTest extends TestCase {
         self::assertSame('http://example.test/nqf/level-4', $data['nqfLevel'][0]['id']);
         self::assertSame(
             'http://example.test/qualification-framework',
-            $data['qualificationCodes'][0]['inScheme']['id'],
+            $data['qualificationCode'][0]['inScheme']['id'],
         );
     }
 

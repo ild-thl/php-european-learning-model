@@ -36,7 +36,7 @@ use IsyThl\EuropeanLearningModel\LearningAssessment;
 use IsyThl\EuropeanLearningModel\LearningAssessmentSpecification;
 use IsyThl\EuropeanLearningModel\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
-use IsyThl\EuropeanLearningModel\Organisation;
+use IsyThl\EuropeanLearningModel\Core\Organisation;
 use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\Core\GradingScheme;
 use IsyThl\EuropeanLearningModel\Core\WebResource;

@@ -29,7 +29,7 @@ use IsyThl\EuropeanLearningModel\LearningActivity as CoreLearningActivity;
 use IsyThl\EuropeanLearningModel\LearningActivitySpecification as CoreLearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
 use IsyThl\EuropeanLearningModel\Core\MediaObject as CoreMediaObject;
-use IsyThl\EuropeanLearningModel\Organisation as CoreOrganisation;
+use IsyThl\EuropeanLearningModel\Core\Organisation as CoreOrganisation;
 use IsyThl\EuropeanLearningModel\Core\EmailAddress as CoreEmailAddress;
 use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
@@ -172,7 +172,7 @@ final class ValidationContractTest extends TestCase {
         );
         $process = new CoreAwardingProcess('core-awarding-process', $organisation);
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Organisation::class, $organisation);
+        self::assertInstanceOf(CoreOrganisation::class, $organisation);
         self::assertInstanceOf(\IsyThl\EuropeanLearningModel\AwardingProcess::class, $process);
         self::assertSame([
             'id' => 'urn:epass:awardingProcess:core-awarding-process',

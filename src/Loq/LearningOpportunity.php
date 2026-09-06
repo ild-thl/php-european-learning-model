@@ -14,7 +14,7 @@ use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Location;
 use IsyThl\EuropeanLearningModel\Core\MediaObject;
 use IsyThl\EuropeanLearningModel\Core\Note;
-use IsyThl\EuropeanLearningModel\Organisation;
+use IsyThl\EuropeanLearningModel\Core\Organisation;
 use IsyThl\EuropeanLearningModel\Core\WebResource;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 use IsyThl\EuropeanLearningModel\Core\PriceDetail;

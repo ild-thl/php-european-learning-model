@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\Organisation;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\Location;
 use IsyThl\EuropeanLearningModel\Core\ContactPoint;

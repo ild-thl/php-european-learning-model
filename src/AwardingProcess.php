@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\Organisation;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class AwardingProcess extends \IsyThl\EuropeanLearningModel\Core\Entity {

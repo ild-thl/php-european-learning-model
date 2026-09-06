@@ -16,6 +16,8 @@ use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
+use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
+use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\FilesystemProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidationResult;
@@ -77,6 +79,24 @@ final class ValidationContractTest extends TestCase {
 
         self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Concept::class, $concept);
         self::assertSame($concept->toArray(), $roundTrip->toArray());
+    }
+
+    public function testCoreNoteAndWebResourceAliasesPreserveSerialization(): void {
+        $note = new CoreNote('core-note', new CoreLocalizedString(['en' => 'Core note']));
+        $resource = new CoreWebResource('core-resource', 'https://example.test/resource');
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Note::class, $note);
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\WebResource::class, $resource);
+        self::assertSame([
+            'id' => 'urn:epass:note:core-note',
+            'type' => 'Note',
+            'noteLiteral' => ['en' => ['Core note']],
+        ], $note->toArray());
+        self::assertSame([
+            'id' => 'urn:epass:webResource:core-resource',
+            'type' => 'WebResource',
+            'contentURL' => 'https://example.test/resource',
+        ], $resource->toArray());
     }
 
     public function testProfileResourceRegistryIsAnExplicitResolutionBoundary(): void {

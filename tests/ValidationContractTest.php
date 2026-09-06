@@ -16,6 +16,7 @@ use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidationResult;
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidatorInterface;
 use IsyThl\EuropeanLearningModel\Loq\LoqDocumentValidator;
 use IsyThl\EuropeanLearningModel\Loq\LoqDatasetDocument;
+use IsyThl\EuropeanLearningModel\Loq\LoqProfile;
 use IsyThl\EuropeanLearningModel\Loq\QualificationDocument;
 use PHPUnit\Framework\TestCase;
 
@@ -47,6 +48,14 @@ final class ValidationContractTest extends TestCase {
         $registry->get('unregistered.rdf');
     }
 
+    public function testLoqProfileExposesPinnedResourceIdentity(): void {
+        self::assertSame(
+            'http://data.europa.eu/snb/model/application-profile/loq-constraints',
+            LoqProfile::LOQ_CONSTRAINTS->value,
+        );
+        self::assertSame('LOQ-constraints.rdf', LoqProfile::LOQ_CONSTRAINTS->resourceName());
+    }
+
     public function testLoqDocumentValidatorDelegatesToInjectedStandardsValidator(): void {
         $standardsValidator = new class implements StandardsValidatorInterface {
             public bool $called = false;
@@ -60,12 +69,12 @@ final class ValidationContractTest extends TestCase {
         };
         $validator = new LoqDocumentValidator(
             $standardsValidator,
-            new InMemoryProfileResourceRegistry(['LOQ.rdf' => 'profile']),
+            new InMemoryProfileResourceRegistry(['LOQ-constraints.rdf' => 'profile']),
         );
 
         $validator->validate(
             new QualificationDocument($this->qualification()),
-            'LOQ.rdf',
+            LoqProfile::LOQ_CONSTRAINTS,
         );
         self::assertTrue($standardsValidator->called);
     }
@@ -77,11 +86,11 @@ final class ValidationContractTest extends TestCase {
                     return StandardsValidationResult::invalid(['Missing publisher.']);
                 }
             },
-            new InMemoryProfileResourceRegistry(['LOQ.rdf' => 'profile']),
+            new InMemoryProfileResourceRegistry(['LOQ-constraints.rdf' => 'profile']),
         );
 
         $this->expectExceptionMessage('Missing publisher.');
-        $validator->validate(new QualificationDocument($this->qualification()), 'LOQ.rdf');
+        $validator->validate(new QualificationDocument($this->qualification()), LoqProfile::LOQ_CONSTRAINTS);
     }
 
     public function testLoqDocumentValidatorAcceptsDatasetDocuments(): void {
@@ -94,10 +103,10 @@ final class ValidationContractTest extends TestCase {
         };
         $validator = new LoqDocumentValidator(
             $standardsValidator,
-            new InMemoryProfileResourceRegistry(['LOQ.rdf' => 'profile']),
+            new InMemoryProfileResourceRegistry(['LOQ-constraints.rdf' => 'profile']),
         );
 
-        $validator->validate(new LoqDatasetDocument($this->qualification()), 'LOQ.rdf');
+        $validator->validate(new LoqDatasetDocument($this->qualification()), LoqProfile::LOQ_CONSTRAINTS);
         self::assertTrue(true);
     }
 

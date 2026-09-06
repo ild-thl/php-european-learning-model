@@ -19,11 +19,11 @@ final class LoqDocumentValidator {
 
     public function validate(
         LearningOpportunityDocument|QualificationDocument|LoqDatasetDocument $document,
-        string $profileResource,
+        LoqProfile $profile,
     ): void {
         $result = $this->standardsValidator->validate(
             $document->toJson(),
-            $this->profileResources->get($profileResource),
+            $this->profileResources->get($profile->resourceName()),
         );
         if (!$result->valid) {
             throw new InvalidCredentialException(self::formatErrors($result));

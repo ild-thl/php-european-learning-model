@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanDigitalCredentials\Tests;
 
 use IsyThl\EuropeanDigitalCredentials\Address;
+use IsyThl\EuropeanDigitalCredentials\AwardingOpportunity;
 use IsyThl\EuropeanDigitalCredentials\AwardingProcess;
 use IsyThl\EuropeanDigitalCredentials\Concept;
 use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
@@ -552,6 +553,37 @@ final class LoqTest extends TestCase {
             'https://example.test/qualification/invalid-influence',
             new LocalizedString(['en' => 'Invalid qualification']),
             influencedBy: ['invalid'],
+        );
+    }
+
+    public function testQualificationSerializesAwardingOpportunities(): void {
+        $opportunity = new AwardingOpportunity(
+            'https://example.test/awarding-opportunity/qualification',
+            new LearningAchievementSpecification(
+                'https://example.test/specification/qualification',
+                new LocalizedString(['en' => 'Qualification specification']),
+            ),
+            [$this->provider()],
+        );
+        $qualification = new Qualification(
+            'https://example.test/qualification/awarding-opportunity',
+            new LocalizedString(['en' => 'Qualification with awarding opportunity']),
+            awardingOpportunities: [$opportunity],
+        );
+
+        self::assertSame([$opportunity->toArray()], $qualification->toArray()['awardingOpportunity']);
+    }
+
+    public function testAwardingOpportunityRequiresAnAwardingBody(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new AwardingOpportunity(
+            'https://example.test/awarding-opportunity/invalid',
+            new LearningAchievementSpecification(
+                'https://example.test/specification/invalid',
+                new LocalizedString(['en' => 'Invalid specification']),
+            ),
+            [],
         );
     }
 

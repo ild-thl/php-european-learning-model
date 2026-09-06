@@ -15,6 +15,7 @@ final class Qualification extends LearningAchievementSpecification {
     * @param list<LearningOutcome> $learningOutcomes
     * @param list<Concept> $educationSubjects
     * @param list<LearningActivity> $influencedBy
+    * @param list<AwardingOpportunity> $awardingOpportunities
      */
     public function __construct(
         string $id,
@@ -45,6 +46,8 @@ final class Qualification extends LearningAchievementSpecification {
         public readonly array $isPartOf = [],
         /** @var list<LearningActivity> */
         public readonly array $influencedBy = [],
+        /** @var list<AwardingOpportunity> */
+        public readonly array $awardingOpportunities = [],
     ) {
         parent::__construct(
             $id,
@@ -85,6 +88,14 @@ final class Qualification extends LearningAchievementSpecification {
         }
         if (array_filter($influencedBy, static fn ($activity): bool => !$activity instanceof LearningActivity) !== []) {
             throw new InvalidCredentialException('Qualification activities must be LearningActivity objects.');
+        }
+        if (
+            array_filter(
+                $awardingOpportunities,
+                static fn ($opportunity): bool => !$opportunity instanceof AwardingOpportunity,
+            ) !== []
+        ) {
+            throw new InvalidCredentialException('Awarding opportunities must be AwardingOpportunity objects.');
         }
         foreach ($nqfLevels as $nqfLevel) {
             ConceptAssertions::assertSchemePrefix($nqfLevel, ElmVocabularySchemes::QDR_BASE, 'nqfLevels');
@@ -159,6 +170,12 @@ final class Qualification extends LearningAchievementSpecification {
             $data['influencedBy'] = array_map(
                 static fn (LearningActivity $activity): array => $activity->toArray(),
                 $this->influencedBy,
+            );
+        }
+        if ($this->awardingOpportunities !== []) {
+            $data['awardingOpportunity'] = array_map(
+                static fn (AwardingOpportunity $opportunity): array => $opportunity->toArray(),
+                $this->awardingOpportunities,
             );
         }
         return $data;

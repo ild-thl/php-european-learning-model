@@ -355,6 +355,47 @@ final class LoqTest extends TestCase {
         self::assertSame('2026-06-01T10:00:00Z', $opportunity->toArray()['applicationDeadline']);
     }
 
+    public function testLearningOpportunitySerializesPartRelations(): void {
+        $part = new LearningOpportunity(
+            'https://example.test/opportunity/part',
+            new LocalizedString(['en' => 'Part opportunity']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-part', 'https://example.test/opportunity/part'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/part',
+                new LocalizedString(['en' => 'Part specification']),
+            ),
+        );
+        $parent = new LearningOpportunity(
+            'https://example.test/opportunity/parent',
+            new LocalizedString(['en' => 'Parent opportunity']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-parent', 'https://example.test/opportunity/parent'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/parent',
+                new LocalizedString(['en' => 'Parent specification']),
+            ),
+            hasPart: [$part],
+        );
+        $child = new LearningOpportunity(
+            'https://example.test/opportunity/child',
+            new LocalizedString(['en' => 'Child opportunity']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-child', 'https://example.test/opportunity/child'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/child',
+                new LocalizedString(['en' => 'Child specification']),
+            ),
+            isPartOf: [$parent],
+        );
+
+        self::assertSame($part->toArray(), $parent->toArray()['hasPart'][0]);
+        self::assertSame($parent->toArray(), $child->toArray()['isPartOf'][0]);
+    }
+
     public function testPriceDetailSerializesDecimalAmountAndCurrency(): void {
         $currency = new Concept(
             'http://publications.europa.eu/resource/authority/currency/EUR',

@@ -48,6 +48,10 @@ final class LearningOpportunity {
         public readonly ?MediaObject $bannerImage = null,
         public readonly ?LearningActivitySpecification $learningActivitySpecification = null,
         public readonly ?\DateTimeImmutable $applicationDeadline = null,
+        /** @var list<LearningOpportunity> */
+        public readonly array $hasPart = [],
+        /** @var list<LearningOpportunity> */
+        public readonly array $isPartOf = [],
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -69,6 +73,12 @@ final class LearningOpportunity {
         }
         if ($status !== null) {
             ConceptAssertions::assertScheme($status, ElmVocabularySchemes::ACCREDITATION_STATUS, 'status');
+        }
+        if (array_filter($hasPart, static fn ($part): bool => !$part instanceof self) !== []) {
+            throw new InvalidCredentialException('Learning opportunity parts must be LearningOpportunity objects.');
+        }
+        if (array_filter($isPartOf, static fn ($parent): bool => !$parent instanceof self) !== []) {
+            throw new InvalidCredentialException('Learning opportunity parents must be LearningOpportunity objects.');
         }
         if (
             $duration !== null
@@ -150,6 +160,18 @@ final class LearningOpportunity {
             $data['applicationDeadline'] = $this->applicationDeadline
                 ->setTimezone(new \DateTimeZone('UTC'))
                 ->format('Y-m-d\TH:i:s\Z');
+        }
+        if ($this->hasPart !== []) {
+            $data['hasPart'] = array_map(
+                static fn (self $part): array => $part->toArray(),
+                $this->hasPart,
+            );
+        }
+        if ($this->isPartOf !== []) {
+            $data['isPartOf'] = array_map(
+                static fn (self $parent): array => $parent->toArray(),
+                $this->isPartOf,
+            );
         }
         return $data;
     }

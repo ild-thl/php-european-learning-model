@@ -2,14 +2,8 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
-use IsyThl\EuropeanLearningModel\Core\Concept;
-use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-use IsyThl\EuropeanLearningModel\Core\VocabularyProvider;
-use IsyThl\EuropeanLearningModel\Core\VocabularyResourceFetcher;
-use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use SimpleXMLElement;
 

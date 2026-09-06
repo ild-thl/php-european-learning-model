@@ -8,7 +8,7 @@ use IsyThl\EuropeanLearningModel\Concept;
 use IsyThl\EuropeanLearningModel\ConceptScheme;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\GradingScheme;
-use IsyThl\EuropeanLearningModel\InMemoryVocabularyProvider;
+use IsyThl\EuropeanLearningModel\Core\InMemoryVocabularyProvider;
 use IsyThl\EuropeanLearningModel\LearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\LearningAssessmentSpecification;
 use IsyThl\EuropeanLearningModel\LocalizedString;

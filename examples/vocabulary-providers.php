@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use IsyThl\EuropeanLearningModel\CachedVocabularyProvider;
+use IsyThl\EuropeanLearningModel\Core\CachedVocabularyProvider;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\InMemoryVocabularyCache;
-use IsyThl\EuropeanLearningModel\JsonLdVocabularyProvider;
-use IsyThl\EuropeanLearningModel\RdfVocabularyProvider;
+use IsyThl\EuropeanLearningModel\Core\InMemoryVocabularyCache;
+use IsyThl\EuropeanLearningModel\Core\JsonLdVocabularyProvider;
+use IsyThl\EuropeanLearningModel\Core\RdfVocabularyProvider;
 use IsyThl\EuropeanLearningModel\VocabularyResourceFetcher;
 
 $schemeId = ElmVocabularySchemes::LANGUAGE;

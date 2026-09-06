@@ -11,6 +11,8 @@ use IsyThl\EuropeanDigitalCredentials\LearningOutcome;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
+use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
+use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\FilesystemProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidationResult;
@@ -22,6 +24,28 @@ use IsyThl\EuropeanLearningModel\Loq\QualificationDocument;
 use PHPUnit\Framework\TestCase;
 
 final class ValidationContractTest extends TestCase {
+
+    public function testCoreIdentifierAliasesPreserveLegacyIdentityAndSerialization(): void {
+        $identifier = new CoreIdentifier('core-id', '123', 'example-scheme');
+        $legalIdentifier = new CoreLegalIdentifier(
+            'core-legal-id',
+            '456',
+            new Concept(
+                'http://publications.europa.eu/resource/authority/country/BEL',
+                new LocalizedString(['en' => 'Belgium']),
+                new ConceptScheme(ElmVocabularySchemes::COUNTRY),
+            ),
+        );
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Identifier::class, $identifier);
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\LegalIdentifier::class, $legalIdentifier);
+        self::assertSame([
+            'id' => 'urn:epass:identifier:core-id',
+            'type' => 'Identifier',
+            'notation' => '123',
+            'schemeName' => 'example-scheme',
+        ], $identifier->toArray());
+    }
 
     public function testStandardsValidatorContractCarriesResultWithoutChoosingImplementation(): void {
         $validator = new class implements StandardsValidatorInterface {

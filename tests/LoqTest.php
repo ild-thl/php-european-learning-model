@@ -606,6 +606,66 @@ final class LoqTest extends TestCase {
         );
     }
 
+    public function testAwardingOpportunitySerializesOptionalProfileFields(): void {
+        $location = new Location(
+            'awarding-location',
+            new Address(
+                'awarding-address',
+                $this->countryConcept(),
+                new Note('awarding-location-note', new LocalizedString(['en' => 'Brussels'])),
+            ),
+        );
+        $temporal = new PeriodOfTime(
+            new \DateTimeImmutable('2026-01-01T00:00:00+00:00'),
+            new \DateTimeImmutable('2026-12-31T00:00:00+00:00'),
+        );
+        $opportunity = new AwardingOpportunity(
+            'https://example.test/awarding-opportunity/optional',
+            new LearningAchievementSpecification(
+                'https://example.test/specification/optional',
+                new LocalizedString(['en' => 'Optional specification']),
+            ),
+            [$this->provider()],
+            identifiers: [new Identifier('awarding-id', 'AO-1', 'awarding-opportunity')],
+            temporal: $temporal,
+            location: $location,
+        );
+
+        self::assertSame([
+            'id' => 'urn:epass:awardingOpportunity:https://example.test/awarding-opportunity/optional',
+            'type' => 'AwardingOpportunity',
+            'awardingBody' => [$this->provider()->toArray()],
+            'learningAchievementSpecification' => [
+                'id' => 'urn:epass:learningAchievementSpecification:https://example.test/specification/optional',
+                'type' => 'LearningAchievementSpecification',
+                'title' => ['en' => ['Optional specification']],
+            ],
+            'identifier' => [[
+                'id' => 'urn:epass:identifier:awarding-id',
+                'type' => 'Identifier',
+                'notation' => 'AO-1',
+                'schemeName' => 'awarding-opportunity',
+            ]],
+            'temporal' => $temporal->toArray(),
+            'location' => $location->toArray(),
+        ], $opportunity->toArray());
+    }
+
+    public function testAwardingOpportunityRejectsMalformedLists(): void {
+        $specification = new LearningAchievementSpecification(
+            'https://example.test/specification/malformed',
+            new LocalizedString(['en' => 'Malformed specification']),
+        );
+
+        $this->expectException(InvalidCredentialException::class);
+
+        new AwardingOpportunity(
+            'https://example.test/awarding-opportunity/malformed',
+            $specification,
+            ['invalid'],
+        );
+    }
+
     public function testQualificationSerializesQualificationCodeUsingProfilePropertyName(): void {
         $qualificationCode = $this->concept(
             'https://example.test/qualification-code/1',

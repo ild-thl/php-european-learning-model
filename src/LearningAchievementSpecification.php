@@ -8,7 +8,7 @@ use IsyThl\EuropeanLearningModel\Core\CreditPoint;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-class LearningAchievementSpecification extends Entity {
+class LearningAchievementSpecification extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(
         string $id,

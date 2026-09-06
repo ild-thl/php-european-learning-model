@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanLearningModel\Entity;
+use IsyThl\EuropeanLearningModel\Core\Entity;
 use IsyThl\EuropeanLearningModel\Concept;
 use IsyThl\EuropeanLearningModel\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Claim;

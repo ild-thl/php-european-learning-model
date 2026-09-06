@@ -6,7 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class AwardingProcess extends Entity {
+final class AwardingProcess extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(string $id, public readonly Organisation $awardingBody) {
         parent::__construct($id);

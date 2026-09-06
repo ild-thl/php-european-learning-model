@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class Credential extends Entity {
+final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     private const CONTEXT = [
         'https://www.w3.org/2018/credentials/v1',

@@ -7,12 +7,11 @@ namespace IsyThl\EuropeanLearningModel\Core;
 use IsyThl\EuropeanLearningModel\Concept;
 use IsyThl\EuropeanLearningModel\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\Entity;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\LocalizedString;
 use IsyThl\EuropeanLearningModel\Note;
 
-final class LearningOutcome extends Entity {
+final class LearningOutcome extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     /** @param list<Concept> $relatedSkills */
     public function __construct(

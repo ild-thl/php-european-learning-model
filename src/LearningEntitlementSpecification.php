@@ -6,7 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class LearningEntitlementSpecification extends Entity {
+final class LearningEntitlementSpecification extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     /**
      * @param list<Note> $additionalNotes

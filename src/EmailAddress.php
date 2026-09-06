@@ -6,7 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class EmailAddress extends Entity {
+final class EmailAddress extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(string $email) {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {

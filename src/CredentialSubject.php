@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class CredentialSubject extends Entity {
+final class CredentialSubject extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     /** @param list<Claim> $claims */
     public function __construct(

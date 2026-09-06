@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
-final class LearningAssessmentSpecification extends Entity {
+final class LearningAssessmentSpecification extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(
         string $id,

@@ -6,7 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class IndividualDisplay extends Entity {
+final class IndividualDisplay extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     /** @param list<DisplayDetail> $displayDetails */
     public function __construct(

@@ -6,7 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class ConceptScheme extends Entity {
+final class ConceptScheme extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(string $id, public readonly string $schemeType = 'ConceptScheme') {
         parent::__construct($id);

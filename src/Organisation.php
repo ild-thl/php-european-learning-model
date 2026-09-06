@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
-class Organisation extends Entity {
+class Organisation extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(
         string $id,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
-final class ContactPoint extends Entity {
+final class ContactPoint extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(
         string $id,

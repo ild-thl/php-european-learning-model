@@ -7,10 +7,9 @@ namespace IsyThl\EuropeanLearningModel\Core;
 use IsyThl\EuropeanLearningModel\Concept;
 use IsyThl\EuropeanLearningModel\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\Entity;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class CreditPoint extends Entity {
+final class CreditPoint extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(
         string $id,

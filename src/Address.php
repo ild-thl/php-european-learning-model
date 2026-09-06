@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
-final class Address extends Entity {
+final class Address extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(
         string $id,

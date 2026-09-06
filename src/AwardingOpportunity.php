@@ -7,7 +7,7 @@ namespace IsyThl\EuropeanLearningModel;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 
-final class AwardingOpportunity extends Entity {
+final class AwardingOpportunity extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     /**
      * @param list<Identifier|LegalIdentifier> $identifiers

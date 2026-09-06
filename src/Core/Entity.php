@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
-
-use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
+namespace IsyThl\EuropeanLearningModel\Core;
 
 abstract class Entity {
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
-final class Accreditation extends Entity {
+final class Accreditation extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(
         string $id,

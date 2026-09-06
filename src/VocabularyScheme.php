@@ -6,7 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class VocabularyScheme extends Entity {
+final class VocabularyScheme extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     /**
      * @param list<Concept> $concepts

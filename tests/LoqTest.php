@@ -14,7 +14,7 @@ use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\LearningActivity;
-use IsyThl\EuropeanLearningModel\LearningActivitySpecification;
+use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Location;
 use IsyThl\EuropeanLearningModel\Core\Note;
@@ -354,7 +354,7 @@ final class LoqTest extends TestCase {
     }
 
     public function testLearningOpportunitySerializesActivitySpecificationAndDeadlineInUtc(): void {
-        $activitySpecification = new \IsyThl\EuropeanLearningModel\LearningActivitySpecification(
+        $activitySpecification = new \IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification(
             'https://example.test/activity-specification/1',
             new LocalizedString(['en' => 'Blended activity']),
         );

@@ -29,7 +29,7 @@ use IsyThl\EuropeanLearningModel\Core\EmailAddress;
 use IsyThl\EuropeanLearningModel\Core\Location;
 use IsyThl\EuropeanLearningModel\LearningAchievement;
 use IsyThl\EuropeanLearningModel\LearningActivity;
-use IsyThl\EuropeanLearningModel\LearningActivitySpecification;
+use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\LearningEntitlement;
 use IsyThl\EuropeanLearningModel\LearningEntitlementSpecification;
 use IsyThl\EuropeanLearningModel\LearningAssessment;

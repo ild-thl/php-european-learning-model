@@ -26,7 +26,7 @@ use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome as CoreLearningOutcome;
 use IsyThl\EuropeanLearningModel\LearningActivity as CoreLearningActivity;
-use IsyThl\EuropeanLearningModel\LearningActivitySpecification as CoreLearningActivitySpecification;
+use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification as CoreLearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
 use IsyThl\EuropeanLearningModel\Core\MediaObject as CoreMediaObject;
 use IsyThl\EuropeanLearningModel\Core\Organisation as CoreOrganisation;

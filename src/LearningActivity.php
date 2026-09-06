@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
+use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 

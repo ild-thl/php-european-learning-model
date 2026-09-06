@@ -12,7 +12,7 @@ use IsyThl\EuropeanLearningModel\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
 use IsyThl\EuropeanLearningModel\Core\Address as CoreAddress;
 use IsyThl\EuropeanLearningModel\AwardingProcess as CoreAwardingProcess;
-use IsyThl\EuropeanLearningModel\ContactPoint as CoreContactPoint;
+use IsyThl\EuropeanLearningModel\Core\ContactPoint as CoreContactPoint;
 use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint as CoreCreditPoint;
@@ -139,7 +139,7 @@ final class ValidationContractTest extends TestCase {
         $contactPoint = new CoreContactPoint('core-contact', emailAddress: $email);
 
         self::assertInstanceOf(CoreEmailAddress::class, $email);
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\ContactPoint::class, $contactPoint);
+        self::assertInstanceOf(CoreContactPoint::class, $contactPoint);
         self::assertSame([
             'id' => 'urn:epass:contactPoint:core-contact',
             'type' => 'ContactPoint',

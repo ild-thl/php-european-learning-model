@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\Address;
-use IsyThl\EuropeanLearningModel\Core\EmailAddress;
-
-final class ContactPoint extends \IsyThl\EuropeanLearningModel\Core\Entity {
+final class ContactPoint extends Entity {
 
     public function __construct(
         string $id,

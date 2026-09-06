@@ -6,6 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
+use IsyThl\EuropeanLearningModel\Core\ContactPoint;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use DateTimeImmutable;
 use DateTimeZone;

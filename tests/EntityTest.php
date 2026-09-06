@@ -11,7 +11,7 @@ use IsyThl\EuropeanLearningModel\Claim;
 use IsyThl\EuropeanLearningModel\Core\Address;
 use IsyThl\EuropeanLearningModel\Accreditation;
 use IsyThl\EuropeanLearningModel\AwardingProcess;
-use IsyThl\EuropeanLearningModel\ContactPoint;
+use IsyThl\EuropeanLearningModel\Core\ContactPoint;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint;
 use IsyThl\EuropeanLearningModel\Credential;
 use IsyThl\EuropeanLearningModel\CredentialSubject;

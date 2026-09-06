@@ -25,6 +25,7 @@ use IsyThl\EuropeanLearningModel\Loq\QualificationDocument;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 use IsyThl\EuropeanLearningModel\Core\PriceDetail;
 use IsyThl\EuropeanLearningModel\Core\Amount;
+use IsyThl\EuropeanLearningModel\Core\Grant;
 use PHPUnit\Framework\TestCase;
 
 final class LoqTest extends TestCase {
@@ -191,6 +192,29 @@ final class LoqTest extends TestCase {
             'http://publications.europa.eu/resource/authority/currency',
             'https://example.test/currency/eur',
         ));
+    }
+
+    public function testGrantRequiresTitleAndSerializesOptionalProfileFields(): void {
+        $grant = new Grant(
+            new LocalizedString(['en' => 'Study grant']),
+            $this->concept('https://example.test/grant-type', 'https://example.test/grant-type/allowance'),
+            'https://example.test/grants/study',
+            [new WebResource('grant-document', 'https://example.test/grants/study.pdf')],
+        );
+
+        self::assertSame([
+            'type' => 'Grant',
+            'title' => ['en' => ['Study grant']],
+            'dcType' => $grant->type->toArray(),
+            'contentURL' => 'https://example.test/grants/study',
+            'supplementaryDocument' => [$grant->supplementaryDocuments[0]->toArray()],
+        ], $grant->toArray());
+    }
+
+    public function testGrantRejectsInvalidContentUrl(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new Grant(new LocalizedString(['en' => 'Study grant']), contentUrl: 'file:///tmp/grant');
     }
 
     public function testQualificationDocumentRejectsMissingProfileFields(): void {

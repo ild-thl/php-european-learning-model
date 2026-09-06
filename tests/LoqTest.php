@@ -66,6 +66,44 @@ final class LoqTest extends TestCase {
         new QualificationDocument([$qualification]);
     }
 
+    public function testLoqRootsSerializeOptionalPublisher(): void {
+        $publisher = new Organisation(
+            'publisher-1',
+            new Location('publisher-location', new Address(
+                'publisher-address',
+                $this->countryConcept(),
+                new Note('publisher-note', new LocalizedString(['en' => 'Brussels'])),
+            )),
+            new LocalizedString(['en' => 'Example publisher']),
+        );
+        $qualification = new Qualification(
+            'https://example.test/qualification/1',
+            new LocalizedString(['en' => 'Qualification']),
+            eqfLevel: $this->concept(ElmVocabularySchemes::EQF, 'https://example.test/eqf/4'),
+            nqfLevels: [$this->concept(ElmVocabularySchemes::QDR_BASE, 'https://example.test/nqf/4')],
+            learningOutcomes: [new \IsyThl\EuropeanDigitalCredentials\LearningOutcome(
+                'https://example.test/outcome/1',
+                new LocalizedString(['en' => 'Outcome']),
+            )],
+            educationSubjects: [$this->concept(ElmVocabularySchemes::ISCED_F, 'https://example.test/isced/1')],
+            publisher: $publisher,
+        );
+
+        self::assertSame($publisher->toArray(), $qualification->toArray()['publisher']);
+    }
+
+    private function countryConcept(): Concept {
+        return new Concept(
+            'http://publications.europa.eu/resource/authority/country/BEL',
+            new LocalizedString(['en' => 'Belgium']),
+            new ConceptScheme(ElmVocabularySchemes::COUNTRY),
+            'BEL',
+        );
+    }
+
+    private function concept(string $scheme, string $id): Concept {
+        return new Concept($id, new LocalizedString(['en' => $id]), new ConceptScheme($scheme));
+    }
     public function testDocumentSerializationIsDeterministic(): void {
         $language = new Concept(
             'http://publications.europa.eu/resource/authority/language/ENG',

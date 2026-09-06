@@ -21,6 +21,7 @@ final class LearningOpportunity {
         public readonly WebResource $homepage,
         public readonly array $providedBy,
         public readonly LearningAchievementSpecification|QualificationReference $learningAchievementSpecification,
+        public readonly ?Organisation $publisher = null,
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -33,7 +34,7 @@ final class LearningOpportunity {
 
     /** @return array<string, mixed> */
     public function toArray(): array {
-        return [
+        $data = [
             'id' => $this->id,
             'type' => 'LearningOpportunity',
             'title' => $this->title->toArray(),
@@ -45,6 +46,10 @@ final class LearningOpportunity {
             ),
             'learningAchievementSpecification' => $this->learningAchievementSpecification->toArray(),
         ];
+        if ($this->publisher !== null) {
+            $data['publisher'] = $this->publisher->toArray();
+        }
+        return $data;
     }
 
     private static function assertUri(string $id): void {

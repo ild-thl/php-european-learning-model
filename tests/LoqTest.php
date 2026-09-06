@@ -24,6 +24,7 @@ use IsyThl\EuropeanLearningModel\Loq\QualificationReference;
 use IsyThl\EuropeanLearningModel\Loq\QualificationDocument;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
 use IsyThl\EuropeanLearningModel\Core\PriceDetail;
+use IsyThl\EuropeanLearningModel\Core\Amount;
 use PHPUnit\Framework\TestCase;
 
 final class LoqTest extends TestCase {
@@ -164,6 +165,32 @@ final class LoqTest extends TestCase {
         $opportunity = $this->opportunityWithPriceDetail($priceDetail);
 
         self::assertSame($priceDetail->toArray(), $opportunity->toArray()['priceDetail']);
+    }
+
+    public function testPriceDetailSerializesDecimalAmountAndCurrency(): void {
+        $currency = new Concept(
+            'http://publications.europa.eu/resource/authority/currency/EUR',
+            new LocalizedString(['en' => 'Euro']),
+            new ConceptScheme('http://publications.europa.eu/resource/authority/currency'),
+            'EUR',
+        );
+        $amount = new Amount('1250.50', $currency);
+
+        self::assertSame([
+            'type' => 'Amount',
+            'value' => '1250.50',
+            'unit' => $currency->toArray(),
+        ], $amount->toArray());
+        self::assertSame($amount->toArray(), (new PriceDetail(amount: $amount))->toArray()['amount']);
+    }
+
+    public function testAmountRejectsNonDecimalValues(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new Amount('12.5 EUR', $this->concept(
+            'http://publications.europa.eu/resource/authority/currency',
+            'https://example.test/currency/eur',
+        ));
     }
 
     public function testQualificationDocumentRejectsMissingProfileFields(): void {

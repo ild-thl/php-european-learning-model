@@ -14,6 +14,7 @@ final class PriceDetail {
         public readonly ?LocalizedString $prefLabel = null,
         public readonly ?LocalizedString $description = null,
         public readonly array $additionalNotes = [],
+        public readonly ?Amount $amount = null,
     ) {
         if (array_filter($additionalNotes, static fn ($note): bool => !$note instanceof Note) !== []) {
             throw new \InvalidArgumentException('Price detail notes must be Note objects.');
@@ -34,6 +35,9 @@ final class PriceDetail {
                 static fn (Note $note): array => $note->toArray(),
                 $this->additionalNotes,
             );
+        }
+        if ($this->amount !== null) {
+            $data['amount'] = $this->amount->toArray();
         }
         return $data;
     }

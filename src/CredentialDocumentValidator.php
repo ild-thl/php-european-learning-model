@@ -9,6 +9,12 @@ use DateTimeZone;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 
 final class CredentialDocumentValidator {
+
+    public function __construct(
+        private readonly string $schemaId = 'http://data.europa.eu/snb/model/ap/edc-generic-full',
+    ) {
+    }
+
     /** @param array<string, mixed> $document */
     public function validate(array $document): void {
         if (array_is_list($document)) {
@@ -92,7 +98,7 @@ final class CredentialDocumentValidator {
             }
             $this->assertEntityShape($document['issuer'], 'issuer', 'Organisation');
         }
-        if ($document['credentialSchema']['id'] !== 'http://data.europa.eu/snb/model/ap/edc-generic-full') {
+        if ($document['credentialSchema']['id'] !== $this->schemaId) {
             throw new InvalidCredentialException('Credential schema has an unsupported identifier.');
         }
         if ($document['credentialProfiles'] === []) {

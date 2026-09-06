@@ -15,7 +15,7 @@ use IsyThl\EuropeanLearningModel\JsonLdVocabularyProvider;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\RdfVocabularyProvider;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\VocabularyResourceFetcher;
+use IsyThl\EuropeanLearningModel\Core\VocabularyResourceFetcher;
 use IsyThl\EuropeanLearningModel\Vocabulary\JsonVocabularySearchProvider;
 use IsyThl\EuropeanLearningModel\Vocabulary\EscoVocabularySearchProvider;
 use IsyThl\EuropeanLearningModel\Vocabulary\VocabularySearchResourceFetcher;

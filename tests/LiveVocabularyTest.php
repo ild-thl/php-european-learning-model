@@ -7,7 +7,7 @@ namespace IsyThl\EuropeanLearningModel\Tests;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\RdfVocabularyProvider;
 use IsyThl\EuropeanLearningModel\Vocabulary\EscoVocabularySearchProvider;
-use IsyThl\EuropeanLearningModel\VocabularyResourceFetcher;
+use IsyThl\EuropeanLearningModel\Core\VocabularyResourceFetcher;
 use IsyThl\EuropeanLearningModel\Vocabulary\VocabularySearchResourceFetcher;
 use PHPUnit\Framework\TestCase;
 

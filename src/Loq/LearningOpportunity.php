@@ -12,6 +12,7 @@ use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
 use IsyThl\EuropeanDigitalCredentials\WebResource;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
+use IsyThl\EuropeanLearningModel\Core\PriceDetail;
 
 final class LearningOpportunity {
 
@@ -27,6 +28,7 @@ final class LearningOpportunity {
         public readonly ?PeriodOfTime $temporal = null,
         public readonly ?Concept $learningSchedule = null,
         public readonly ?Location $location = null,
+        public readonly ?PriceDetail $priceDetail = null,
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -62,6 +64,9 @@ final class LearningOpportunity {
         }
         if ($this->location !== null) {
             $data['location'] = $this->location->toArray();
+        }
+        if ($this->priceDetail !== null) {
+            $data['priceDetail'] = $this->priceDetail->toArray();
         }
         return $data;
     }

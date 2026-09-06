@@ -23,6 +23,7 @@ use IsyThl\EuropeanLearningModel\Loq\LoqDatasetDocument;
 use IsyThl\EuropeanLearningModel\Loq\QualificationReference;
 use IsyThl\EuropeanLearningModel\Loq\QualificationDocument;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
+use IsyThl\EuropeanLearningModel\Core\PriceDetail;
 use PHPUnit\Framework\TestCase;
 
 final class LoqTest extends TestCase {
@@ -153,6 +154,18 @@ final class LoqTest extends TestCase {
         self::assertSame($location->toArray(), $opportunity->toArray()['location']);
     }
 
+    public function testLearningOpportunitySerializesPriceDetail(): void {
+        $priceDetail = new PriceDetail(
+            new LocalizedString(['en' => 'Course fee']),
+            new LocalizedString(['en' => 'The fee for the course']),
+            [new Note('price-note', new LocalizedString(['en' => 'Scholarships available']))],
+        );
+
+        $opportunity = $this->opportunityWithPriceDetail($priceDetail);
+
+        self::assertSame($priceDetail->toArray(), $opportunity->toArray()['priceDetail']);
+    }
+
     public function testQualificationDocumentRejectsMissingProfileFields(): void {
         $qualification = new Qualification(
             'qualification-1',
@@ -247,6 +260,33 @@ final class LoqTest extends TestCase {
             null,
             null,
             $location,
+        );
+    }
+
+    private function opportunityWithPriceDetail(PriceDetail $priceDetail): LearningOpportunity {
+        return new LearningOpportunity(
+            'https://example.test/opportunity/1',
+            new LocalizedString(['en' => 'Opportunity']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-1', 'https://example.test/opportunity/1'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/1',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            priceDetail: $priceDetail,
+        );
+    }
+
+    private function provider(): Organisation {
+        return new Organisation(
+            'provider-1',
+            new Location('location-1', new Address(
+                'address-1',
+                $this->countryConcept(),
+                new Note('address-note', new LocalizedString(['en' => 'Brussels'])),
+            )),
+            new LocalizedString(['en' => 'Example Provider']),
         );
     }
 

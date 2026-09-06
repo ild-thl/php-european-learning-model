@@ -2,19 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\Concept;
-use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
-use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-use IsyThl\EuropeanLearningModel\Core\CreditPoint;
-use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
-use IsyThl\EuropeanLearningModel\Core\Note;
-use IsyThl\EuropeanLearningModel\Core\WebResource;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-class LearningAchievementSpecification extends \IsyThl\EuropeanLearningModel\Core\Entity {
+class LearningAchievementSpecification extends Entity {
 
     public function __construct(
         string $id,
@@ -112,7 +104,7 @@ class LearningAchievementSpecification extends \IsyThl\EuropeanLearningModel\Cor
         }
         foreach ([$maximumDuration, $volumeOfLearning] as $duration) {
             $isValidDuration = $duration === null || preg_match(
-                '/^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?=\\d)(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?$/',
+                '/^P(?:\d+Y)?(?:\d+M)?(?:\d+D)?(?:T(?=\d)(?:\d+H)?(?:\d+M)?(?:\d+(?:\.\d+)?S)?)?$/',
                 $duration,
             ) === 1;
             if (!$isValidDuration) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
 
 final class LearningActivitySpecification extends LearningAchievementSpecification {
 

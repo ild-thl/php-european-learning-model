@@ -6,6 +6,7 @@ namespace IsyThl\EuropeanLearningModel;
 
 use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
 use DateTimeImmutable;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 

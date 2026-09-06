@@ -58,6 +58,25 @@ final class LoqTest extends TestCase {
         new QualificationReference(null);
     }
 
+    public function testQualificationReferenceRejectsInvalidDatasetNamespace(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new QualificationReference(
+            new Identifier('qualification-id', '123', 'example-qualifications'),
+            'not a uri',
+        );
+    }
+
+    public function testQualificationReferenceJsonIsDeterministic(): void {
+        $reference = new QualificationReference(
+            new Identifier('qualification-id', '123', 'example-qualifications'),
+            'https://example.test/datasets/qualifications',
+        );
+
+        self::assertSame($reference->toJson(), $reference->toJson());
+        self::assertStringContainsString('datasetNamespace', $reference->toJson());
+    }
+
     public function testDocumentRejectsNonLearningOpportunityRoots(): void {
         $this->expectException(InvalidCredentialException::class);
 

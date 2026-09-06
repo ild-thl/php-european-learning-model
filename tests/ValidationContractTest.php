@@ -16,8 +16,8 @@ use IsyThl\EuropeanLearningModel\Core\ContactPoint as CoreContactPoint;
 use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint as CoreCreditPoint;
-use IsyThl\EuropeanLearningModel\DisplayDetail as CoreDisplayDetail;
-use IsyThl\EuropeanLearningModel\DisplayParameter as CoreDisplayParameter;
+use IsyThl\EuropeanLearningModel\Edc\DisplayDetail as CoreDisplayDetail;
+use IsyThl\EuropeanLearningModel\Edc\DisplayParameter as CoreDisplayParameter;
 use IsyThl\EuropeanLearningModel\Core\GradingScheme as CoreGradingScheme;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
@@ -305,8 +305,8 @@ final class ValidationContractTest extends TestCase {
         );
 
         self::assertInstanceOf(CoreGradingScheme::class, $gradingScheme);
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\DisplayParameter::class, $displayParameter);
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\DisplayDetail::class, $displayDetail);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Edc\DisplayParameter::class, $displayParameter);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Edc\DisplayDetail::class, $displayDetail);
         self::assertSame('GradingScheme', $gradingScheme->toArray()['type']);
         self::assertSame(1, $displayDetail->toArray()['page']);
         self::assertArrayNotHasKey('description', $displayParameter->toArray());

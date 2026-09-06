@@ -9,6 +9,7 @@ use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
 use IsyThl\EuropeanLearningModel\Edc\Issuer;
+use IsyThl\EuropeanLearningModel\Edc\DisplayParameter;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use DateTimeImmutable;
 use DateTimeZone;

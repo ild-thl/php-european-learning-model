@@ -12,6 +12,7 @@ use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
 use IsyThl\EuropeanLearningModel\Core\Address as CoreAddress;
+use IsyThl\EuropeanLearningModel\Core\ContactPoint as CoreContactPoint;
 use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
@@ -19,6 +20,7 @@ use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
+use IsyThl\EuropeanLearningModel\Core\EmailAddress as CoreEmailAddress;
 use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\FilesystemProfileResourceRegistry;
@@ -120,6 +122,25 @@ final class ValidationContractTest extends TestCase {
             'type' => 'Location',
             'address' => $address->toArray(),
         ], $location->toArray());
+    }
+
+    public function testCoreContactPointAndEmailAliasesPreserveSerialization(): void {
+        $email = new CoreEmailAddress('core@example.test');
+        $contactPoint = new CoreContactPoint('core-contact', emailAddress: $email);
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\EmailAddress::class, $email);
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\ContactPoint::class, $contactPoint);
+        self::assertSame([
+            'id' => 'urn:epass:contactPoint:core-contact',
+            'type' => 'ContactPoint',
+            'emailAddress' => [[
+                'id' => 'mailto:core@example.test',
+                'type' => 'Mailbox',
+            ]],
+        ], $contactPoint->toArray());
+
+        $this->expectException(\IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException::class);
+        new CoreEmailAddress('invalid email');
     }
 
     public function testProfileResourceRegistryIsAnExplicitResolutionBoundary(): void {

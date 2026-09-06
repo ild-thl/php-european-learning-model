@@ -6,8 +6,8 @@ namespace IsyThl\EuropeanLearningModel\Tests;
 
 use DateTimeImmutable;
 use IsyThl\EuropeanLearningModel\Claim;
-use IsyThl\EuropeanLearningModel\Concept;
-use IsyThl\EuropeanLearningModel\ConceptScheme;
+use IsyThl\EuropeanLearningModel\Core\Concept;
+use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Credential;
 use IsyThl\EuropeanLearningModel\CredentialSubject;
 use IsyThl\EuropeanLearningModel\DisplayParameter;

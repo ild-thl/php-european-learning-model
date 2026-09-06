@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 
 final class Accreditation extends \IsyThl\EuropeanLearningModel\Core\Entity {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class ConceptScheme extends \IsyThl\EuropeanLearningModel\Core\Entity {
+final class ConceptScheme extends Entity {
 
     public function __construct(string $id, public readonly string $schemeType = 'ConceptScheme') {
         parent::__construct($id);

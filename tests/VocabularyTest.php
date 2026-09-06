@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanLearningModel\Concept;
-use IsyThl\EuropeanLearningModel\ConceptScheme;
+use IsyThl\EuropeanLearningModel\Core\Concept;
+use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\CachedVocabularyProvider;
 use IsyThl\EuropeanLearningModel\Core\Clock;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;

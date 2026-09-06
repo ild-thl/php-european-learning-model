@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\Concept;
+
 final class Address extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     public function __construct(

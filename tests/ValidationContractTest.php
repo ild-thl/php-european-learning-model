@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Tests;
 
-use IsyThl\EuropeanLearningModel\Concept;
-use IsyThl\EuropeanLearningModel\ConceptScheme;
+use IsyThl\EuropeanLearningModel\Core\Concept;
+use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Qualification;
@@ -13,8 +13,8 @@ use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterfac
 use IsyThl\EuropeanLearningModel\Address as CoreAddress;
 use IsyThl\EuropeanLearningModel\AwardingProcess as CoreAwardingProcess;
 use IsyThl\EuropeanLearningModel\ContactPoint as CoreContactPoint;
-use IsyThl\EuropeanLearningModel\Concept as CoreConcept;
-use IsyThl\EuropeanLearningModel\ConceptScheme as CoreConceptScheme;
+use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
+use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint as CoreCreditPoint;
 use IsyThl\EuropeanLearningModel\DisplayDetail as CoreDisplayDetail;
 use IsyThl\EuropeanLearningModel\DisplayParameter as CoreDisplayParameter;
@@ -91,7 +91,7 @@ final class ValidationContractTest extends TestCase {
         );
         $roundTrip = CoreConcept::fromArray($concept->toArray());
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Concept::class, $concept);
+        self::assertInstanceOf(CoreConcept::class, $concept);
         self::assertSame($concept->toArray(), $roundTrip->toArray());
     }
 

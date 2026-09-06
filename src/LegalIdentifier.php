@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LegalIdentifier extends \IsyThl\EuropeanLearningModel\Core\Entity {

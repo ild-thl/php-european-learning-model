@@ -11,8 +11,11 @@ use IsyThl\EuropeanDigitalCredentials\LearningOutcome;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
+use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
+use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\FilesystemProfileResourceRegistry;
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidationResult;
@@ -61,6 +64,19 @@ final class ValidationContractTest extends TestCase {
             ['Document and profile are required.'],
             $validator->validate('', 'loq')->errors,
         );
+    }
+
+    public function testCoreConceptAliasesPreserveLegacyIdentityAndRoundTrip(): void {
+        $concept = new CoreConcept(
+            'https://example.test/concept/core',
+            new CoreLocalizedString(['en' => 'Core concept']),
+            new CoreConceptScheme('https://example.test/scheme/core'),
+            'CORE-1',
+        );
+        $roundTrip = CoreConcept::fromArray($concept->toArray());
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Concept::class, $concept);
+        self::assertSame($concept->toArray(), $roundTrip->toArray());
     }
 
     public function testProfileResourceRegistryIsAnExplicitResolutionBoundary(): void {

@@ -329,6 +329,32 @@ final class LoqTest extends TestCase {
         self::assertSame($bannerImage->toArray(), $opportunity->toArray()['bannerImage']);
     }
 
+    public function testLearningOpportunitySerializesActivitySpecificationAndDeadlineInUtc(): void {
+        $activitySpecification = new \IsyThl\EuropeanDigitalCredentials\LearningActivitySpecification(
+            'https://example.test/activity-specification/1',
+            new LocalizedString(['en' => 'Blended activity']),
+        );
+        $opportunity = new LearningOpportunity(
+            'https://example.test/opportunity/deadline',
+            new LocalizedString(['en' => 'Opportunity with deadline']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-deadline', 'https://example.test/opportunity/deadline'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/deadline',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            learningActivitySpecification: $activitySpecification,
+            applicationDeadline: new \DateTimeImmutable('2026-06-01T12:00:00+02:00'),
+        );
+
+        self::assertSame(
+            $activitySpecification->toArray(),
+            $opportunity->toArray()['learningActivitySpecification'],
+        );
+        self::assertSame('2026-06-01T10:00:00Z', $opportunity->toArray()['applicationDeadline']);
+    }
+
     public function testPriceDetailSerializesDecimalAmountAndCurrency(): void {
         $currency = new Concept(
             'http://publications.europa.eu/resource/authority/currency/EUR',

@@ -9,6 +9,7 @@ use IsyThl\EuropeanDigitalCredentials\ConceptAssertions;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
+use IsyThl\EuropeanDigitalCredentials\LearningActivitySpecification;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\MediaObject;
@@ -45,6 +46,8 @@ final class LearningOpportunity {
         public readonly ?Concept $status = null,
         public readonly ?Grant $grant = null,
         public readonly ?MediaObject $bannerImage = null,
+        public readonly ?LearningActivitySpecification $learningActivitySpecification = null,
+        public readonly ?\DateTimeImmutable $applicationDeadline = null,
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -139,6 +142,14 @@ final class LearningOpportunity {
         }
         if ($this->bannerImage !== null) {
             $data['bannerImage'] = $this->bannerImage->toArray();
+        }
+        if ($this->learningActivitySpecification !== null) {
+            $data['learningActivitySpecification'] = $this->learningActivitySpecification->toArray();
+        }
+        if ($this->applicationDeadline !== null) {
+            $data['applicationDeadline'] = $this->applicationDeadline
+                ->setTimezone(new \DateTimeZone('UTC'))
+                ->format('Y-m-d\TH:i:s\Z');
         }
         return $data;
     }

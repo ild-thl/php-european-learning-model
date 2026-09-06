@@ -18,7 +18,7 @@ use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint as CoreCreditPoint;
 use IsyThl\EuropeanLearningModel\DisplayDetail as CoreDisplayDetail;
 use IsyThl\EuropeanLearningModel\DisplayParameter as CoreDisplayParameter;
-use IsyThl\EuropeanLearningModel\GradingScheme as CoreGradingScheme;
+use IsyThl\EuropeanLearningModel\Core\GradingScheme as CoreGradingScheme;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
@@ -304,7 +304,7 @@ final class ValidationContractTest extends TestCase {
             ),
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\GradingScheme::class, $gradingScheme);
+        self::assertInstanceOf(CoreGradingScheme::class, $gradingScheme);
         self::assertInstanceOf(\IsyThl\EuropeanLearningModel\DisplayParameter::class, $displayParameter);
         self::assertInstanceOf(\IsyThl\EuropeanLearningModel\DisplayDetail::class, $displayDetail);
         self::assertSame('GradingScheme', $gradingScheme->toArray()['type']);

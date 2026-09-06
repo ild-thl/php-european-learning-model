@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-
-final class GradingScheme extends \IsyThl\EuropeanLearningModel\Core\Entity {
+final class GradingScheme extends Entity {
 
     public function __construct(
         string $id,

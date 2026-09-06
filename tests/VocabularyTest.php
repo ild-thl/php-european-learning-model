@@ -7,7 +7,7 @@ namespace IsyThl\EuropeanLearningModel\Tests;
 use IsyThl\EuropeanLearningModel\Concept;
 use IsyThl\EuropeanLearningModel\ConceptScheme;
 use IsyThl\EuropeanLearningModel\CachedVocabularyProvider;
-use IsyThl\EuropeanLearningModel\Clock;
+use IsyThl\EuropeanLearningModel\Core\Clock;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\InMemoryVocabularyCache;
 use IsyThl\EuropeanLearningModel\InMemoryVocabularyProvider;

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\Clock;
+use IsyThl\EuropeanLearningModel\Core\SystemClock;
+
 final class InMemoryVocabularyCache implements VocabularyCache {
 
     public function __construct(private readonly Clock $clock = new SystemClock()) {

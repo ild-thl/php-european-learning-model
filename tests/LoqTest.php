@@ -9,6 +9,7 @@ use IsyThl\EuropeanDigitalCredentials\Concept;
 use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
+use IsyThl\EuropeanDigitalCredentials\Identifier;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Location;
@@ -24,13 +25,18 @@ final class LoqTest extends TestCase {
 
     public function testQualificationReferencePreservesPersistentIdentity(): void {
         $reference = new QualificationReference(
-            'https://example.test/qualification/123',
+            new Identifier('qualification-id', '123', 'example-qualifications'),
             'https://example.test/datasets/qualifications',
         );
 
         self::assertSame([
             'type' => 'QualificationReference',
-            'id' => 'https://example.test/qualification/123',
+            'identifier' => [
+                'id' => 'urn:epass:identifier:qualification-id',
+                'type' => 'Identifier',
+                'notation' => '123',
+                'schemeName' => 'example-qualifications',
+            ],
             'datasetNamespace' => 'https://example.test/datasets/qualifications',
         ], $reference->toArray());
     }
@@ -38,7 +44,7 @@ final class LoqTest extends TestCase {
     public function testIncompleteQualificationReferenceFailsBeforeSerialization(): void {
         $this->expectException(InvalidCredentialException::class);
 
-        new QualificationReference('', 'https://example.test/datasets/qualifications');
+        new QualificationReference(null);
     }
 
     public function testDocumentRejectsNonLearningOpportunityRoots(): void {

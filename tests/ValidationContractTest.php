@@ -15,6 +15,7 @@ use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidationResult;
 use IsyThl\EuropeanLearningModel\Core\Validation\StandardsValidatorInterface;
 use IsyThl\EuropeanLearningModel\Loq\LoqDocumentValidator;
+use IsyThl\EuropeanLearningModel\Loq\LoqDatasetDocument;
 use IsyThl\EuropeanLearningModel\Loq\QualificationDocument;
 use PHPUnit\Framework\TestCase;
 
@@ -81,6 +82,23 @@ final class ValidationContractTest extends TestCase {
 
         $this->expectExceptionMessage('Missing publisher.');
         $validator->validate(new QualificationDocument($this->qualification()), 'LOQ.rdf');
+    }
+
+    public function testLoqDocumentValidatorAcceptsDatasetDocuments(): void {
+        $standardsValidator = new class implements StandardsValidatorInterface {
+            public function validate(string $document, string $profileResource): StandardsValidationResult {
+                return str_contains($document, 'Qualification') && $profileResource === 'profile'
+                    ? StandardsValidationResult::valid()
+                    : StandardsValidationResult::invalid(['The LOQ dataset is invalid.']);
+            }
+        };
+        $validator = new LoqDocumentValidator(
+            $standardsValidator,
+            new InMemoryProfileResourceRegistry(['LOQ.rdf' => 'profile']),
+        );
+
+        $validator->validate(new LoqDatasetDocument($this->qualification()), 'LOQ.rdf');
+        self::assertTrue(true);
     }
 
     /** @return list<Qualification> */

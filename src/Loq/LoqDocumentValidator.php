@@ -18,7 +18,7 @@ final class LoqDocumentValidator {
     }
 
     public function validate(
-        LearningOpportunityDocument|QualificationDocument $document,
+        LearningOpportunityDocument|QualificationDocument|LoqDatasetDocument $document,
         string $profileResource,
     ): void {
         $result = $this->standardsValidator->validate(

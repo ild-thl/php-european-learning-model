@@ -21,6 +21,7 @@ use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
+use IsyThl\EuropeanLearningModel\Core\MediaObject as CoreMediaObject;
 use IsyThl\EuropeanLearningModel\Core\Organisation as CoreOrganisation;
 use IsyThl\EuropeanLearningModel\Core\EmailAddress as CoreEmailAddress;
 use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
@@ -171,6 +172,27 @@ final class ValidationContractTest extends TestCase {
             'type' => 'AwardingProcess',
             'awardingBody' => $organisation->toArray(),
         ], $process->toArray());
+    }
+
+    public function testCoreMediaObjectAliasPreservesControlledConceptSerialization(): void {
+        $media = new CoreMediaObject(
+            'core-media',
+            'aGVsbG8=',
+            new CoreConcept(
+                'https://example.test/encoding/base64',
+                new CoreLocalizedString(['en' => 'Base64']),
+                new CoreConceptScheme(ElmVocabularySchemes::CONTENT_ENCODING),
+            ),
+            new CoreConcept(
+                'https://example.test/content-type/image',
+                new CoreLocalizedString(['en' => 'Image']),
+                new CoreConceptScheme(ElmVocabularySchemes::CONTENT_TYPE),
+            ),
+        );
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\MediaObject::class, $media);
+        self::assertSame('MediaObject', $media->toArray()['type']);
+        self::assertSame('aGVsbG8=', $media->toArray()['content']);
     }
 
     public function testProfileResourceRegistryIsAnExplicitResolutionBoundary(): void {

@@ -31,7 +31,7 @@ use IsyThl\EuropeanLearningModel\LearningAchievement;
 use IsyThl\EuropeanLearningModel\LearningActivity;
 use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\LearningEntitlement;
-use IsyThl\EuropeanLearningModel\LearningEntitlementSpecification;
+use IsyThl\EuropeanLearningModel\Core\LearningEntitlementSpecification;
 use IsyThl\EuropeanLearningModel\LearningAssessment;
 use IsyThl\EuropeanLearningModel\Core\LearningAssessmentSpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;

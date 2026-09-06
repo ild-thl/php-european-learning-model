@@ -12,6 +12,7 @@ use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
 use IsyThl\EuropeanLearningModel\Core\Address as CoreAddress;
+use IsyThl\EuropeanLearningModel\Core\AwardingProcess as CoreAwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\ContactPoint as CoreContactPoint;
 use IsyThl\EuropeanLearningModel\Core\Concept as CoreConcept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme as CoreConceptScheme;
@@ -20,6 +21,7 @@ use IsyThl\EuropeanLearningModel\Core\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
+use IsyThl\EuropeanLearningModel\Core\Organisation as CoreOrganisation;
 use IsyThl\EuropeanLearningModel\Core\EmailAddress as CoreEmailAddress;
 use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
 use IsyThl\EuropeanLearningModel\Core\Validation\InMemoryProfileResourceRegistry;
@@ -141,6 +143,34 @@ final class ValidationContractTest extends TestCase {
 
         $this->expectException(\IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException::class);
         new CoreEmailAddress('invalid email');
+    }
+
+    public function testCoreOrganisationAndAwardingProcessAliasesPreserveNestedSerialization(): void {
+        $organisation = new CoreOrganisation(
+            'core-organisation',
+            new CoreLocation(
+                'core-organisation-location',
+                new CoreAddress(
+                    'core-organisation-address',
+                    new CoreConcept(
+                        'http://publications.europa.eu/resource/authority/country/BEL',
+                        new CoreLocalizedString(['en' => 'Belgium']),
+                        new CoreConceptScheme(ElmVocabularySchemes::COUNTRY),
+                    ),
+                    new CoreNote('core-organisation-note', new CoreLocalizedString(['en' => 'Brussels'])),
+                ),
+            ),
+            new CoreLocalizedString(['en' => 'Core organisation']),
+        );
+        $process = new CoreAwardingProcess('core-awarding-process', $organisation);
+
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\Organisation::class, $organisation);
+        self::assertInstanceOf(\IsyThl\EuropeanDigitalCredentials\AwardingProcess::class, $process);
+        self::assertSame([
+            'id' => 'urn:epass:awardingProcess:core-awarding-process',
+            'type' => 'AwardingProcess',
+            'awardingBody' => $organisation->toArray(),
+        ], $process->toArray());
     }
 
     public function testProfileResourceRegistryIsAnExplicitResolutionBoundary(): void {

@@ -666,6 +666,20 @@ final class LoqTest extends TestCase {
         );
     }
 
+    public function testAwardingOpportunityRejectsMalformedIdentifiers(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new AwardingOpportunity(
+            'https://example.test/awarding-opportunity/invalid-identifier',
+            new LearningAchievementSpecification(
+                'https://example.test/specification/invalid-identifier',
+                new LocalizedString(['en' => 'Invalid identifier specification']),
+            ),
+            [$this->provider()],
+            identifiers: ['invalid'],
+        );
+    }
+
     public function testQualificationSerializesQualificationCodeUsingProfilePropertyName(): void {
         $qualificationCode = $this->concept(
             'https://example.test/qualification-code/1',

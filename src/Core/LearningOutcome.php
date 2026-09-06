@@ -9,7 +9,7 @@ use IsyThl\EuropeanLearningModel\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-use IsyThl\EuropeanLearningModel\Note;
+use IsyThl\EuropeanLearningModel\Core\Note;
 
 final class LearningOutcome extends \IsyThl\EuropeanLearningModel\Core\Entity {
 

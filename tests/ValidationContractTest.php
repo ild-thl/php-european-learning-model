@@ -22,7 +22,7 @@ use IsyThl\EuropeanLearningModel\GradingScheme as CoreGradingScheme;
 use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
-use IsyThl\EuropeanLearningModel\Note as CoreNote;
+use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Location as CoreLocation;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome as CoreLearningOutcome;
 use IsyThl\EuropeanLearningModel\LearningActivity as CoreLearningActivity;
@@ -99,7 +99,7 @@ final class ValidationContractTest extends TestCase {
         $note = new CoreNote('core-note', new CoreLocalizedString(['en' => 'Core note']));
         $resource = new CoreWebResource('core-resource', 'https://example.test/resource');
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Note::class, $note);
+        self::assertInstanceOf(CoreNote::class, $note);
         self::assertInstanceOf(\IsyThl\EuropeanLearningModel\WebResource::class, $resource);
         self::assertSame([
             'id' => 'urn:epass:note:core-note',

@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-
-final class Note extends \IsyThl\EuropeanLearningModel\Core\Entity {
+final class Note extends Entity {
 
     public function __construct(string $id, public readonly LocalizedString $noteLiteral) {
         parent::__construct($id);

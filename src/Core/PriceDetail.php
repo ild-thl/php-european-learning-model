@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel\Core;
 
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-use IsyThl\EuropeanLearningModel\Note;
+use IsyThl\EuropeanLearningModel\Core\Note;
 
 final class PriceDetail {
 

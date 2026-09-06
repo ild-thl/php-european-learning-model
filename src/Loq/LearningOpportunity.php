@@ -13,7 +13,7 @@ use IsyThl\EuropeanLearningModel\LearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Location;
 use IsyThl\EuropeanLearningModel\MediaObject;
-use IsyThl\EuropeanLearningModel\Note;
+use IsyThl\EuropeanLearningModel\Core\Note;
 use IsyThl\EuropeanLearningModel\Organisation;
 use IsyThl\EuropeanLearningModel\WebResource;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;

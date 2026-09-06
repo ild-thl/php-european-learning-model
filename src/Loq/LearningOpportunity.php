@@ -9,6 +9,7 @@ use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Location;
+use IsyThl\EuropeanDigitalCredentials\Note;
 use IsyThl\EuropeanDigitalCredentials\Organisation;
 use IsyThl\EuropeanDigitalCredentials\WebResource;
 use IsyThl\EuropeanLearningModel\Core\PeriodOfTime;
@@ -31,6 +32,10 @@ final class LearningOpportunity {
         public readonly ?PriceDetail $priceDetail = null,
         public readonly ?string $duration = null,
         public readonly ?Concept $mode = null,
+        /** @var list<WebResource> */
+        public readonly array $supplementaryDocuments = [],
+        /** @var list<Note> */
+        public readonly array $additionalNotes = [],
     ) {
         self::assertUri($id);
         if ($providedBy === []) {
@@ -38,6 +43,17 @@ final class LearningOpportunity {
         }
         if (array_filter($providedBy, static fn ($provider): bool => !$provider instanceof Organisation) !== []) {
             throw new InvalidCredentialException('Learning opportunity providers must be organisations.');
+        }
+        if (
+            array_filter(
+                $supplementaryDocuments,
+                static fn ($document): bool => !$document instanceof WebResource,
+            ) !== []
+        ) {
+            throw new InvalidCredentialException('Supplementary documents must be WebResource objects.');
+        }
+        if (array_filter($additionalNotes, static fn ($note): bool => !$note instanceof Note) !== []) {
+            throw new InvalidCredentialException('Additional notes must be Note objects.');
         }
         if (
             $duration !== null
@@ -84,6 +100,18 @@ final class LearningOpportunity {
         }
         if ($this->mode !== null) {
             $data['mode'] = $this->mode->toArray();
+        }
+        if ($this->supplementaryDocuments !== []) {
+            $data['supplementaryDocument'] = array_map(
+                static fn (WebResource $document): array => $document->toArray(),
+                $this->supplementaryDocuments,
+            );
+        }
+        if ($this->additionalNotes !== []) {
+            $data['additionalNote'] = array_map(
+                static fn (Note $note): array => $note->toArray(),
+                $this->additionalNotes,
+            );
         }
         return $data;
     }

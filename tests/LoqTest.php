@@ -209,6 +209,44 @@ final class LoqTest extends TestCase {
         );
     }
 
+    public function testLearningOpportunitySerializesSupplementaryDocumentsAndAdditionalNotes(): void {
+        $document = new WebResource('supplementary-document', 'https://example.test/course-guide.pdf');
+        $note = new Note('opportunity-note', new LocalizedString(['en' => 'Bring a laptop.']));
+        $opportunity = new LearningOpportunity(
+            'https://example.test/opportunity/resources',
+            new LocalizedString(['en' => 'Opportunity with resources']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-resources', 'https://example.test/opportunity/resources'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/resources',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            supplementaryDocuments: [$document],
+            additionalNotes: [$note],
+        );
+
+        self::assertSame([$document->toArray()], $opportunity->toArray()['supplementaryDocument']);
+        self::assertSame([$note->toArray()], $opportunity->toArray()['additionalNote']);
+    }
+
+    public function testLearningOpportunityRejectsInvalidSupplementaryDocument(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new LearningOpportunity(
+            'https://example.test/opportunity/invalid-document',
+            new LocalizedString(['en' => 'Invalid document']),
+            $this->concept(ElmVocabularySchemes::LANGUAGE, 'https://example.test/language/en'),
+            new WebResource('homepage-invalid-document', 'https://example.test/opportunity/invalid-document'),
+            [$this->provider()],
+            new LearningAchievementSpecification(
+                'https://example.test/specification/invalid-document',
+                new LocalizedString(['en' => 'Specification']),
+            ),
+            supplementaryDocuments: [new Note('wrong-document', new LocalizedString(['en' => 'Not a web resource']))],
+        );
+    }
+
     public function testPriceDetailSerializesDecimalAmountAndCurrency(): void {
         $currency = new Concept(
             'http://publications.europa.eu/resource/authority/currency/EUR',

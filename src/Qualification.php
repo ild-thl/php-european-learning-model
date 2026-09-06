@@ -34,6 +34,7 @@ final class Qualification extends LearningAchievementSpecification {
         array $learningOutcomes = [],
         array $educationSubjects = [],
         public readonly ?Organisation $publisher = null,
+        public readonly ?Note $learningOutcomeSummary = null,
     ) {
         parent::__construct(
             $id,
@@ -110,6 +111,9 @@ final class Qualification extends LearningAchievementSpecification {
         }
         if ($this->publisher !== null) {
             $data['publisher'] = $this->publisher->toArray();
+        }
+        if ($this->learningOutcomeSummary !== null) {
+            $data['learningOutcomeSummary'] = $this->learningOutcomeSummary->toArray();
         }
         return $data;
     }

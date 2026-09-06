@@ -217,6 +217,26 @@ final class LoqTest extends TestCase {
         new Grant(new LocalizedString(['en' => 'Study grant']), contentUrl: 'file:///tmp/grant');
     }
 
+    public function testQualificationSerializesLearningOutcomeSummary(): void {
+        $summary = new Note('outcome-summary', new LocalizedString([
+            'en' => 'Learners can apply the acquired skills independently.',
+        ]));
+        $qualification = new Qualification(
+            'https://example.test/qualification/summary',
+            new LocalizedString(['en' => 'Qualification with summary']),
+            eqfLevel: $this->concept(ElmVocabularySchemes::EQF, 'https://example.test/eqf/4'),
+            nqfLevels: [$this->concept(ElmVocabularySchemes::QDR_BASE, 'https://example.test/nqf/4')],
+            learningOutcomes: [new \IsyThl\EuropeanDigitalCredentials\LearningOutcome(
+                'https://example.test/outcome/summary',
+                new LocalizedString(['en' => 'Outcome']),
+            )],
+            educationSubjects: [$this->concept(ElmVocabularySchemes::ISCED_F, 'https://example.test/isced/1')],
+            learningOutcomeSummary: $summary,
+        );
+
+        self::assertSame($summary->toArray(), $qualification->toArray()['learningOutcomeSummary']);
+    }
+
     public function testQualificationDocumentRejectsMissingProfileFields(): void {
         $qualification = new Qualification(
             'qualification-1',

@@ -323,7 +323,7 @@ final class LoqTest extends TestCase {
 
     public function testLearningOpportunitySerializesGrantAndBannerImage(): void {
         $grant = new Grant(new LocalizedString(['en' => 'Study grant']));
-        $bannerImage = new \IsyThl\EuropeanLearningModel\MediaObject(
+        $bannerImage = new \IsyThl\EuropeanLearningModel\Core\MediaObject(
             'banner-image',
             'base64-image-data',
             $this->concept(

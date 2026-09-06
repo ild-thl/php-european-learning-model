@@ -2,14 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
-use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class MediaObject extends \IsyThl\EuropeanLearningModel\Core\Entity {
+final class MediaObject extends Entity {
 
     public function __construct(
         string $id,

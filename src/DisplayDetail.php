@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel;
 
+use IsyThl\EuropeanLearningModel\Core\MediaObject;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class DisplayDetail extends \IsyThl\EuropeanLearningModel\Core\Entity {

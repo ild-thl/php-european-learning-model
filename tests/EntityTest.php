@@ -23,7 +23,7 @@ use IsyThl\EuropeanLearningModel\IndividualDisplay;
 use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Issuer;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
-use IsyThl\EuropeanLearningModel\MediaObject;
+use IsyThl\EuropeanLearningModel\Core\MediaObject;
 use IsyThl\EuropeanLearningModel\Core\Note;
 use IsyThl\EuropeanLearningModel\Core\EmailAddress;
 use IsyThl\EuropeanLearningModel\Core\Location;

@@ -28,7 +28,7 @@ use IsyThl\EuropeanLearningModel\Core\LearningOutcome as CoreLearningOutcome;
 use IsyThl\EuropeanLearningModel\LearningActivity as CoreLearningActivity;
 use IsyThl\EuropeanLearningModel\LearningActivitySpecification as CoreLearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
-use IsyThl\EuropeanLearningModel\MediaObject as CoreMediaObject;
+use IsyThl\EuropeanLearningModel\Core\MediaObject as CoreMediaObject;
 use IsyThl\EuropeanLearningModel\Organisation as CoreOrganisation;
 use IsyThl\EuropeanLearningModel\Core\EmailAddress as CoreEmailAddress;
 use IsyThl\EuropeanLearningModel\Core\WebResource as CoreWebResource;
@@ -197,7 +197,7 @@ final class ValidationContractTest extends TestCase {
             ),
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\MediaObject::class, $media);
+        self::assertInstanceOf(CoreMediaObject::class, $media);
         self::assertSame('MediaObject', $media->toArray()['type']);
         self::assertSame('aGVsbG8=', $media->toArray()['content']);
     }

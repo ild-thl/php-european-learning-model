@@ -20,7 +20,7 @@ use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\DisplayParameter;
 use IsyThl\EuropeanLearningModel\DisplayDetail;
 use IsyThl\EuropeanLearningModel\IndividualDisplay;
-use IsyThl\EuropeanLearningModel\Identifier;
+use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Issuer;
 use IsyThl\EuropeanLearningModel\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\MediaObject;

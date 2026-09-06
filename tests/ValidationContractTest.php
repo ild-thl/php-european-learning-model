@@ -19,7 +19,7 @@ use IsyThl\EuropeanLearningModel\Core\CreditPoint as CoreCreditPoint;
 use IsyThl\EuropeanLearningModel\DisplayDetail as CoreDisplayDetail;
 use IsyThl\EuropeanLearningModel\DisplayParameter as CoreDisplayParameter;
 use IsyThl\EuropeanLearningModel\GradingScheme as CoreGradingScheme;
-use IsyThl\EuropeanLearningModel\Identifier as CoreIdentifier;
+use IsyThl\EuropeanLearningModel\Core\Identifier as CoreIdentifier;
 use IsyThl\EuropeanLearningModel\LegalIdentifier as CoreLegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Note as CoreNote;
@@ -56,7 +56,7 @@ final class ValidationContractTest extends TestCase {
             ),
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Identifier::class, $identifier);
+        self::assertInstanceOf(CoreIdentifier::class, $identifier);
         self::assertInstanceOf(\IsyThl\EuropeanLearningModel\LegalIdentifier::class, $legalIdentifier);
         self::assertSame([
             'id' => 'urn:epass:identifier:core-id',

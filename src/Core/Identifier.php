@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Core;
 
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class Identifier extends \IsyThl\EuropeanLearningModel\Core\Entity {
+final class Identifier extends Entity {
 
     public function __construct(
         string $id,

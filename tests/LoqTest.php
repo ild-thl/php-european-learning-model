@@ -11,7 +11,7 @@ use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\Identifier;
+use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\LearningActivity;
 use IsyThl\EuropeanLearningModel\LearningActivitySpecification;

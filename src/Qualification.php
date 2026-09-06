@@ -14,6 +14,7 @@ final class Qualification extends LearningAchievementSpecification {
      * @param list<Concept> $qualificationCodes
     * @param list<LearningOutcome> $learningOutcomes
     * @param list<Concept> $educationSubjects
+    * @param list<LearningActivity> $influencedBy
      */
     public function __construct(
         string $id,
@@ -42,6 +43,8 @@ final class Qualification extends LearningAchievementSpecification {
         public readonly array $hasPart = [],
         /** @var list<Qualification> */
         public readonly array $isPartOf = [],
+        /** @var list<LearningActivity> */
+        public readonly array $influencedBy = [],
     ) {
         parent::__construct(
             $id,
@@ -79,6 +82,9 @@ final class Qualification extends LearningAchievementSpecification {
         }
         if (array_filter($isPartOf, static fn ($parent): bool => !$parent instanceof self) !== []) {
             throw new InvalidCredentialException('Qualification parents must be Qualification objects.');
+        }
+        if (array_filter($influencedBy, static fn ($activity): bool => !$activity instanceof LearningActivity) !== []) {
+            throw new InvalidCredentialException('Qualification activities must be LearningActivity objects.');
         }
         foreach ($nqfLevels as $nqfLevel) {
             ConceptAssertions::assertSchemePrefix($nqfLevel, ElmVocabularySchemes::QDR_BASE, 'nqfLevels');
@@ -147,6 +153,12 @@ final class Qualification extends LearningAchievementSpecification {
             $data['isPartOf'] = array_map(
                 static fn (self $parent): array => $parent->toArray(),
                 $this->isPartOf,
+            );
+        }
+        if ($this->influencedBy !== []) {
+            $data['influencedBy'] = array_map(
+                static fn (LearningActivity $activity): array => $activity->toArray(),
+                $this->influencedBy,
             );
         }
         return $data;

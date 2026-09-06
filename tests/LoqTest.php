@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanDigitalCredentials\Tests;
 
 use IsyThl\EuropeanDigitalCredentials\Address;
+use IsyThl\EuropeanDigitalCredentials\AwardingProcess;
 use IsyThl\EuropeanDigitalCredentials\Concept;
 use IsyThl\EuropeanDigitalCredentials\ConceptScheme;
 use IsyThl\EuropeanDigitalCredentials\Exception\InvalidCredentialException;
 use IsyThl\EuropeanDigitalCredentials\ElmVocabularySchemes;
 use IsyThl\EuropeanDigitalCredentials\Identifier;
 use IsyThl\EuropeanDigitalCredentials\LearningAchievementSpecification;
+use IsyThl\EuropeanDigitalCredentials\LearningActivity;
+use IsyThl\EuropeanDigitalCredentials\LearningActivitySpecification;
 use IsyThl\EuropeanDigitalCredentials\LocalizedString;
 use IsyThl\EuropeanDigitalCredentials\Location;
 use IsyThl\EuropeanDigitalCredentials\Note;
@@ -520,6 +523,35 @@ final class LoqTest extends TestCase {
             'https://example.test/qualification/invalid-part',
             new LocalizedString(['en' => 'Invalid qualification']),
             hasPart: ['invalid'],
+        );
+    }
+
+    public function testQualificationSerializesInfluencingActivities(): void {
+        $activity = new LearningActivity(
+            'https://example.test/activity/qualification',
+            new LocalizedString(['en' => 'Qualification activity']),
+            new AwardingProcess('https://example.test/awarding/qualification', $this->provider()),
+            new LearningActivitySpecification(
+                'https://example.test/activity-specification/qualification',
+                new LocalizedString(['en' => 'Qualification activity']),
+            ),
+        );
+        $qualification = new Qualification(
+            'https://example.test/qualification/influenced',
+            new LocalizedString(['en' => 'Influenced qualification']),
+            influencedBy: [$activity],
+        );
+
+        self::assertSame([$activity->toArray()], $qualification->toArray()['influencedBy']);
+    }
+
+    public function testQualificationRejectsInvalidInfluencingActivities(): void {
+        $this->expectException(InvalidCredentialException::class);
+
+        new Qualification(
+            'https://example.test/qualification/invalid-influence',
+            new LocalizedString(['en' => 'Invalid qualification']),
+            influencedBy: ['invalid'],
         );
     }
 

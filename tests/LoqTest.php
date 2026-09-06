@@ -13,7 +13,7 @@ use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
-use IsyThl\EuropeanLearningModel\LearningActivity;
+use IsyThl\EuropeanLearningModel\Edc\LearningActivity;
 use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Location;

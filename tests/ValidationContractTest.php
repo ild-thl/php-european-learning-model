@@ -25,7 +25,7 @@ use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome as CoreLearningOutcome;
-use IsyThl\EuropeanLearningModel\LearningActivity as CoreLearningActivity;
+use IsyThl\EuropeanLearningModel\Edc\LearningActivity as CoreLearningActivity;
 use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification as CoreLearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
 use IsyThl\EuropeanLearningModel\Core\MediaObject as CoreMediaObject;
@@ -263,7 +263,7 @@ final class ValidationContractTest extends TestCase {
             )],
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\LearningActivity::class, $activity);
+        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Edc\LearningActivity::class, $activity);
         self::assertSame('LearningActivity', $activity->toArray()['type']);
         self::assertCount(1, $activity->toArray()['hasPart']);
     }

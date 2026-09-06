@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Edc;
 
 use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
@@ -10,7 +10,6 @@ use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
-use IsyThl\EuropeanLearningModel\Edc\Claim;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LearningAchievement extends Claim {

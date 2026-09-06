@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Edc;
 
 use IsyThl\EuropeanLearningModel\Core\Concept;
-use IsyThl\EuropeanLearningModel\Edc\Claim;
 use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;

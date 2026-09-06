@@ -13,6 +13,7 @@ use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
+use IsyThl\EuropeanLearningModel\Edc\LearningActivity;
 use IsyThl\EuropeanLearningModel\Core\Note;
 use IsyThl\EuropeanLearningModel\Core\Organisation;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;

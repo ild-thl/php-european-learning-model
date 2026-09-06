@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel;
+namespace IsyThl\EuropeanLearningModel\Edc;
 
 use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
-use IsyThl\EuropeanLearningModel\Edc\Claim;
 use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;

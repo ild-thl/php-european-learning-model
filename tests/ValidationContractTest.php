@@ -8,7 +8,7 @@ use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-use IsyThl\EuropeanLearningModel\Loq\Qualification;
+use IsyThl\EuropeanLearningModel\Core\Qualification;
 use IsyThl\EuropeanLearningModel\Core\Validation\ProfileResourceRegistryInterface;
 use IsyThl\EuropeanLearningModel\Core\Address as CoreAddress;
 use IsyThl\EuropeanLearningModel\Core\AwardingProcess as CoreAwardingProcess;
@@ -25,7 +25,7 @@ use IsyThl\EuropeanLearningModel\Core\LocalizedString as CoreLocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Note as CoreNote;
 use IsyThl\EuropeanLearningModel\Core\Location as CoreLocation;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome as CoreLearningOutcome;
-use IsyThl\EuropeanLearningModel\Edc\LearningActivity as CoreLearningActivity;
+use IsyThl\EuropeanLearningModel\Core\LearningActivity;
 use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification as CoreLearningActivitySpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningOutcome;
 use IsyThl\EuropeanLearningModel\Core\MediaObject as CoreMediaObject;
@@ -250,12 +250,12 @@ final class ValidationContractTest extends TestCase {
             'core-activity-spec',
             new CoreLocalizedString(['en' => 'Core activity']),
         );
-        $activity = new CoreLearningActivity(
+        $activity = new LearningActivity(
             'core-activity',
             new CoreLocalizedString(['en' => 'Core activity']),
             new CoreAwardingProcess('core-awarding-process', $organisation),
             $specification,
-            hasPart: [new CoreLearningActivity(
+            hasPart: [new LearningActivity(
                 'core-sub-activity',
                 new CoreLocalizedString(['en' => 'Core sub-activity']),
                 new CoreAwardingProcess('core-sub-awarding-process', $organisation),
@@ -263,7 +263,7 @@ final class ValidationContractTest extends TestCase {
             )],
         );
 
-        self::assertInstanceOf(\IsyThl\EuropeanLearningModel\Edc\LearningActivity::class, $activity);
+        self::assertInstanceOf(LearningActivity::class, $activity);
         self::assertSame('LearningActivity', $activity->toArray()['type']);
         self::assertCount(1, $activity->toArray()['hasPart']);
     }

@@ -2,14 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IsyThl\EuropeanLearningModel\Edc;
+namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
-use IsyThl\EuropeanLearningModel\Core\LearningActivitySpecification;
-use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class LearningActivity extends Claim {
+final class LearningActivity extends Entity {
 
     public function __construct(
         string $id,

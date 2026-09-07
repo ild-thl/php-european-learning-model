@@ -7,6 +7,7 @@ namespace IsyThl\EuropeanLearningModel\Edc;
 use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\ContactPoint;
+use IsyThl\EuropeanLearningModel\Core\LearningActivity;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -14,7 +15,7 @@ use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class CredentialSubject extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
-    /** @param list<Claim> $claims */
+    /** @param list<Claim|LearningActivity> $claims */
     public function __construct(
         string $id,
         public readonly LocalizedString $givenName,
@@ -28,7 +29,14 @@ final class CredentialSubject extends \IsyThl\EuropeanLearningModel\Core\Entity 
         public readonly ?ContactPoint $contactPoint = null,
     ) {
         parent::__construct($id);
-        if ($claims === [] || array_filter($claims, static fn ($claim): bool => !$claim instanceof Claim) !== []) {
+        if (
+            $claims === []
+            || array_filter(
+                $claims,
+                static fn ($claim): bool => !$claim instanceof Claim && !$claim instanceof LearningActivity,
+            )
+            !== []
+        ) {
             throw new InvalidCredentialException('A credential subject requires at least one valid claim.');
         }
     }
@@ -41,7 +49,10 @@ final class CredentialSubject extends \IsyThl\EuropeanLearningModel\Core\Entity 
             'familyName' => $this->familyName->toArray(),
             'fullName' => $this->fullName->toArray(),
             'givenName' => $this->givenName->toArray(),
-            'hasClaim' => array_map(static fn (Claim $claim): array => $claim->toArray(), $this->claims),
+            'hasClaim' => array_map(
+                static fn (Claim|LearningActivity $claim): array => $claim->toArray(),
+                $this->claims,
+            ),
         ];
 
         if ($this->dateOfBirth !== null) {

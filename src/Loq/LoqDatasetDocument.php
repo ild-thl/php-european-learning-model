@@ -6,6 +6,7 @@ namespace IsyThl\EuropeanLearningModel\Loq;
 
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
+use IsyThl\EuropeanLearningModel\Core\Qualification;
 
 final class LoqDatasetDocument {
 

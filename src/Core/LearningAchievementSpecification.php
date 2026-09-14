@@ -35,6 +35,7 @@ class LearningAchievementSpecification extends Entity {
         public readonly ?Concept $status = null,
         /** @var list<Concept> */
         public readonly array $targetGroups = [],
+        public readonly ?Note $learningOutcomeSummary = null,
     ) {
         parent::__construct($id);
         if ($language !== null) {
@@ -150,6 +151,9 @@ class LearningAchievementSpecification extends Entity {
                 static fn (LearningOutcome $learningOutcome): array => $learningOutcome->toArray(),
                 $this->learningOutcomes,
             );
+        }
+        if ($this->learningOutcomeSummary !== null) {
+            $data['learningOutcomeSummary'] = $this->learningOutcomeSummary->toArray();
         }
         if ($this->additionalNotes !== []) {
             $data['additionalNote'] = array_map(

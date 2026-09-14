@@ -489,6 +489,19 @@ final class LoqTest extends TestCase {
         self::assertSame($summary->toArray(), $qualification->toArray()['learningOutcomeSummary']);
     }
 
+    public function testLearningAchievementSpecificationSerializesLearningOutcomeSummary(): void {
+        $summary = new Note('specification-outcome-summary', new LocalizedString([
+            'en' => 'Learners can apply the acquired skills independently.',
+        ]));
+        $specification = new LearningAchievementSpecification(
+            'https://example.test/specification/summary',
+            new LocalizedString(['en' => 'Specification with summary']),
+            learningOutcomeSummary: $summary,
+        );
+
+        self::assertSame($summary->toArray(), $specification->toArray()['learningOutcomeSummary']);
+    }
+
     public function testQualificationSerializesEntryRequirement(): void {
         $entryRequirement = new Note(
             'entry-requirement',

@@ -36,7 +36,7 @@ final class Qualification extends LearningAchievementSpecification {
         array $learningOutcomes = [],
         array $educationSubjects = [],
         public readonly ?Organisation $publisher = null,
-        public readonly ?Note $learningOutcomeSummary = null,
+        ?Note $learningOutcomeSummary = null,
         public readonly ?Note $entryRequirement = null,
         public readonly ?Qualification $specialisationOf = null,
         public readonly ?Qualification $generalisationOf = null,
@@ -60,6 +60,7 @@ final class Qualification extends LearningAchievementSpecification {
             $volumeOfLearning,
             learningOutcomes: $learningOutcomes,
             educationSubjects: $educationSubjects,
+            learningOutcomeSummary: $learningOutcomeSummary,
         );
         if (
             array_filter(
@@ -141,9 +142,6 @@ final class Qualification extends LearningAchievementSpecification {
         }
         if ($this->publisher !== null) {
             $data['publisher'] = $this->publisher->toArray();
-        }
-        if ($this->learningOutcomeSummary !== null) {
-            $data['learningOutcomeSummary'] = $this->learningOutcomeSummary->toArray();
         }
         if ($this->entryRequirement !== null) {
             $data['entryRequirement'] = $this->entryRequirement->toArray();

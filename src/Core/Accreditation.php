@@ -4,11 +4,20 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
+/**
+ * Class accreditation
+ * 
+ * The quality assurance or licensing of an organisation or a qualification. An accreditation instance can be used to specify information about: (1) the quality assurance and/or licensing of an organisation, (2) the quality assurance and/or licensing of an organisation with respect to a specific qualification.
+ *
+ * @see https://europa.eu/europass/elm-browser/documentation/rdf/ap/edc/documentation/edc-generic-no-cv_en.html#accreditation 
+ */
 final class Accreditation extends Entity {
 
     public function __construct(
         string $id,
+        /** A name given to the resource. */
         public readonly LocalizedString $title,
+        /** The legal person who is issuing the accreditation decision., The Quality Assuring Authority.(i.e., assurer). */
         public readonly Organisation $accreditingAgent,
         /** @var list<Concept> */
         public readonly array $accreditedForEqfLevels = [],
@@ -20,6 +29,10 @@ final class Accreditation extends Entity {
         /** @var list<Concept> */
         public readonly array $limitCredentialTypes = [],
         public readonly ?Concept $status = null,
+        /** @var list<Note> */
+        public readonly array $additionalNotes = [],
+        /** @var list<WebResource> */
+        public readonly array $supplementaryDocuments = [],
     ) {
         parent::__construct($id);
         ConceptAssertions::assertSchemes(
@@ -47,6 +60,22 @@ final class Accreditation extends Entity {
         );
         if ($status !== null) {
             ConceptAssertions::assertScheme($status, ElmVocabularySchemes::ACCREDITATION_STATUS, 'status');
+        }
+        if (
+            array_filter(
+                $additionalNotes,
+                static fn ($note): bool => !$note instanceof Note,
+            ) !== []
+        ) {
+            throw new InvalidCredentialException('Specification notes must be Note objects.');
+        }
+        if (
+            array_filter(
+                $supplementaryDocuments,
+                static fn ($document): bool => !$document instanceof WebResource,
+            ) !== []
+        ) {
+            throw new InvalidCredentialException('Supplementary documents must be WebResource objects.');
         }
     }
 
@@ -87,6 +116,18 @@ final class Accreditation extends Entity {
         }
         if ($this->status !== null) {
             $data['status'] = $this->status->toArray();
+        }
+        if ($this->additionalNotes !== []) {
+            $data['additionalNote'] = array_map(
+                static fn (Note $note): array => $note->toArray(),
+                $this->additionalNotes,
+            );
+        }
+        if ($this->supplementaryDocuments !== []) {
+            $data['supplementaryDocument'] = array_map(
+                static fn (WebResource $document): array => $document->toArray(),
+                $this->supplementaryDocuments,
+            );
         }
 
         return $data;

@@ -9,6 +9,7 @@ use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\ContactPoint;
 use IsyThl\EuropeanLearningModel\Core\LearningActivity;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+use IsyThl\EuropeanLearningModel\Edc\Claim;
 use DateTimeImmutable;
 use DateTimeZone;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
@@ -21,6 +22,7 @@ final class CredentialSubject extends \IsyThl\EuropeanLearningModel\Core\Entity 
         public readonly LocalizedString $givenName,
         public readonly LocalizedString $familyName,
         public readonly LocalizedString $fullName,
+        /** @var list<Claim> */
         public readonly array $claims,
         public readonly ?LocalizedString $birthName = null,
         public readonly ?DateTimeImmutable $dateOfBirth = null,
@@ -33,7 +35,7 @@ final class CredentialSubject extends \IsyThl\EuropeanLearningModel\Core\Entity 
             $claims === []
             || array_filter(
                 $claims,
-                static fn ($claim): bool => !$claim instanceof Claim && !$claim instanceof LearningActivity,
+                static fn ($claim): bool => !$claim instanceof Claim,
             )
             !== []
         ) {

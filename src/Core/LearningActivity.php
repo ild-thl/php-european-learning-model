@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
+use IsyThl\EuropeanLearningModel\Edc\Claim;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class LearningActivity extends Entity {
+final class LearningActivity extends Claim {
 
     public function __construct(
         string $id,

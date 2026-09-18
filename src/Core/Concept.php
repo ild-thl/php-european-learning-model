@@ -10,9 +10,11 @@ final class Concept extends Entity {
 
     public function __construct(
         string $id,
-        public readonly LocalizedString $prefLabel,
-        public readonly ConceptScheme $inScheme,
+        public readonly ?LocalizedString $prefLabel = null,
+        public readonly ?ConceptScheme $inScheme = null,
         public readonly ?string $notation = null,
+        public readonly ?LocalizedString $definition = null,
+        public readonly ?LocalizedString $altLabel = null,
     ) {
         parent::__construct($id);
         if ($notation === '') {
@@ -25,31 +27,34 @@ final class Concept extends Entity {
         $data = [
             'id' => $this->id,
             'type' => 'Concept',
-            'inScheme' => $this->inScheme->toArray(),
-            'prefLabel' => $this->prefLabel->toArray(),
         ];
+        if ($this->inScheme !== null) {
+            $data['inScheme'] = $this->inScheme->toArray();
+        }
+        if ($this->prefLabel !== null) {
+            $data['prefLabel'] = $this->prefLabel->toArray();
+        }
         if ($this->notation !== null) {
             $data['notation'] = $this->notation;
+        }
+        if ($this->definition !== null) {
+            $data['definition'] = $this->definition->toArray();
+        }
+        if ($this->altLabel !== null) {
+            $data['altLabel'] = $this->altLabel->toArray();
         }
         return $data;
     }
 
     /** @param array<string, mixed> $data */
     public static function fromArray(array $data): self {
-        if (
-            !isset($data['id'], $data['inScheme'], $data['prefLabel'])
-            || !is_string($data['id'])
-            || !is_array($data['inScheme'])
-            || !is_array($data['prefLabel'])
-        ) {
-            throw new InvalidCredentialException('A concept requires id, inScheme, and prefLabel fields.');
-        }
-
         return new self(
             $data['id'],
-            new LocalizedString($data['prefLabel']),
-            ConceptScheme::fromArray($data['inScheme']),
-            $data['notation'] ?? null,
+            isset($data['prefLabel']) ? LocalizedString::fromArray($data['prefLabel']) : null,
+            isset($data['inScheme']) ? ConceptScheme::fromArray($data['inScheme']) : null,
+            isset($data['notation']) ? $data['notation'] : null,
+            isset($data['definition']) ? LocalizedString::fromArray($data['definition']) : null,
+            isset($data['altLabel']) ? LocalizedString::fromArray($data['altLabel']) : null,
         );
     }
 }

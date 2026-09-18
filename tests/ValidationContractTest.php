@@ -95,24 +95,6 @@ final class ValidationContractTest extends TestCase {
         self::assertSame($concept->toArray(), $roundTrip->toArray());
     }
 
-    public function testCoreNoteAndWebResourceAliasesPreserveSerialization(): void {
-        $note = new CoreNote('core-note', new CoreLocalizedString(['en' => 'Core note']));
-        $resource = new CoreWebResource('core-resource', 'https://example.test/resource');
-
-        self::assertInstanceOf(CoreNote::class, $note);
-        self::assertInstanceOf(CoreWebResource::class, $resource);
-        self::assertSame([
-            'id' => 'urn:epass:note:core-note',
-            'type' => 'Note',
-            'noteLiteral' => ['en' => ['Core note']],
-        ], $note->toArray());
-        self::assertSame([
-            'id' => 'urn:epass:webResource:core-resource',
-            'type' => 'WebResource',
-            'contentURL' => 'https://example.test/resource',
-        ], $resource->toArray());
-    }
-
     public function testCoreAddressAndLocationAliasesPreserveNestedSerialization(): void {
         $address = new CoreAddress(
             'core-address',

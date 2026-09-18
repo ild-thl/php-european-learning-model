@@ -29,9 +29,12 @@ final class LocalizedString {
                 throw new InvalidCredentialException('Language tags must use the BCP 47 language format.');
             }
 
-            $values = is_string($values) ? [$values] : $values;
+            if (is_string($values)) {
+                $values = [$values];
+            }
             if (
-                $values === []
+                !is_array($values)
+                || $values === []
                 || array_filter($values, static fn ($value): bool => !is_string($value) || $value === '') !== []
             ) {
                 throw new InvalidCredentialException('Localized values must be non-empty strings.');
@@ -44,6 +47,11 @@ final class LocalizedString {
     /** @return array<string, list<string>> */
     public function toArray(): array {
         return $this->translations;
+    }
+
+    /** @param array<string, string|list<string>> $data */
+    public static function fromArray(array $data): self {
+        return new self($data);
     }
 
     /**

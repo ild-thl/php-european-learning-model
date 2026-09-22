@@ -23,7 +23,7 @@ final class LearningAchievement extends Claim {
         public readonly ?CreditPoint $creditReceived = null,
         /** @var list<LearningAssessment> */
         public readonly array $provenBy = [],
-        /** @var list<Identifier|LegalIdentifier> */
+        /** @var list<Identifier> */
         public readonly array $identifiers = [],
         /** @var list<LearningActivity> */
         public readonly array $influencedBy = [],
@@ -46,7 +46,6 @@ final class LearningAchievement extends Claim {
             $identifiers,
             static fn ($identifier): bool => (
                 !$identifier instanceof Identifier
-                && !$identifier instanceof LegalIdentifier
             ),
         );
         if ($invalidIdentifiers !== []) {
@@ -77,10 +76,10 @@ final class LearningAchievement extends Claim {
     /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
-            'id' => 'urn:epass:learningAchievement:' . $this->id,
+            'id' => $this->id,
             'type' => 'LearningAchievement',
-            'awardedBy' => $this->awardedBy->toArray(),
             'title' => $this->title->toArray(),
+            'awardedBy' => $this->awardedBy->toArray(),
             'specifiedBy' => $this->specifiedBy->toArray(),
         ];
         if ($this->creditReceived !== null) {
@@ -123,5 +122,15 @@ final class LearningAchievement extends Claim {
             );
         }
         return $data;
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        return new self(
+            $data['id'],
+            LocalizedString::fromArray($data['title']),
+            AwardingProcess::fromArray($data['awardedBy']),
+            LearningAchievementSpecification::fromArray($data['specifiedBy']),
+        );
     }
 }

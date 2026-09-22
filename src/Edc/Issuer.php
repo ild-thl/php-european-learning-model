@@ -4,24 +4,32 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Edc;
 
-use IsyThl\EuropeanLearningModel\Core\Organisation;
-use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
-use IsyThl\EuropeanLearningModel\Core\Location;
 use IsyThl\EuropeanLearningModel\Core\ContactPoint;
-use IsyThl\EuropeanLearningModel\Core\MediaObject;
+use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\Location;
+use IsyThl\EuropeanLearningModel\Core\MediaObject;
+use IsyThl\EuropeanLearningModel\Core\Organisation;
 
 final class Issuer extends Organisation {
 
+    /** @param list<Location> $location */
     public function __construct(
         string $id,
-        Location $location,
         LocalizedString $legalName,
+        array $location,
         LegalIdentifier $registration,
         ?ContactPoint $contactPoint = null,
         ?MediaObject $logo = null,
     ) {
-        parent::__construct($id, $location, $legalName, $registration, $contactPoint, $logo);
+        parent::__construct(
+            $id,
+            $legalName,
+            $location,
+            registration: $registration,
+            contactPoint: $contactPoint,
+            logo: $logo,
+        );
     }
 
     /** @return array<string, mixed> */

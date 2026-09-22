@@ -121,7 +121,7 @@ class LearningAchievementSpecification extends Entity {
     /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
-            'id' => 'urn:epass:learningAchievementSpecification:' . $this->id,
+            'id' => $this->id,
             'type' => 'LearningAchievementSpecification',
             'title' => $this->title->toArray(),
         ];
@@ -198,5 +198,13 @@ class LearningAchievementSpecification extends Entity {
             );
         }
         return $data;
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        return new self(
+            $data['id'],
+            LocalizedString::fromArray($data['title']),
+        );
     }
 }

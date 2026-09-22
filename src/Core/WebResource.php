@@ -23,13 +23,26 @@ final class WebResource extends Entity {
     /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
-            'id' => 'urn:epass:webResource:' . $this->id,
+            'id' => $this->id,
             'type' => 'WebResource',
-            'contentURL' => $this->contentUrl,
+            'contentUrl' => $this->contentUrl,
         ];
         if ($this->title !== null) {
             $data['title'] = $this->title->toArray();
         }
         return $data;
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        if (!isset($data['id'], $data['contentUrl'])) {
+            throw new InvalidCredentialException('Invalid web resource data.');
+        }
+
+        return new self(
+            $data['id'],
+            $data['contentUrl'],
+            isset($data['title']) ? LocalizedString::fromArray($data['title']) : null,
+        );
     }
 }

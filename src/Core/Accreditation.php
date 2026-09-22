@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+
 /**
- * Class accreditation
- * 
- * The quality assurance or licensing of an organisation or a qualification. An accreditation instance can be used to specify information about: (1) the quality assurance and/or licensing of an organisation, (2) the quality assurance and/or licensing of an organisation with respect to a specific qualification.
+ * Class Accreditation
  *
- * @see https://europa.eu/europass/elm-browser/documentation/rdf/ap/edc/documentation/edc-generic-no-cv_en.html#accreditation 
+ * @see https://europa.eu/europass/elm-browser/documentation/rdf/ap/edc/documentation/edc-generic-no-cv_en.html#accreditation
  */
 final class Accreditation extends Entity {
 
     public function __construct(
         string $id,
-        /** A name given to the resource. */
         public readonly LocalizedString $title,
-        /** The legal person who is issuing the accreditation decision., The Quality Assuring Authority.(i.e., assurer). */
         public readonly Organisation $accreditingAgent,
+        public readonly Concept $dcType,
         /** @var list<Concept> */
         public readonly array $accreditedForEqfLevels = [],
         /** @var list<Concept> */
@@ -35,6 +34,11 @@ final class Accreditation extends Entity {
         public readonly array $supplementaryDocuments = [],
     ) {
         parent::__construct($id);
+        ConceptAssertions::assertScheme(
+            $dcType,
+            ElmVocabularySchemes::ACCREDITATION_DC_TYPE,
+            'dcType',
+        );
         ConceptAssertions::assertSchemes(
             $accreditedForEqfLevels,
             ElmVocabularySchemes::EQF,
@@ -82,10 +86,11 @@ final class Accreditation extends Entity {
     /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
-            'id' => 'urn:epass:accreditation:' . $this->id,
+            'id' => $this->id,
             'type' => 'Accreditation',
             'title' => $this->title->toArray(),
             'accreditingAgent' => $this->accreditingAgent->toArray(),
+            'dcType' => $this->dcType->toArray(),
         ];
         if ($this->accreditedForEqfLevels !== []) {
             $data['accreditedForEQFLevel'] = array_map(
@@ -131,5 +136,27 @@ final class Accreditation extends Entity {
         }
 
         return $data;
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        if (!isset($data['id'], $data['dcType'], $data['accreditingAgent'])) {
+            throw new InvalidCredentialException('Invalid accreditation data.');
+        }
+
+        return new self(
+            $data['id'],
+            LocalizedString::fromArray($data['title']),
+            Organisation::fromArray($data['accreditingAgent']),
+            Concept::fromArray($data['dcType']),
+            isset($data['accreditedForEqfLevels']) ? array_map(static fn (array $concept): Concept => Concept::fromArray($concept), $data['accreditedForEqfLevels']) : [],
+            isset($data['accreditedForThematicAreas']) ? array_map(static fn (array $concept): Concept => Concept::fromArray($concept), $data['accreditedForThematicAreas']) : [],
+            isset($data['accreditedInJurisdictions']) ? array_map(static fn (array $concept): Concept => Concept::fromArray($concept), $data['accreditedInJurisdictions']) : [],
+            isset($data['decision']) ? Concept::fromArray($data['decision']) : null,
+            isset($data['limitCredentialType']) ? array_map(static fn (array $concept): Concept => Concept::fromArray($concept), $data['limitCredentialType']) : [],
+            isset($data['status']) ? Concept::fromArray($data['status']) : null,
+            isset($data['additionalNote']) ? array_map(static fn (array $note): Note => Note::fromArray($note), $data['additionalNote']) : [],
+            isset($data['supplementaryDocument']) ? array_map(static fn (array $document): WebResource => WebResource::fromArray($document), $data['supplementaryDocument']) : [],
+        );
     }
 }

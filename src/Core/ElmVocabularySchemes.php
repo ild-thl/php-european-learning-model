@@ -17,6 +17,7 @@ final class ElmVocabularySchemes {
     public const ISCED_F = 'http://data.europa.eu/snb/isced-f/25831c2';
     public const ENTITLEMENT = 'http://data.europa.eu/snb/entitlement/25831c2';
     public const ESCO_SKILLS = 'http://data.europa.eu/esco/concept-scheme/skills';
+    public const ACCREDITATION_DC_TYPE = 'http://data.europa.eu/snb/accreditation/25831c2';
     public const ACCREDITATION_DECISION = 'http://data.europa.eu/snb/accreditation-decision/25831c2';
     public const ACCREDITATION_STATUS = 'http://data.europa.eu/snb/status/25831c2';
     public const ATU = 'http://publications.europa.eu/resource/authority/atu';
@@ -29,6 +30,7 @@ final class ElmVocabularySchemes {
     public const TARGET_GROUP = 'http://data.europa.eu/snb/target-group/25831c2';
     public const DCF_SKILLS = 'http://data.europa.eu/snb/dcf/25831c2';
     public const OCCUPATIONS = 'http://data.europa.eu/esco/concept-scheme/occupations';
+    public const FAMILY_RELATIONSHIP = ' http://data.europa.eu/snb/family-relationship/78df67z';
 
     /** @return array<string, string> */
     public static function all(): array {
@@ -44,6 +46,7 @@ final class ElmVocabularySchemes {
             'ISCED_F' => self::ISCED_F,
             'ENTITLEMENT' => self::ENTITLEMENT,
             'ESCO_SKILLS' => self::ESCO_SKILLS,
+            'ACCREDITATION_DC_TYPE' => self::ACCREDITATION_DC_TYPE,
             'ACCREDITATION_DECISION' => self::ACCREDITATION_DECISION,
             'ACCREDITATION_STATUS' => self::ACCREDITATION_STATUS,
             'ATU' => self::ATU,
@@ -56,6 +59,7 @@ final class ElmVocabularySchemes {
             'TARGET_GROUP' => self::TARGET_GROUP,
             'DCF_SKILLS' => self::DCF_SKILLS,
             'OCCUPATIONS' => self::OCCUPATIONS,
+            'FAMILY_RELATIONSHIP' => self::FAMILY_RELATIONSHIP,
         ];
     }
 
@@ -87,6 +91,7 @@ final class ElmVocabularySchemes {
             'ISCED_F' => 'search-backed',
             'ENTITLEMENT' => 'model-enforced',
             'ESCO_SKILLS' => 'search-backed',
+            'ACCREDITATION_DC_TYPE' => 'model-enforced',
             'ACCREDITATION_DECISION' => 'model-enforced',
             'ACCREDITATION_STATUS' => 'model-enforced',
             'ATU' => 'search-backed',
@@ -99,6 +104,7 @@ final class ElmVocabularySchemes {
             'TARGET_GROUP' => 'model-enforced',
             'DCF_SKILLS' => 'search-backed',
             'OCCUPATIONS' => 'search-backed',
+            'FAMILY_RELATIONSHIP' => 'model-enforced',
         ];
     }
 }

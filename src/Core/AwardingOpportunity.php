@@ -9,7 +9,7 @@ use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 final class AwardingOpportunity extends Entity {
 
     /**
-     * @param list<Identifier|LegalIdentifier> $identifiers
+    * @param list<Identifier> $identifiers
      * @param list<Organisation> $awardingBodies
      */
     public function __construct(
@@ -32,7 +32,6 @@ final class AwardingOpportunity extends Entity {
                 $identifiers,
                 static fn ($identifier): bool => (
                     !$identifier instanceof Identifier
-                    && !$identifier instanceof LegalIdentifier
                 ),
             ) !== []
         ) {
@@ -43,7 +42,7 @@ final class AwardingOpportunity extends Entity {
     /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
-            'id' => 'urn:epass:awardingOpportunity:' . $this->id,
+            'id' => $this->id,
             'type' => 'AwardingOpportunity',
             'awardingBody' => array_map(
                 static fn (Organisation $body): array => $body->toArray(),

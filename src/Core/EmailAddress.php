@@ -19,4 +19,17 @@ final class EmailAddress extends Entity {
     public function toArray(): array {
         return ['id' => 'mailto:' . $this->id, 'type' => 'Mailbox'];
     }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        if (!isset($data['type'], $data['id']) || $data['type'] !== 'Mailbox') {
+            throw new InvalidCredentialException('Data is not a Mailbox.');
+        }
+
+        return new self(
+            is_string($data['id']) && str_starts_with($data['id'], 'mailto:')
+                ? substr($data['id'], strlen('mailto:'))
+                : $data['id'],
+        );
+    }
 }

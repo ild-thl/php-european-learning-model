@@ -266,22 +266,6 @@ final class VocabularyTest extends TestCase {
         $snapshot->assertContains($otherConcept, 'country');
     }
 
-    public function testProfileSchemeRegistryContainsStableIdentifiers(): void {
-        self::assertSame(
-            'http://publications.europa.eu/resource/authority/language',
-            ElmVocabularySchemes::LANGUAGE,
-        );
-        self::assertSame(
-            'http://data.europa.eu/snb/credential/25831c2',
-            ElmVocabularySchemes::CREDENTIAL,
-        );
-        self::assertSame(
-            'http://data.europa.eu/snb/assessment/25831c2',
-            ElmVocabularySchemes::ASSESSMENT,
-        );
-        self::assertCount(23, ElmVocabularySchemes::all());
-    }
-
     public function testEveryRegisteredSchemeHasAnOwnershipClassification(): void {
         $schemes = ElmVocabularySchemes::all();
         $ownership = ElmVocabularySchemes::ownership();

@@ -48,6 +48,10 @@ final class Concept extends Entity {
 
     /** @param array<string, mixed> $data */
     public static function fromArray(array $data): self {
+        if (!isset($data['type']) || $data['type'] !== 'Concept') {
+            throw new InvalidCredentialException('Data is not a Concept.');
+        }
+
         return new self(
             $data['id'],
             isset($data['prefLabel']) ? LocalizedString::fromArray($data['prefLabel']) : null,

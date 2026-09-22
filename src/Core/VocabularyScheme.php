@@ -55,6 +55,17 @@ final class VocabularyScheme extends Entity {
         return $data;
     }
 
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        return new self(
+            $data['id'],
+            ConceptScheme::fromArray($data['scheme']),
+            array_map(static fn (array $conceptData): Concept => Concept::fromArray($conceptData), $data['concept'] ?? []),
+            isset($data['title']) ? LocalizedString::fromArray($data['title']) : null,
+            $data['source'] ?? null,
+        );
+    }
+
     public function contains(Concept $concept): bool {
         return $concept->inScheme->id === $this->id
             && in_array($concept->id, $this->conceptIds(), true);

@@ -48,14 +48,17 @@ final class EdcTest extends TestCase {
     private function fixture(): array {
         $subject = new CredentialSubject(
             'subject-1',
-            new LocalizedString(['en' => 'Ada']),
-            new LocalizedString(['en' => 'Lovelace']),
-            new LocalizedString(['en' => 'Ada Lovelace']),
             [new class ('claim-1') extends Claim {
                 public function toArray(): array {
                     return ['id' => $this->id, 'type' => 'Claim'];
                 }
+                public static function fromArray(array $data): self {
+                    return new self($data['id']);
+                }
             }],
+            new LocalizedString(['en' => 'Ada']),
+            new LocalizedString(['en' => 'Lovelace']),
+            new LocalizedString(['en' => 'Ada Lovelace']),
         );
         $language = new Concept(
             'http://publications.europa.eu/resource/authority/language/ENG',

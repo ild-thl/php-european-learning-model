@@ -10,7 +10,7 @@ use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use DateTimeImmutable;
-use DateTimeZone;
+use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
@@ -74,23 +74,23 @@ final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
                 'type' => 'ShaclValidator2017',
             ],
             'credentialSubject' => $this->credentialSubject->toArray(),
-            'validFrom' => $this->formatDate($this->validFrom),
+            'validFrom' => DateTimeFormatter::format($this->validFrom),
             '@context' => self::CONTEXT,
         ];
         if ($this->expirationDate !== null) {
-            $data['expirationDate'] = $this->formatDate($this->expirationDate);
+            $data['expirationDate'] = DateTimeFormatter::format($this->expirationDate);
         }
         if ($this->issuer !== null) {
             $data['issuer'] = $this->issuer->toArray();
         }
         if ($this->issuanceDate !== null) {
-            $data['issuanceDate'] = $this->formatDate($this->issuanceDate);
+            $data['issuanceDate'] = DateTimeFormatter::format($this->issuanceDate);
         }
         if ($this->issued !== null) {
-            $data['issued'] = $this->formatDate($this->issued);
+            $data['issued'] = DateTimeFormatter::format($this->issued);
         }
         if ($this->validUntil !== null) {
-            $data['validUntil'] = $this->formatDate($this->validUntil);
+            $data['validUntil'] = DateTimeFormatter::format($this->validUntil);
         }
         return $data;
     }
@@ -102,7 +102,19 @@ final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
         return $json;
     }
 
-    private function formatDate(DateTimeImmutable $date): string {
-        return $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        return new self(
+            $data['id'],
+            Concept::fromArray($data['credentialProfile']),
+            DisplayParameter::fromArray($data['displayParameter']),
+            CredentialSubject::fromArray($data['credentialSubject']),
+            isset($data['issuer']) ? Issuer::fromArray($data['issuer']) : null,
+            isset($data['expirationDate']) ? new DateTimeImmutable($data['expirationDate']) : null,
+            isset($data['issuanceDate']) ? new DateTimeImmutable($data['issuanceDate']) : null,
+            isset($data['issued']) ? new DateTimeImmutable($data['issued']) : null,
+            isset($data['validFrom']) ? new DateTimeImmutable($data['validFrom']) : null,
+            isset($data['validUntil']) ? new DateTimeImmutable($data['validUntil']) : null,
+        );
     }
 }

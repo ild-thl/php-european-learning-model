@@ -57,4 +57,19 @@ final class DisplayParameter extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
         return $data;
     }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        return new self(
+            $data['id'],
+            Concept::fromArray($data['language']),
+            Concept::fromArray($data['primaryLanguage']),
+            new LocalizedString($data['title']),
+            isset($data['description']) ? new LocalizedString($data['description']) : null,
+            isset($data['individualDisplay']) ? array_map(
+                static fn (array $individualDisplay): IndividualDisplay => IndividualDisplay::fromArray($individualDisplay),
+                $data['individualDisplay'],
+            ) : [],
+        );
+    }
 }

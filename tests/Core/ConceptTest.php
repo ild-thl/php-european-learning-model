@@ -57,6 +57,7 @@ final class ConceptTest extends TestCase {
             'empty notation' => [
                 [
                     "id" => "http://publications.europa.eu/resource/authority/language/ENG",
+                    'type' => 'Concept',
                     "notation" => ""
                 ],
                 InvalidCredentialException::class
@@ -64,6 +65,7 @@ final class ConceptTest extends TestCase {
             'invalid inScheme type' => [
                 [
                     "id" => "http://publications.europa.eu/resource/authority/language/ENG",
+                    'type' => 'Concept',
                     "inScheme" => "invalid type"
                 ],
                 \TypeError::class

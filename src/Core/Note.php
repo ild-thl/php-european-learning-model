@@ -33,6 +33,10 @@ final class Note extends Entity {
 
     /** @param array<string, mixed> $data */
     public static function fromArray(array $data): self {
+        if (!isset($data['type']) || $data['type'] !== 'Note') {
+            throw new InvalidCredentialException('Data is not a Note.');
+        }
+
         return new self(
             $data['id'],
             isset($data['noteLiteral']) ? LocalizedString::fromArray($data['noteLiteral']) : null,

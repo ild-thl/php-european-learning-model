@@ -8,6 +8,7 @@ use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningEntitlementSpecification;
+use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
 use DateTimeImmutable;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
@@ -50,7 +51,7 @@ final class LearningEntitlement extends Claim {
             'title' => $this->title->toArray(),
         ];
         if ($this->issued !== null) {
-            $data['issued'] = $this->formatDate($this->issued);
+            $data['issued'] = DateTimeFormatter::format($this->issued);
         }
         if ($this->description !== null) {
             $data['description'] = $this->description->toArray();
@@ -62,16 +63,12 @@ final class LearningEntitlement extends Claim {
             );
         }
         if ($this->expiryDate !== null) {
-            $data['expiryDate'] = $this->formatDate($this->expiryDate);
+            $data['expiryDate'] = DateTimeFormatter::format($this->expiryDate);
         }
         if ($this->specifiedBy !== null) {
             $data['specifiedBy'] = $this->specifiedBy->toArray();
         }
 
         return $data;
-    }
-
-    private function formatDate(DateTimeImmutable $date): string {
-        return $date->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
     }
 }

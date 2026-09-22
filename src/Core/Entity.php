@@ -15,6 +15,9 @@ abstract class Entity {
     /** @return array<string, mixed> */
     abstract public function toArray(): array;
 
+    /** @param array<string, mixed> $data */
+    abstract public static function fromArray(array $data): self;
+
     public function toJson(): string {
         return JsonLdEncoder::encode($this->toArray());
     }

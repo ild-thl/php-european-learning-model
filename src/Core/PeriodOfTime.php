@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel\Core;
 
 use DateTimeImmutable;
-use DateTimeZone;
+use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class PeriodOfTime {
@@ -26,15 +26,11 @@ final class PeriodOfTime {
     public function toArray(): array {
         $data = ['type' => 'PeriodOfTime'];
         if ($this->startDate !== null) {
-            $data['startDate'] = self::formatDate($this->startDate);
+            $data['startDate'] = DateTimeFormatter::format($this->startDate);
         }
         if ($this->endDate !== null) {
-            $data['endDate'] = self::formatDate($this->endDate);
+            $data['endDate'] = DateTimeFormatter::format($this->endDate);
         }
         return $data;
-    }
-
-    private static function formatDate(DateTimeImmutable $date): string {
-        return $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d\\TH:i:s\\Z');
     }
 }

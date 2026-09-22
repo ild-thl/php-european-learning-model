@@ -26,7 +26,10 @@ final class LocalizedString {
                 $language,
             ) === 1;
             if (!$isValidLanguage) {
-                throw new InvalidCredentialException('Language tags must use the BCP 47 language format.');
+                throw new InvalidCredentialException(
+                    'Language tags must use the BCP 47 language format. Invalid language: '
+                     . $language
+                );
             }
 
             if (is_string($values)) {

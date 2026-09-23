@@ -11,8 +11,12 @@ use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Edc\Credential;
 use IsyThl\EuropeanLearningModel\Edc\CredentialSubject;
 use IsyThl\EuropeanLearningModel\Edc\DisplayParameter;
+use IsyThl\EuropeanLearningModel\Core\Address;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\Location;
+use IsyThl\EuropeanLearningModel\Core\Organisation;
 use IsyThl\EuropeanLearningModel\Edc\EdcDocumentValidator;
 use IsyThl\EuropeanLearningModel\Edc\EdcProfile;
 use PHPUnit\Framework\TestCase;
@@ -44,6 +48,31 @@ final class EdcTest extends TestCase {
         (new EdcDocumentValidator(EdcProfile::GENERIC_NO_CV))->validate($this->fixture());
     }
 
+    public function testCredentialRejectsOrganisationWithoutEidasLegalIdentifierAsIssuer(): void {
+        $this->expectExceptionMessage('A credential issuer requires an eIDAS legal identifier.');
+
+        $this->createCredential(new Organisation(
+            'issuer-1',
+            new LocalizedString(['en' => 'Issuer']),
+            [$this->location()],
+        ));
+    }
+
+    public function testCredentialAcceptsOrganisationWithEidasLegalIdentifierAsIssuer(): void {
+        $issuer = new Organisation(
+            'issuer-1',
+            new LocalizedString(['en' => 'Issuer']),
+            [$this->location()],
+            eidasLegalIdentifier: new LegalIdentifier(
+                'legal-identifier-1',
+                'DE-123',
+                new Concept('country-DE'),
+            ),
+        );
+
+        self::assertSame($issuer->toArray(), $this->createCredential($issuer)->toArray()['issuer']);
+    }
+
     /** @return array<string, mixed> */
     private function fixture(): array {
         $subject = new CredentialSubject(
@@ -73,5 +102,40 @@ final class EdcTest extends TestCase {
             new DisplayParameter('display-1', $language, $language, new LocalizedString(['en' => 'Title'])),
             new DateTimeImmutable('2024-01-01T00:00:00+00:00'),
         ))->toArray();
+    }
+
+    private function createCredential(Organisation $issuer): Credential {
+        $language = new Concept(
+            'http://publications.europa.eu/resource/authority/language/ENG',
+            new LocalizedString(['en' => 'English']),
+            new ConceptScheme(ElmVocabularySchemes::LANGUAGE),
+            'ENG',
+        );
+
+        return new Credential(
+            'credential-1',
+            new CredentialSubject(
+                'subject-1',
+                [new class ('claim-1') extends Claim {
+                    public function toArray(): array {
+                        return ['id' => $this->id, 'type' => 'Claim'];
+                    }
+
+                    public static function fromArray(array $data): self {
+                        return new self($data['id']);
+                    }
+                }],
+            ),
+            new DisplayParameter('display-1', $language, $language, new LocalizedString(['en' => 'Title'])),
+            new DateTimeImmutable('2024-01-01T00:00:00+00:00'),
+            issuer: $issuer,
+        );
+    }
+
+    private function location(): Location {
+        return new Location(
+            'location-1',
+            [new Address('address-1', new Concept('country-DE'))],
+        );
     }
 }

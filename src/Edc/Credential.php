@@ -9,6 +9,7 @@ use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\Organisation;
 use DateTimeImmutable;
 use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
@@ -30,9 +31,14 @@ final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
         public readonly ?DateTimeImmutable $issuanceDate = null,
         public readonly ?DateTimeImmutable $issued = null,
         public readonly ?DateTimeImmutable $validUntil = null,
-        public readonly ?Issuer $issuer = null,
+        public readonly ?Organisation $issuer = null,
     ) {
         parent::__construct($id);
+        if ($issuer !== null && $issuer->eidasLegalIdentifier === null) {
+            throw new InvalidCredentialException(
+                'A credential issuer requires an eIDAS legal identifier.',
+            );
+        }
         $this->credentialProfile = $credentialProfile ?? new Concept(
             'http://data.europa.eu/snb/credential/e34929035b',
             new LocalizedString(['en' => 'Generic']),
@@ -109,7 +115,7 @@ final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
             Concept::fromArray($data['credentialProfile']),
             DisplayParameter::fromArray($data['displayParameter']),
             CredentialSubject::fromArray($data['credentialSubject']),
-            isset($data['issuer']) ? Issuer::fromArray($data['issuer']) : null,
+            isset($data['issuer']) ? Organisation::fromArray($data['issuer']) : null,
             isset($data['expirationDate']) ? new DateTimeImmutable($data['expirationDate']) : null,
             isset($data['issuanceDate']) ? new DateTimeImmutable($data['issuanceDate']) : null,
             isset($data['issued']) ? new DateTimeImmutable($data['issued']) : null,

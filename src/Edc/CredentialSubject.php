@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel\Edc;
 
 use DateTimeImmutable;
-use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
 use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\ContactPoint;
 use IsyThl\EuropeanLearningModel\Core\Identifier;
@@ -14,22 +13,19 @@ use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Location;
 use IsyThl\EuropeanLearningModel\Core\Organisation;
 use IsyThl\EuropeanLearningModel\Core\Person;
-use IsyThl\EuropeanLearningModel\Edc\Credential;
-use IsyThl\EuropeanLearningModel\Edc\Claim;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class CredentialSubject extends Person {
-
     /**
-     * @param list<Claim> $hasClaim
-     * @param list<LocalizedString>|null $birthName
-     * @param list<LocalizedString>|null $patronymicName
-     * @param list<Identifier|LegalIdentifier>|null $identifier
-     * @param list<ContactPoint>|null $contactPoint
-     * @param list<Organisation>|null $memberOf
-     * @param list<Concept>|null $citizenshipCountry
-     * @param list<Credential>|null $hasCredential
-     * @param list<Concept>|null $hasFamilyRelationship
+     * @param  list<Claim>  $hasClaim
+     * @param  list<LocalizedString>|null  $birthName
+     * @param  list<LocalizedString>|null  $patronymicName
+     * @param  list<Identifier|LegalIdentifier>|null  $identifier
+     * @param  list<ContactPoint>|null  $contactPoint
+     * @param  list<Organisation>|null  $memberOf
+     * @param  list<Concept>|null  $citizenshipCountry
+     * @param  list<Credential>|null  $hasCredential
+     * @param  list<Concept>|null  $hasFamilyRelationship
      */
     public function __construct(
         string $id,
@@ -99,9 +95,17 @@ final class CredentialSubject extends Person {
             throw new InvalidCredentialException('A credential subject requires an id and type.');
         }
 
+        $claim = [];
+        foreach ($data['hasClaim'] as $claimData) {
+            if (!is_array($claimData) || !isset($claimData['type'])) {
+                throw new InvalidCredentialException('Each claim must have a type.');
+            }
+            $claim[] = Claim::fromArray($claimData);
+        }
+
         return new self(
             $data['id'],
-            array_map(static fn (array $claim): Claim => Claim::fromArray($claim), $data['hasClaim']),
+            $claim,
             isset($data['fullName']) ? LocalizedString::fromArray($data['fullName']) : null,
             isset($data['familyName']) ? LocalizedString::fromArray($data['familyName']) : null,
             isset($data['givenName']) ? LocalizedString::fromArray($data['givenName']) : null,

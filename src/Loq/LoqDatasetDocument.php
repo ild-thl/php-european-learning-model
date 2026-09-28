@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Loq;
 
-use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
+use IsyThl\EuropeanLearningModel\Core\LearningOpportunity;
 use IsyThl\EuropeanLearningModel\Core\Qualification;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LoqDatasetDocument {
-
     /** @param list<Qualification|LearningOpportunity> $roots */
     public function __construct(
         private readonly array $roots,
@@ -21,10 +21,12 @@ final class LoqDatasetDocument {
         foreach ($roots as $root) {
             if ($root instanceof Qualification) {
                 $this->validator->validateQualification($root);
+
                 continue;
             }
             if ($root instanceof LearningOpportunity) {
                 $this->validator->validateLearningOpportunity($root);
+
                 continue;
             }
             throw new InvalidCredentialException('LOQ dataset roots must be typed qualifications or opportunities.');

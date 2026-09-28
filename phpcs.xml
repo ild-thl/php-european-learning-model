@@ -7,6 +7,7 @@
         <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
         <exclude name="PSR12.Classes.OpeningBraceSpace"/>
         <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
+        <exclude name="Generic.Files.LineLength.TooLong"/>
     </rule>
     <rule ref="Generic.Classes.OpeningBraceSameLine"/>
     <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>

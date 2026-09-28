@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
-use IsyThl\EuropeanLearningModel\Core\Concept;
-use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
-use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class CreditPoint extends \IsyThl\EuropeanLearningModel\Core\Entity {
-
+final class CreditPoint extends Entity {
     public function __construct(
         string $id,
         public readonly Concept $framework,
@@ -26,10 +22,29 @@ final class CreditPoint extends \IsyThl\EuropeanLearningModel\Core\Entity {
     /** @return array<string, mixed> */
     public function toArray(): array {
         return [
-            'id' => 'urn:epass:creditPoint:' . $this->id,
+            'id' => $this->id,
             'type' => 'CreditPoint',
             'framework' => $this->framework->toArray(),
             'point' => $this->point,
         ];
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        if (!isset($data['type']) || $data['type'] !== 'CreditPoint') {
+            throw new InvalidCredentialException('Data is not a CreditPoint.');
+        }
+        if (!isset($data['framework'])) {
+            throw new InvalidCredentialException('Data is missing framework');
+        }
+        if (!isset($data['point'])) {
+            throw new InvalidCredentialException('Data is missing point');
+        }
+
+        return new self(
+            $data['id'],
+            Concept::fromArray($data['framework']),
+            $data['point'],
+        );
     }
 }

@@ -7,67 +7,80 @@ namespace IsyThl\EuropeanLearningModel\Core;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LearningEntitlementSpecification extends Entity {
-
-    /**
-     * @param list<Note> $additionalNotes
-     * @param list<WebResource> $supplementaryDocuments
-     */
     public function __construct(
         string $id,
         public readonly LocalizedString $title,
-        public readonly Concept $type,
+        public readonly Concept $dcType,
+        public readonly Concept $entitlementStatus,
         public readonly ?LocalizedString $description = null,
-        public readonly array $additionalNotes = [],
-        public readonly array $supplementaryDocuments = [],
-        /** @var list<Concept> */
-        public readonly array $limitOccupations = [],
+        /** @var list<Note>|null */
+        public readonly ?array $additionalNote = null,
+        /** @var list<WebResource>|null */
+        public readonly ?array $supplementaryDocument = null,
+        /** @var list<Concept>|null */
+        public readonly ?array $limitOccupation = null,
     ) {
         parent::__construct($id);
-        ConceptAssertions::assertScheme($type, ElmVocabularySchemes::ENTITLEMENT, 'type');
-        if (array_filter($additionalNotes, static fn ($note): bool => !$note instanceof Note) !== []) {
-            throw new InvalidCredentialException('Entitlement specification notes must be Note objects.');
+        ConceptAssertions::assertScheme($entitlementStatus, ElmVocabularySchemes::ENTITLEMENT_STATUS, 'entitlementStatus');
+        if ($limitOccupation != null) {
+            ConceptAssertions::assertSchemes($limitOccupation, ElmVocabularySchemes::OCCUPATIONS, 'limitOccupation');
         }
-        if (
-            array_filter(
-                $supplementaryDocuments,
-                static fn ($document): bool => !$document instanceof WebResource,
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('Entitlement specification documents must be WebResource objects.');
-        }
-        ConceptAssertions::assertSchemes($limitOccupations, ElmVocabularySchemes::OCCUPATIONS, 'limitOccupations');
     }
 
     /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
-            'id' => 'urn:epass:learningEntitlementSpecification:' . $this->id,
+            'id' => $this->id,
             'type' => 'LearningEntitlementSpecification',
             'title' => $this->title->toArray(),
-            'dcType' => $this->type->toArray(),
+            'dcType' => $this->dcType->toArray(),
+            'entitlementStatus' => $this->entitlementStatus->toArray(),
         ];
         if ($this->description !== null) {
             $data['description'] = $this->description->toArray();
         }
-        if ($this->additionalNotes !== []) {
+        if ($this->additionalNote !== null) {
             $data['additionalNote'] = array_map(
                 static fn (Note $note): array => $note->toArray(),
-                $this->additionalNotes,
+                $this->additionalNote,
             );
         }
-        if ($this->supplementaryDocuments !== []) {
+        if ($this->supplementaryDocument !== null) {
             $data['supplementaryDocument'] = array_map(
                 static fn (WebResource $document): array => $document->toArray(),
-                $this->supplementaryDocuments,
+                $this->supplementaryDocument,
             );
         }
-        if ($this->limitOccupations !== []) {
+        if ($this->limitOccupation !== null) {
             $data['limitOccupation'] = array_map(
                 static fn (Concept $occupation): array => $occupation->toArray(),
-                $this->limitOccupations,
+                $this->limitOccupation,
             );
         }
 
         return $data;
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        if (!isset($data['type']) || $data['type'] !== 'LearningEntitlementSpecification') {
+            throw new InvalidCredentialException('Data is not a LearningEntitlementSpecification.');
+        }
+        if (!isset($data['title'])) {
+            throw new InvalidCredentialException('Data is missing title');
+        }
+        if (!isset($data['dcType'])) {
+            throw new InvalidCredentialException('Data is missing dcType');
+        }
+        if (!isset($data['entitlementStatus'])) {
+            throw new InvalidCredentialException('Data is missing entitlementStatus');
+        }
+
+        return new self(
+            $data['id'],
+            LocalizedString::fromArray($data['title']),
+            Concept::fromArray($data['dcType']),
+            Concept::fromArray($data['entitlementStatus']),
+        );
     }
 }

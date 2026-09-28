@@ -21,12 +21,12 @@ final class OrganisationTest extends TestCase {
                     'id' => 'urn:epass:org:1',
                     'type' => 'Organisation',
                     'legalName' => [
-                        'en' => [ 'Research Alliance' ]
+                        'en' => ['Research Alliance'],
                     ],
                     'location' => [[
                         'id' => 'urn:epass:location:1',
                         'type' => 'Location',
-                        'address' => [ [
+                        'address' => [[
                             'id' => 'urn:epass:address:1',
                             'type' => 'Address',
                             'countryCode' => [
@@ -34,24 +34,24 @@ final class OrganisationTest extends TestCase {
                                 'type' => 'Concept',
                                 'inScheme' => [
                                     'id' => 'http://publications.europa.eu/resource/authority/country',
-                                    'type' => 'ConceptScheme'
+                                    'type' => 'ConceptScheme',
                                 ],
                                 'prefLabel' => [
-                                    'en' => [ 'Ireland' ]
+                                    'en' => ['Ireland'],
                                 ],
-                                'notation' => 'country'
+                                'notation' => 'country',
                             ],
-                        ] ],
-                    ] ],
+                        ]],
+                    ]],
                     'identifier' => [[
                         'id' => 'urn:epass:identifier:1',
                         'type' => 'Identifier',
                         'notation' => 'Res1818',
-                        'schemeName' => 'Research Alliance ID'
+                        'schemeName' => 'Research Alliance ID',
                     ]],
-                    'altLabel' => [
-                        'en' => [ 'RA' ]
-                    ],
+                    'altLabel' => [[
+                        'en' => ['RA'],
+                    ]],
                     'eidasLegalIdentifier' => [
                         'id' => 'urn:epass:legalIdentifier:1',
                         'type' => 'LegalIdentifier',
@@ -64,18 +64,18 @@ final class OrganisationTest extends TestCase {
                     'subOrganizationOf' => [
                         'id' => 'urn:epass:org:2',
                         'type' => 'Organisation',
-                        'legalName' => [ 'en' => [ 'Parent Organization' ] ],
+                        'legalName' => ['en' => ['Parent Organization']],
                         'location' => [[
                             'id' => 'urn:epass:location:1',
                             'type' => 'Location',
-                            'address' => [ [
+                            'address' => [[
                                 'id' => 'urn:epass:address:1',
                                 'type' => 'Address',
                                 'countryCode' => [
                                     'id' => 'http://publications.europa.eu/resource/authority/country/IRL',
                                     'type' => 'Concept',
                                 ],
-                            ] ],
+                            ]],
                         ]],
                     ],
                     'registration' => [
@@ -118,19 +118,19 @@ final class OrganisationTest extends TestCase {
                         'id' => 'urn:epass:org:3',
                         'type' => 'Organisation',
                         'legalName' => [
-                            'en' => [ 'Sub Organization' ]
+                            'en' => ['Sub Organization'],
                         ],
                         'location' => [[
                             'id' => 'urn:epass:location:1',
                             'type' => 'Location',
-                            'address' => [ [
+                            'address' => [[
                                 'id' => 'urn:epass:address:1',
                                 'type' => 'Address',
                                 'countryCode' => [
                                     'id' => 'http://publications.europa.eu/resource/authority/country/IRL',
                                     'type' => 'Concept',
                                 ],
-                            ] ],
+                            ]],
                         ]],
                     ]],
                     'taxIdentifier' => [[
@@ -159,26 +159,26 @@ final class OrganisationTest extends TestCase {
                         'id' => 'urn:epass:accreditation:1',
                         'type' => 'Accreditation',
                         'title' => [
-                            'en' => [ 'Accreditation Title' ]
+                            'en' => ['Accreditation Title'],
                         ],
                         'accreditingAgent' => [
                             'id' => 'urn:epass:org:1',
                             'type' => 'Organisation',
                             'legalName' => [
-                                'en' => [ 'Accrediting Agent Legal Name' ]
+                                'en' => ['Accrediting Agent Legal Name'],
                             ],
                             'location' => [[
                                 'id' => 'urn:epass:location:1',
                                 'type' => 'Location',
-                                'address' => [ [
+                                'address' => [[
                                     'id' => 'urn:epass:address:1',
                                     'type' => 'Address',
                                     'countryCode' => [
                                         'id' => 'http://publications.europa.eu/resource/authority/country/IRL',
                                         'type' => 'Concept',
                                     ],
-                                ] ],
-                            ] ],
+                                ]],
+                            ]],
                         ],
                         'dcType' => [
                             'id' => 'http://data.europa.eu/snb/accreditation/003293d2ce',
@@ -187,28 +187,28 @@ final class OrganisationTest extends TestCase {
                     ]],
                     'order' => 1,
                     'modified' => '2024-06-01T12:00:00Z',
-                ]
+                ],
             ],
             'minimal' => [
                 [
                     'id' => 'urn:epass:org:1',
                     'type' => 'Organisation',
                     'legalName' => [
-                        'en' => [ 'Research Alliance' ]
+                        'en' => ['Research Alliance'],
                     ],
                     'location' => [[
                         'id' => 'urn:epass:location:1',
                         'type' => 'Location',
-                        'address' => [ [
+                        'address' => [[
                             'id' => 'urn:epass:address:1',
                             'type' => 'Address',
                             'countryCode' => [
                                 'id' => 'http://publications.europa.eu/resource/authority/country/IRL',
                                 'type' => 'Concept',
                             ],
-                        ] ],
-                    ] ],
-                ]
+                        ]],
+                    ]],
+                ],
             ],
         ];
     }
@@ -223,40 +223,40 @@ final class OrganisationTest extends TestCase {
                     'location' => [[
                         'id' => 'urn:epass:location:1',
                         'type' => 'Location',
-                        'address' => [ [
+                        'address' => [[
                             'id' => 'urn:epass:address:1',
                             'type' => 'Address',
                             'countryCode' => [
                                 'id' => 'http://publications.europa.eu/resource/authority/country/IRL',
                                 'type' => 'Concept',
                             ],
-                        ] ],
-                    ] ],
+                        ]],
+                    ]],
                 ],
-                InvalidCredentialException::class
+                InvalidCredentialException::class,
             ],
             'missing location' => [
                 [
                     'id' => 'urn:epass:org:1',
                     'type' => 'Organisation',
                     'legalName' => [
-                        'en' => [ 'Research Alliance' ]
+                        'en' => ['Research Alliance'],
                     ],
                 ],
-                InvalidCredentialException::class
+                InvalidCredentialException::class,
             ],
         ];
     }
 
     /** @param array<string, mixed> $expected */
     #[DataProvider('validTargets')]
-    public function testEachValidTargetRoundTripsThroughArrayDeserialization(array $expected): void {
+    public function test_each_valid_target_round_trips_through_array_deserialization(array $expected): void {
         $this->assertArrayRoundTrip($expected, [Organisation::class, 'fromArray']);
     }
 
     /** @param array<string, mixed> $expected */
     #[DataProvider('validTargets')]
-    public function testEachValidTargetRoundTripsThroughJsonEncoding(array $expected): void {
+    public function test_each_valid_target_round_trips_through_json_encoding(array $expected): void {
         $this->assertJsonRoundTrip(
             $expected,
             [Organisation::class, 'fromArray'],
@@ -266,7 +266,7 @@ final class OrganisationTest extends TestCase {
 
     /** @param array<string, mixed> $invalid */
     #[DataProvider('invalidTargets')]
-    public function testInvalidTargetsAreRejected(array $invalid, string $expectedException): void {
+    public function test_invalid_targets_are_rejected(array $invalid, string $expectedException): void {
         $this->expectException($expectedException);
 
         Organisation::fromArray($invalid);

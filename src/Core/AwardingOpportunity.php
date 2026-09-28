@@ -7,36 +7,22 @@ namespace IsyThl\EuropeanLearningModel\Core;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class AwardingOpportunity extends Entity {
-
     /**
-    * @param list<Identifier> $identifiers
-     * @param list<Organisation> $awardingBodies
+     * @param  list<Identifier>  $identifiers
+     * @param  list<Organisation>  $awardingBody
      */
     public function __construct(
         string $id,
-        public readonly LearningAchievementSpecification $learningAchievementSpecification,
-        public readonly array $awardingBodies,
-        public readonly array $identifiers = [],
+        /** @var list<Identifier|LegalIdentifier>|null */
+        public readonly ?array $identifiers = null,
+        public readonly ?LearningAchievementSpecification $learningAchievementSpecification = null,
+        /** @var list<Organisation>|null */
+        public readonly ?array $awardingBody = null,
         public readonly ?PeriodOfTime $temporal = null,
         public readonly ?Location $location = null,
+        public readonly ?int $order = null,
     ) {
         parent::__construct($id);
-        if ($awardingBodies === []) {
-            throw new InvalidCredentialException('An awarding opportunity requires an awarding body.');
-        }
-        if (array_filter($awardingBodies, static fn ($body): bool => !$body instanceof Organisation) !== []) {
-            throw new InvalidCredentialException('Awarding bodies must be Organisation objects.');
-        }
-        if (
-            array_filter(
-                $identifiers,
-                static fn ($identifier): bool => (
-                    !$identifier instanceof Identifier
-                ),
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('Awarding opportunity identifiers must be Identifier objects.');
-        }
     }
 
     /** @return array<string, mixed> */
@@ -44,17 +30,21 @@ final class AwardingOpportunity extends Entity {
         $data = [
             'id' => $this->id,
             'type' => 'AwardingOpportunity',
-            'awardingBody' => array_map(
-                static fn (Organisation $body): array => $body->toArray(),
-                $this->awardingBodies,
-            ),
-            'learningAchievementSpecification' => $this->learningAchievementSpecification->toArray(),
         ];
-        if ($this->identifiers !== []) {
+        if ($this->identifiers !== null) {
             $data['identifier'] = array_map(
                 static fn (Identifier|LegalIdentifier $identifier): array => $identifier->toArray(),
                 $this->identifiers,
             );
+        }
+        if ($this->awardingBody !== null) {
+            $data['awardingBody'] = array_map(
+                static fn (Organisation $body): array => $body->toArray(),
+                $this->awardingBody,
+            );
+        }
+        if (isset($this->learningAchievementSpecification)) {
+            $data['learningAchievementSpecification'] = $this->learningAchievementSpecification->toArray();
         }
         if ($this->temporal !== null) {
             $data['temporal'] = $this->temporal->toArray();
@@ -62,6 +52,30 @@ final class AwardingOpportunity extends Entity {
         if ($this->location !== null) {
             $data['location'] = $this->location->toArray();
         }
+
         return $data;
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        if (!isset($data['type']) || $data['type'] !== 'AwardingOpportunity') {
+            throw new InvalidCredentialException('Data is not a AwardingOpportunity.');
+        }
+
+        return new self(
+            $data['id'] ?? '',
+            isset($data['identifier']) ? array_map(
+                static fn (array $identifier): Identifier|LegalIdentifier => Identifier::fromArray($identifier),
+                $data['identifier'],
+            ) : null,
+            isset($data['learningAchievementSpecification']) ? LearningAchievementSpecification::fromArray($data['learningAchievementSpecification']) : null,
+            isset($data['awardingBody']) ? array_map(
+                static fn (array $body): Organisation => Organisation::fromArray($body),
+                $data['awardingBody'],
+            ) : null,
+            isset($data['temporal']) ? PeriodOfTime::fromArray($data['temporal']) : null,
+            isset($data['location']) ? Location::fromArray($data['location']) : null,
+            $data['order'] ?? null,
+        );
     }
 }

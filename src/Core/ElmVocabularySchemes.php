@@ -6,31 +6,60 @@ namespace IsyThl\EuropeanLearningModel\Core;
 
 final class ElmVocabularySchemes {
     public const LANGUAGE = 'http://publications.europa.eu/resource/authority/language';
+
     public const COUNTRY = 'http://publications.europa.eu/resource/authority/country';
+
     public const CREDENTIAL = 'http://data.europa.eu/snb/credential/25831c2';
+
     public const EQF = 'http://data.europa.eu/snb/eqf/25831c2';
+
     public const QDR = 'http://data.europa.eu/snb/qdr/25831c2';
+
     public const QDR_BASE = 'http://data.europa.eu/snb/qdr/';
+
     public const LEARNING_SETTING = 'http://data.europa.eu/snb/learning-setting/25831c2';
+
     public const LEARNING_ACTIVITY = 'http://data.europa.eu/snb/learning-activity/25831c2';
+
     public const ASSESSMENT = 'http://data.europa.eu/snb/assessment/25831c2';
+
     public const ISCED_F = 'http://data.europa.eu/snb/isced-f/25831c2';
+
     public const ENTITLEMENT = 'http://data.europa.eu/snb/entitlement/25831c2';
+
+    public const ENTITLEMENT_STATUS = 'http://data.europa.eu/snb/entitlement-status/25831c2';
+
     public const ESCO_SKILLS = 'http://data.europa.eu/esco/concept-scheme/skills';
+
     public const ACCREDITATION_DC_TYPE = 'http://data.europa.eu/snb/accreditation/25831c2';
+
     public const ACCREDITATION_DECISION = 'http://data.europa.eu/snb/accreditation-decision/25831c2';
+
     public const ACCREDITATION_STATUS = 'http://data.europa.eu/snb/status/25831c2';
+
     public const ATU = 'http://publications.europa.eu/resource/authority/atu';
+
     public const CONTENT_ENCODING = 'http://data.europa.eu/snb/encoding/25831c2';
+
     public const CONTENT_TYPE = 'http://publications.europa.eu/resource/authority/file-type';
+
     public const EDUCATION_CREDIT = 'http://data.europa.eu/snb/education-credit/25831c2';
+
     public const LEARNING_OPPORTUNITY = 'http://data.europa.eu/snb/learning-opportunity/25831c2';
+
     public const SKILL_REUSE_LEVEL = 'http://data.europa.eu/snb/skill-reuse-level/25831c2';
+
     public const SUPERVISION_VERIFICATION = 'http://data.europa.eu/snb/supervision-verification/25831c2';
+
     public const TARGET_GROUP = 'http://data.europa.eu/snb/target-group/25831c2';
+
     public const DCF_SKILLS = 'http://data.europa.eu/snb/dcf/25831c2';
+
     public const OCCUPATIONS = 'http://data.europa.eu/esco/concept-scheme/occupations';
-    public const FAMILY_RELATIONSHIP = ' http://data.europa.eu/snb/family-relationship/78df67z';
+
+    public const FAMILY_RELATIONSHIP = 'http://data.europa.eu/snb/family-relationship/78df67z';
+
+    public const CURRENCY = 'http://publications.europa.eu/resource/authority/currency';
 
     /** @return array<string, string> */
     public static function all(): array {
@@ -45,6 +74,7 @@ final class ElmVocabularySchemes {
             'ASSESSMENT' => self::ASSESSMENT,
             'ISCED_F' => self::ISCED_F,
             'ENTITLEMENT' => self::ENTITLEMENT,
+            'ENTITLEMENT_STATUS' => self::ENTITLEMENT_STATUS,
             'ESCO_SKILLS' => self::ESCO_SKILLS,
             'ACCREDITATION_DC_TYPE' => self::ACCREDITATION_DC_TYPE,
             'ACCREDITATION_DECISION' => self::ACCREDITATION_DECISION,
@@ -60,6 +90,7 @@ final class ElmVocabularySchemes {
             'DCF_SKILLS' => self::DCF_SKILLS,
             'OCCUPATIONS' => self::OCCUPATIONS,
             'FAMILY_RELATIONSHIP' => self::FAMILY_RELATIONSHIP,
+            'CURRENCY' => self::CURRENCY,
         ];
     }
 
@@ -74,6 +105,7 @@ final class ElmVocabularySchemes {
             self::ESCO_SKILLS,
             self::DCF_SKILLS,
             self::OCCUPATIONS,
+            self::CURRENCY,
         ], true);
     }
 
@@ -90,6 +122,7 @@ final class ElmVocabularySchemes {
             'ASSESSMENT' => 'model-enforced',
             'ISCED_F' => 'search-backed',
             'ENTITLEMENT' => 'model-enforced',
+            'ENTITLEMENT_STATUS' => 'model-enforced',
             'ESCO_SKILLS' => 'search-backed',
             'ACCREDITATION_DC_TYPE' => 'model-enforced',
             'ACCREDITATION_DECISION' => 'model-enforced',
@@ -105,6 +138,7 @@ final class ElmVocabularySchemes {
             'DCF_SKILLS' => 'search-backed',
             'OCCUPATIONS' => 'search-backed',
             'FAMILY_RELATIONSHIP' => 'model-enforced',
+            'CURRENCY' => 'search-backed',
         ];
     }
 }

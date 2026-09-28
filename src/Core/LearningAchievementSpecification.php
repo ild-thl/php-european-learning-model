@@ -4,118 +4,85 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
+use DateTimeImmutable;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 class LearningAchievementSpecification extends Entity {
-
     public function __construct(
         string $id,
         public readonly LocalizedString $title,
-        public readonly ?LocalizedString $description = null,
-        /** @var list<CreditPoint> */
-        public readonly array $creditPoints = [],
-        public readonly ?Concept $language = null,
-        /** @var list<string> */
-        public readonly array $category = [],
-        public readonly ?string $maximumDuration = null,
-        public readonly ?string $volumeOfLearning = null,
-        /** @var list<LearningOutcome> */
-        public readonly array $learningOutcomes = [],
-        /** @var list<Note> */
-        public readonly array $additionalNotes = [],
-        /** @var list<WebResource> */
-        public readonly array $supplementaryDocuments = [],
-        /** @var list<Concept> */
-        public readonly array $educationLevels = [],
-        /** @var list<Concept> */
-        public readonly array $educationSubjects = [],
-        public readonly ?Concept $type = null,
-        public readonly ?Concept $learningSetting = null,
-        public readonly ?Concept $mode = null,
-        public readonly ?Concept $status = null,
-        /** @var list<Concept> */
-        public readonly array $targetGroups = [],
+        /** @var list<Identifier|LegalIdentifier>|null */
+        public readonly ?array $identifier = null,
+        /** @var list<LocalizedString>|null */
+        public readonly ?array $altLabel = null,
         public readonly ?Note $learningOutcomeSummary = null,
+        public readonly ?Duration $volumeOfLearning = null,
+        public readonly ?Note $entryRequirement = null,
+        public readonly ?Concept $learningSetting = null,
+        public readonly ?string $status = null,
+        public readonly ?Duration $maximumDuration = null,
+        /** @var list<Concept>|null */
+        public readonly ?array $dcType = null,
+        /** @var list<Concept>|null */
+        public readonly ?array $language = null,
+        public readonly ?LocalizedString $description = null,
+        /** @var list<Note>|null */
+        public readonly ?array $additionalNote = null,
+        /** @var list<WebResource>|null */
+        public readonly ?array $supplementaryDocument = null,
+        /** @var list<LearningAchievementSpecification|Qualification>|null */
+        public readonly ?array $generalisationOf = null,
+        /** @var list<LearningAchievementSpecification|Qualification>|null */
+        public readonly ?array $specialisationOf = null,
+        /** @var list<CreditPoint>|null */
+        public readonly ?array $creditPoint = null,
+        /** @var list<LearningAchievementSpecification|Qualification>|null */
+        public readonly ?array $hasPart = null,
+        /** @var list<LearningAchievementSpecification|Qualification>|null */
+        public readonly ?array $isPartOf = null,
+        /** @var list<Concept>|null */
+        public readonly ?array $mode = null,
+        /** @var list<WebResource>|null */
+        public readonly ?array $homepage = null,
+        /** @var list<string>|null */
+        public readonly ?array $category = null,
+        /** @var list<Concept>|null */
+        public readonly ?array $targetGroup = null,
+        /** @var list<AwardingOpportunity>|null */
+        public readonly ?array $awardingOpportunity = null,
+        /** @var list<Concept>|null */
+        public readonly ?array $educationSubject = null,
+        /** @var list<LearningOutcome>|null */
+        public readonly ?array $learningOutcome = null,
+        /** @var list<LearningActivitySpecification>|null */
+        public readonly ?array $influencedBy = null,
+        /** @var list<LearningAssessmentSpecification>|null */
+        public readonly ?array $provenBy = null,
+        /** @var list<Concept>|null */
+        public readonly ?array $iscedfCode = null,
+        /** @var list<LearningEntitlementSpecification>|null */
+        public readonly ?array $entitlesTo = null,
+        /** @var list<Concept>|null */
+        public readonly ?array $educationLevel = null,
+        public readonly ?int $order = null,
+        public readonly ?DateTimeImmutable $modified = null,
     ) {
         parent::__construct($id);
-        if ($language !== null) {
-            ConceptAssertions::assertScheme($language, ElmVocabularySchemes::LANGUAGE, 'language');
-        }
-        ConceptAssertions::assertSchemes($educationSubjects, ElmVocabularySchemes::ISCED_F, 'educationSubjects');
-        if ($type !== null) {
-            ConceptAssertions::assertScheme($type, static::typeScheme(), 'type');
-        }
         if ($learningSetting !== null) {
-            ConceptAssertions::assertScheme(
-                $learningSetting,
-                ElmVocabularySchemes::LEARNING_SETTING,
-                'learningSetting',
-            );
+            ConceptAssertions::assertScheme($learningSetting, ElmVocabularySchemes::LEARNING_SETTING, 'learningSetting');
+        }
+        if ($language !== null) {
+            ConceptAssertions::assertSchemes($language, ElmVocabularySchemes::LANGUAGE, 'language');
+        }
+        if ($targetGroup !== null) {
+            ConceptAssertions::assertSchemes($targetGroup, ElmVocabularySchemes::TARGET_GROUP, 'targetGroup');
         }
         if ($mode !== null) {
-            ConceptAssertions::assertScheme($mode, ElmVocabularySchemes::ASSESSMENT, 'mode');
+            ConceptAssertions::assertSchemes($mode, ElmVocabularySchemes::ASSESSMENT, 'mode');
         }
-        if ($status !== null) {
-            ConceptAssertions::assertScheme($status, ElmVocabularySchemes::ACCREDITATION_STATUS, 'status');
+        if ($iscedfCode !== null) {
+            ConceptAssertions::assertSchemes($iscedfCode, ElmVocabularySchemes::ISCED_F, 'ISCEDFCode');
         }
-        ConceptAssertions::assertSchemes($targetGroups, ElmVocabularySchemes::TARGET_GROUP, 'targetGroups');
-        if (
-            array_filter(
-                $creditPoints,
-                static fn ($creditPoint): bool => !$creditPoint instanceof CreditPoint,
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('Specifications accept only credit points.');
-        }
-        if (array_filter($category, static fn ($value): bool => !is_string($value) || $value === '') !== []) {
-            throw new InvalidCredentialException('Specification categories must be non-empty strings.');
-        }
-        if (
-            array_filter(
-                $learningOutcomes,
-                static fn ($learningOutcome): bool => !$learningOutcome instanceof LearningOutcome,
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('Learning outcomes must be LearningOutcome objects.');
-        }
-        if (
-            array_filter(
-                $additionalNotes,
-                static fn ($note): bool => !$note instanceof Note,
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('Specification notes must be Note objects.');
-        }
-        if (
-            array_filter(
-                $supplementaryDocuments,
-                static fn ($document): bool => !$document instanceof WebResource,
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('Supplementary documents must be WebResource objects.');
-        }
-        $educationConcepts = [
-            'education level' => $educationLevels,
-            'education subject' => $educationSubjects,
-        ];
-        foreach ($educationConcepts as $name => $concepts) {
-            if (array_filter($concepts, static fn ($concept): bool => !$concept instanceof Concept) !== []) {
-                throw new InvalidCredentialException(sprintf('Specification %s values must be concepts.', $name));
-            }
-        }
-        foreach ([$maximumDuration, $volumeOfLearning] as $duration) {
-            $isValidDuration = $duration === null || preg_match(
-                '/^P(?:\d+Y)?(?:\d+M)?(?:\d+D)?(?:T(?=\d)(?:\d+H)?(?:\d+M)?(?:\d+(?:\.\d+)?S)?)?$/',
-                $duration,
-            ) === 1;
-            if (!$isValidDuration) {
-                throw new InvalidCredentialException('Specification durations must use ISO 8601 format.');
-            }
-        }
-    }
-
-    protected static function typeScheme(): string {
-        return ElmVocabularySchemes::LEARNING_OPPORTUNITY;
     }
 
     /** @return array<string, mixed> */
@@ -125,86 +92,297 @@ class LearningAchievementSpecification extends Entity {
             'type' => 'LearningAchievementSpecification',
             'title' => $this->title->toArray(),
         ];
-        if ($this->description !== null) {
-            $data['description'] = $this->description->toArray();
-        }
-        if ($this->creditPoints !== []) {
-            $data['creditPoint'] = array_map(
-                static fn (CreditPoint $creditPoint): array => $creditPoint->toArray(),
-                $this->creditPoints,
+        if ($this->identifier !== null) {
+            $data['identifier'] = array_map(
+                static fn (Identifier $identifier): array => $identifier->toArray(),
+                $this->identifier,
             );
         }
-        if ($this->language !== null) {
-            $data['language'] = [$this->language->toArray()];
-        }
-        if ($this->category !== []) {
-            $data['category'] = $this->category;
-        }
-        if ($this->maximumDuration !== null) {
-            $data['maximumDuration'] = $this->maximumDuration;
-        }
-        if ($this->volumeOfLearning !== null) {
-            $data['volumeOfLearning'] = $this->volumeOfLearning;
-        }
-        if ($this->learningOutcomes !== []) {
-            $data['learningOutcome'] = array_map(
-                static fn (LearningOutcome $learningOutcome): array => $learningOutcome->toArray(),
-                $this->learningOutcomes,
+        if ($this->altLabel !== null) {
+            $data['altLabel'] = array_map(
+                static fn (LocalizedString $altLabel): array => $altLabel->toArray(),
+                $this->altLabel,
             );
         }
         if ($this->learningOutcomeSummary !== null) {
             $data['learningOutcomeSummary'] = $this->learningOutcomeSummary->toArray();
         }
-        if ($this->additionalNotes !== []) {
-            $data['additionalNote'] = array_map(
-                static fn (Note $note): array => $note->toArray(),
-                $this->additionalNotes,
-            );
+        if ($this->volumeOfLearning !== null) {
+            $data['volumeOfLearning'] = (string) $this->volumeOfLearning;
         }
-        if ($this->supplementaryDocuments !== []) {
-            $data['supplementaryDocument'] = array_map(
-                static fn (WebResource $document): array => $document->toArray(),
-                $this->supplementaryDocuments,
-            );
-        }
-        if ($this->educationLevels !== []) {
-            $data['educationLevel'] = array_map(
-                static fn (Concept $level): array => $level->toArray(),
-                $this->educationLevels,
-            );
-        }
-        if ($this->educationSubjects !== []) {
-            $data['educationSubject'] = array_map(
-                static fn (Concept $subject): array => $subject->toArray(),
-                $this->educationSubjects,
-            );
-        }
-        if ($this->type !== null) {
-            $data['dcType'] = $this->type->toArray();
+        if ($this->entryRequirement !== null) {
+            $data['entryRequirement'] = $this->entryRequirement->toArray();
         }
         if ($this->learningSetting !== null) {
             $data['learningSetting'] = $this->learningSetting->toArray();
         }
-        if ($this->mode !== null) {
-            $data['mode'] = $this->mode->toArray();
-        }
         if ($this->status !== null) {
-            $data['status'] = $this->status->toArray();
+            $data['status'] = $this->status;
         }
-        if ($this->targetGroups !== []) {
-            $data['targetGroup'] = array_map(
-                static fn (Concept $targetGroup): array => $targetGroup->toArray(),
-                $this->targetGroups,
+        if ($this->maximumDuration !== null) {
+            $data['maximumDuration'] = (string) $this->maximumDuration;
+        }
+        if ($this->dcType !== null) {
+            $data['dcType'] = array_map(
+                static fn (Concept $type): array => $type->toArray(),
+                $this->dcType,
             );
         }
+        if ($this->language !== null) {
+            $data['language'] = array_map(
+                static fn (Concept $language): array => $language->toArray(),
+                $this->language,
+            );
+        }
+        if ($this->description !== null) {
+            $data['description'] = $this->description->toArray();
+        }
+        if ($this->additionalNote !== null) {
+            $data['additionalNote'] = array_map(
+                static fn (Note $note): array => $note->toArray(),
+                $this->additionalNote,
+            );
+        }
+        if ($this->supplementaryDocument !== null) {
+            $data['supplementaryDocument'] = array_map(
+                static fn (WebResource $document): array => $document->toArray(),
+                $this->supplementaryDocument,
+            );
+        }
+        if ($this->generalisationOf !== null) {
+            $data['generalisationOf'] = array_map(
+                static fn (LearningAchievementSpecification|Qualification $generalisationOf): array => $generalisationOf->toArray(),
+                $this->generalisationOf,
+            );
+        }
+        if ($this->specialisationOf !== null) {
+            $data['specialisationOf'] = array_map(
+                static fn (LearningAchievementSpecification|Qualification $specialisationOf): array => $specialisationOf->toArray(),
+                $this->specialisationOf,
+            );
+        }
+        if ($this->creditPoint !== null) {
+            $data['creditPoint'] = array_map(
+                static fn (CreditPoint $creditPoint): array => $creditPoint->toArray(),
+                $this->creditPoint,
+            );
+        }
+        if ($this->hasPart !== null) {
+            $data['hasPart'] = array_map(
+                static fn (LearningAchievementSpecification|Qualification $hasPart): array => $hasPart->toArray(),
+                $this->hasPart,
+            );
+        }
+        if ($this->isPartOf !== null) {
+            $data['isPartOf'] = array_map(
+                static fn (LearningAchievementSpecification|Qualification $isPartOf): array => $isPartOf->toArray(),
+                $this->isPartOf,
+            );
+        }
+        if ($this->mode !== null) {
+            $data['mode'] = array_map(
+                static fn (Concept $mode): array => $mode->toArray(),
+                $this->mode,
+            );
+        }
+        if ($this->homepage !== null) {
+            $data['homepage'] = array_map(
+                static fn (WebResource $homepage): array => $homepage->toArray(),
+                $this->homepage,
+            );
+        }
+        if ($this->category !== null) {
+            $data['category'] = $this->category;
+        }
+        if ($this->targetGroup !== null) {
+            $data['targetGroup'] = array_map(
+                static fn (Concept $targetGroup): array => $targetGroup->toArray(),
+                $this->targetGroup,
+            );
+        }
+        if ($this->awardingOpportunity !== null) {
+            $data['awardingOpportunity'] = array_map(
+                static fn (AwardingOpportunity $awardingOpportunity): array => $awardingOpportunity->toArray(),
+                $this->awardingOpportunity,
+            );
+        }
+        if ($this->educationSubject !== null) {
+            $data['educationSubject'] = array_map(
+                static fn (Concept $subject): array => $subject->toArray(),
+                $this->educationSubject,
+            );
+        }
+        if ($this->learningOutcome !== null) {
+            $data['learningOutcome'] = array_map(
+                static fn (LearningOutcome $learningOutcome): array => $learningOutcome->toArray(),
+                $this->learningOutcome,
+            );
+        }
+        if ($this->influencedBy !== null) {
+            $data['influencedBy'] = array_map(
+                static fn (LearningActivitySpecification $influencedBy): array => $influencedBy->toArray(),
+                $this->influencedBy,
+            );
+        }
+        if ($this->provenBy !== null) {
+            $data['provenBy'] = array_map(
+                static fn (LearningAssessmentSpecification $provenBy): array => $provenBy->toArray(),
+                $this->provenBy,
+            );
+        }
+        if ($this->iscedfCode !== null) {
+            $data['ISCEDFCode'] = array_map(
+                static fn (Concept $iscedfCode): array => $iscedfCode->toArray(),
+                $this->iscedfCode,
+            );
+        }
+        if ($this->entitlesTo !== null) {
+            $data['entitlesTo'] = array_map(
+                static fn (LearningEntitlementSpecification $entitlesTo): array => $entitlesTo->toArray(),
+                $this->entitlesTo,
+            );
+        }
+        if ($this->educationLevel !== null) {
+            $data['educationLevel'] = array_map(
+                static fn (Concept $level): array => $level->toArray(),
+                $this->educationLevel,
+            );
+        }
+        if ($this->order !== null) {
+            $data['order'] = $this->order;
+        }
+        if ($this->modified !== null) {
+            $data['modified'] = DateTimeFormatter::format($this->modified);
+        }
+
         return $data;
     }
 
     /** @param array<string, mixed> $data */
     public static function fromArray(array $data): self {
+        if (
+            !isset($data['type']) ||
+            !($data['type'] == 'LearningAchievementSpecification' || $data['type'] == 'Qualification')
+        ) {
+            throw new InvalidCredentialException('Data is not a LearningAchievementSpecification.');
+        }
+        if (!isset($data['title'])) {
+            throw new InvalidCredentialException('Data is missing title');
+        }
+
         return new self(
             $data['id'],
             LocalizedString::fromArray($data['title']),
+            isset($data['identifier']) ? array_map(
+                static fn (array $identifier): Identifier => Identifier::fromArray($identifier),
+                $data['identifier']
+            ) : null,
+            isset($data['altLabel']) ? array_map(
+                static fn (array $altLabel): LocalizedString => LocalizedString::fromArray($altLabel),
+                $data['altLabel']
+            ) : null,
+            isset($data['learningOutcomeSummary']) ? Note::fromArray($data['learningOutcomeSummary']) : null,
+            isset($data['volumeOfLearning']) ? Duration::fromString($data['volumeOfLearning']) : null,
+            isset($data['entryRequirement']) ? Note::fromArray($data['entryRequirement']) : null,
+            isset($data['learningSetting']) ? Concept::fromArray($data['learningSetting']) : null,
+            isset($data['status']) ? $data['status'] : null,
+            isset($data['maximumDuration']) ? Duration::fromString($data['maximumDuration']) : null,
+            isset($data['dcType']) ? array_map(
+                static fn (array $type): Concept => Concept::fromArray($type),
+                $data['dcType'],
+            ) : null,
+            isset($data['language']) ? array_map(
+                static fn (array $language): Concept => Concept::fromArray($language),
+                $data['language'],
+            ) : null,
+            isset($data['description']) ? LocalizedString::fromArray($data['description']) : null,
+            isset($data['additionalNote']) ? array_map(
+                static fn (array $additionalNote): Note => Note::fromArray($additionalNote),
+                $data['additionalNote'],
+            ) : null,
+            isset($data['supplementaryDocument']) ? array_map(
+                static fn (array $supplementaryDocument): WebResource => WebResource::fromArray($supplementaryDocument),
+                $data['supplementaryDocument'],
+            ) : null,
+            isset($data['generalisationOf']) ? array_map(
+                static fn (array $generalisationOf): LearningAchievementSpecification|Qualification => (
+                    $generalisationOf['type'] === 'Qualification' ? Qualification::fromArray($generalisationOf)
+                        : LearningAchievementSpecification::fromArray($generalisationOf)
+                ),
+                $data['generalisationOf'],
+            ) : null,
+            isset($data['specialisationOf']) ? array_map(
+                static fn (array $specialisationOf): LearningAchievementSpecification|Qualification => (
+                    $specialisationOf['type'] === 'Qualification' ? Qualification::fromArray($specialisationOf)
+                        : LearningAchievementSpecification::fromArray($specialisationOf)
+                ),
+                $data['specialisationOf'],
+            ) : null,
+            isset($data['creditPoint']) ? array_map(
+                static fn (array $creditPoint): CreditPoint => CreditPoint::fromArray($creditPoint),
+                $data['creditPoint'],
+            ) : null,
+            isset($data['hasPart']) ? array_map(
+                static fn (array $hasPart): LearningAchievementSpecification|Qualification => (
+                    $hasPart['type'] === 'Qualification' ? Qualification::fromArray($hasPart)
+                        : LearningAchievementSpecification::fromArray($hasPart)
+                ),
+                $data['hasPart'],
+            ) : null,
+            isset($data['isPartOf']) ? array_map(
+                static fn (array $isPartOf): LearningAchievementSpecification|Qualification => (
+                    $isPartOf['type'] === 'Qualification' ? Qualification::fromArray($isPartOf)
+                        : LearningAchievementSpecification::fromArray($isPartOf)
+                ),
+                $data['isPartOf'],
+            ) : null,
+            isset($data['mode']) ? array_map(
+                static fn (array $mode): Concept => Concept::fromArray($mode),
+                $data['mode'],
+            ) : null,
+            isset($data['homepage']) ? array_map(
+                static fn (array $homepage): WebResource => WebResource::fromArray($homepage),
+                $data['homepage'],
+            ) : null,
+            isset($data['category']) ? $data['category'] : null,
+            isset($data['targetGroup']) ? array_map(
+                static fn (array $targetGroup): Concept => Concept::fromArray($targetGroup),
+                $data['targetGroup'],
+            ) : null,
+            isset($data['awardingOpportunity']) ? array_map(
+                static fn (array $awardingOpportunity): AwardingOpportunity => AwardingOpportunity::fromArray($awardingOpportunity),
+                $data['awardingOpportunity'],
+            ) : null,
+            isset($data['educationSubject']) ? array_map(
+                static fn (array $educationSubject): Concept => Concept::fromArray($educationSubject),
+                $data['educationSubject'],
+            ) : null,
+            isset($data['learningOutcome']) ? array_map(
+                static fn (array $learningOutcome): LearningOutcome => LearningOutcome::fromArray($learningOutcome),
+                $data['learningOutcome'],
+            ) : null,
+            isset($data['influencedBy']) ? array_map(
+                static fn (array $influencedBy): LearningActivitySpecification => LearningActivitySpecification::fromArray($influencedBy),
+                $data['influencedBy'],
+            ) : null,
+            isset($data['provenBy']) ? array_map(
+                static fn (array $provenBy): LearningAssessmentSpecification => LearningAssessmentSpecification::fromArray($provenBy),
+                $data['provenBy'],
+            ) : null,
+            isset($data['ISCEDFCode']) ? array_map(
+                static fn (array $iscedfCode): Concept => Concept::fromArray($iscedfCode),
+                $data['ISCEDFCode'],
+            ) : null,
+            isset($data['entitlesTo']) ? array_map(
+                static fn (array $entitlesTo): LearningEntitlementSpecification => LearningEntitlementSpecification::fromArray($entitlesTo),
+                $data['entitlesTo'],
+            ) : null,
+            isset($data['educationLevel']) ? array_map(
+                static fn (array $educationLevel): Concept => Concept::fromArray($educationLevel),
+                $data['educationLevel'],
+            ) : null,
+            isset($data['order']) ? $data['order'] : null,
+            isset($data['modified']) ? new DateTimeImmutable($data['modified']) : null,
         );
     }
 }

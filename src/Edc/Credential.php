@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Edc;
 
-use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
+use DateTimeImmutable;
 use IsyThl\EuropeanLearningModel\Core\Concept;
-use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
+use IsyThl\EuropeanLearningModel\Core\ConceptScheme;
+use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
+use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
+use IsyThl\EuropeanLearningModel\Core\Entity;
 use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Core\Organisation;
-use DateTimeImmutable;
-use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
+use IsyThl\EuropeanLearningModel\Core\VocabularyScheme;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
-final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
-
+final class Credential extends Entity {
     private const CONTEXT = [
         'https://www.w3.org/2018/credentials/v1',
         'http://data.europa.eu/snb/model/context/edc-ap',
@@ -27,11 +27,11 @@ final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
         public readonly DisplayParameter $displayParameter,
         public readonly DateTimeImmutable $validFrom,
         public readonly ?DateTimeImmutable $expirationDate = null,
-        ?Concept $credentialProfile = null,
         public readonly ?DateTimeImmutable $issuanceDate = null,
         public readonly ?DateTimeImmutable $issued = null,
         public readonly ?DateTimeImmutable $validUntil = null,
         public readonly ?Organisation $issuer = null,
+        ?Concept $credentialProfile = null,
     ) {
         parent::__construct($id);
         if ($issuer !== null && $issuer->eidasLegalIdentifier === null) {
@@ -70,35 +70,42 @@ final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
 
     /** @return array<string, mixed> */
     public function toArray(): array {
-        $data = [
-            'id' => 'urn:credential:' . $this->id,
-            'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
-            'credentialProfiles' => [$this->credentialProfile->toArray()],
-            'displayParameter' => $this->displayParameter->toArray(),
-            'credentialSchema' => [
-                'id' => 'http://data.europa.eu/snb/model/ap/edc-generic-full',
-                'type' => 'ShaclValidator2017',
-            ],
-            'credentialSubject' => $this->credentialSubject->toArray(),
-            'validFrom' => DateTimeFormatter::format($this->validFrom),
-            '@context' => self::CONTEXT,
-        ];
-        if ($this->expirationDate !== null) {
-            $data['expirationDate'] = DateTimeFormatter::format($this->expirationDate);
+        $this->beginSerialization();
+
+        try {
+            $data = [
+                'id' => 'urn:credential:' . $this->id,
+                'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
+                'credentialProfiles' => [$this->credentialProfile->toArray()],
+                'displayParameter' => $this->displayParameter->toArray(),
+                'credentialSchema' => [
+                    'id' => 'http://data.europa.eu/snb/model/ap/edc-generic-full',
+                    'type' => 'ShaclValidator2017',
+                ],
+                'credentialSubject' => $this->credentialSubject->toArray(),
+                'validFrom' => DateTimeFormatter::format($this->validFrom),
+                '@context' => self::CONTEXT,
+            ];
+            if ($this->expirationDate !== null) {
+                $data['expirationDate'] = DateTimeFormatter::format($this->expirationDate);
+            }
+            if ($this->issuer !== null) {
+                $data['issuer'] = $this->issuer->toArray();
+            }
+            if ($this->issuanceDate !== null) {
+                $data['issuanceDate'] = DateTimeFormatter::format($this->issuanceDate);
+            }
+            if ($this->issued !== null) {
+                $data['issued'] = DateTimeFormatter::format($this->issued);
+            }
+            if ($this->validUntil !== null) {
+                $data['validUntil'] = DateTimeFormatter::format($this->validUntil);
+            }
+
+            return $data;
+        } finally {
+            $this->endSerialization();
         }
-        if ($this->issuer !== null) {
-            $data['issuer'] = $this->issuer->toArray();
-        }
-        if ($this->issuanceDate !== null) {
-            $data['issuanceDate'] = DateTimeFormatter::format($this->issuanceDate);
-        }
-        if ($this->issued !== null) {
-            $data['issued'] = DateTimeFormatter::format($this->issued);
-        }
-        if ($this->validUntil !== null) {
-            $data['validUntil'] = DateTimeFormatter::format($this->validUntil);
-        }
-        return $data;
     }
 
     public function toJson(): string {
@@ -112,15 +119,15 @@ final class Credential extends \IsyThl\EuropeanLearningModel\Core\Entity {
     public static function fromArray(array $data): self {
         return new self(
             $data['id'],
-            Concept::fromArray($data['credentialProfile']),
-            DisplayParameter::fromArray($data['displayParameter']),
             CredentialSubject::fromArray($data['credentialSubject']),
-            isset($data['issuer']) ? Organisation::fromArray($data['issuer']) : null,
+            DisplayParameter::fromArray($data['displayParameter']),
+            isset($data['validFrom']) ? new DateTimeImmutable($data['validFrom']) : null,
             isset($data['expirationDate']) ? new DateTimeImmutable($data['expirationDate']) : null,
             isset($data['issuanceDate']) ? new DateTimeImmutable($data['issuanceDate']) : null,
             isset($data['issued']) ? new DateTimeImmutable($data['issued']) : null,
-            isset($data['validFrom']) ? new DateTimeImmutable($data['validFrom']) : null,
             isset($data['validUntil']) ? new DateTimeImmutable($data['validUntil']) : null,
+            isset($data['issuer']) ? Organisation::fromArray($data['issuer']) : null,
+            Concept::fromArray($data['credentialProfile']),
         );
     }
 }

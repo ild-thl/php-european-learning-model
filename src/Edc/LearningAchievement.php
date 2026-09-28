@@ -4,73 +4,51 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Edc;
 
-use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
-use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
-use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\Concept;
 use IsyThl\EuropeanLearningModel\Core\CreditPoint;
+use IsyThl\EuropeanLearningModel\Core\Identifier;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningActivity;
+use IsyThl\EuropeanLearningModel\Core\LearningOpportunity;
+use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\Note;
+use IsyThl\EuropeanLearningModel\Core\Qualification;
+use IsyThl\EuropeanLearningModel\Core\WebResource;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LearningAchievement extends Claim {
-
     public function __construct(
         string $id,
         public readonly LocalizedString $title,
         public readonly AwardingProcess $awardedBy,
-        public readonly LearningAchievementSpecification $specifiedBy,
-        public readonly ?CreditPoint $creditReceived = null,
-        /** @var list<LearningAssessment> */
-        public readonly array $provenBy = [],
-        /** @var list<Identifier> */
-        public readonly array $identifiers = [],
-        /** @var list<LearningActivity> */
-        public readonly array $influencedBy = [],
-        /** @var list<LearningEntitlement> */
-        public readonly array $entitlesTo = [],
-        /** @var list<LearningAchievement> */
-        public readonly array $hasPart = [],
-        /** @var list<LearningAchievement> */
-        public readonly array $isPartOf = [],
+        /** @var list<Identifier|LegalIdentifier>|null */
+        public readonly ?array $identifier = null,
+        public readonly LearningAchievementSpecification|Qualification|null $specifiedBy = null,
+        public readonly ?LearningOpportunity $learningOpportunity = null,
+        /** @var list<Concept>|null */
+        public readonly ?array $dcType = null,
+        public readonly ?LocalizedString $description = null,
+        /** @var list<Note>|null */
+        public readonly ?array $additionalNote = null,
+        /** @var list<WebResource>|null */
+        public readonly ?array $supplementaryDocument = null,
+        /** @var list<LearningActivity>|null */
+        public readonly ?array $influencedBy = null,
+        /** @var list<LearningAssessment>|null */
+        public readonly ?array $provenBy = null,
+        /** @var list<LearningEntitlement>|null */
+        public readonly ?array $entitlesTo = null,
+        /** @var list<LearningAchievement>|null */
+        public readonly ?array $hasPart = null,
+        /** @var list<LearningAchievement>|null */
+        public readonly ?array $isPartOf = null,
+        /** @var list<CreditPoint>|null */
+        public readonly ?array $creditReceived = null,
+        public readonly ?int $order = null,
     ) {
         parent::__construct($id);
-        $invalidAssessments = array_filter(
-            $provenBy,
-            static fn ($assessment): bool => !$assessment instanceof LearningAssessment,
-        );
-        if ($invalidAssessments !== []) {
-            throw new InvalidCredentialException('Achievement assessments must be LearningAssessment objects.');
-        }
-        $invalidIdentifiers = array_filter(
-            $identifiers,
-            static fn ($identifier): bool => (
-                !$identifier instanceof Identifier
-            ),
-        );
-        if ($invalidIdentifiers !== []) {
-            throw new InvalidCredentialException('Achievement identifiers must be Identifier objects.');
-        }
-        $invalidActivities = array_filter(
-            $influencedBy,
-            static fn ($activity): bool => !$activity instanceof LearningActivity,
-        );
-        if ($invalidActivities !== []) {
-            throw new InvalidCredentialException('Achievement activities must be LearningActivity objects.');
-        }
-        $invalidEntitlements = array_filter(
-            $entitlesTo,
-            static fn ($entitlement): bool => !$entitlement instanceof LearningEntitlement,
-        );
-        if ($invalidEntitlements !== []) {
-            throw new InvalidCredentialException('Achievement entitlements must be LearningEntitlement objects.');
-        }
-        if (array_filter($hasPart, static fn ($achievement): bool => !$achievement instanceof self) !== []) {
-            throw new InvalidCredentialException('Achievement parts must be LearningAchievement objects.');
-        }
-        if (array_filter($isPartOf, static fn ($achievement): bool => !$achievement instanceof self) !== []) {
-            throw new InvalidCredentialException('Achievement parents must be LearningAchievement objects.');
-        }
     }
 
     /** @return array<string, mixed> */
@@ -80,57 +58,146 @@ final class LearningAchievement extends Claim {
             'type' => 'LearningAchievement',
             'title' => $this->title->toArray(),
             'awardedBy' => $this->awardedBy->toArray(),
-            'specifiedBy' => $this->specifiedBy->toArray(),
         ];
-        if ($this->creditReceived !== null) {
-            $data['creditReceived'] = $this->creditReceived->toArray();
-        }
-        if ($this->provenBy !== []) {
-            $data['provenBy'] = array_map(
-                static fn (LearningAssessment $assessment): array => $assessment->toArray(),
-                $this->provenBy,
-            );
-        }
-        if ($this->identifiers !== []) {
+        if ($this->identifier !== null) {
             $data['identifier'] = array_map(
                 static fn (Identifier|LegalIdentifier $identifier): array => $identifier->toArray(),
-                $this->identifiers,
+                $this->identifier,
             );
         }
-        if ($this->influencedBy !== []) {
+        if ($this->specifiedBy !== null) {
+            $data['specifiedBy'] = $this->specifiedBy->toArray();
+        }
+        if ($this->learningOpportunity !== null) {
+            $data['learningOpportunity'] = $this->learningOpportunity->toArray();
+        }
+        if ($this->dcType != null) {
+            $data['dcType'] = array_map(
+                static fn (Concept $dcType): array => $dcType->toArray(),
+                $this->dcType,
+            );
+        }
+        if ($this->description != null) {
+            $data['description'] = $this->description->toArray();
+        }
+        if ($this->additionalNote !== null) {
+            $data['additionalNote'] = array_map(
+                static fn (Note $note): array => $note->toArray(),
+                $this->additionalNote,
+            );
+        }
+        if ($this->supplementaryDocument !== null) {
+            $data['supplementaryDocument'] = array_map(
+                static fn (WebResource $supplementaryDocument): array => $supplementaryDocument->toArray(),
+                $this->supplementaryDocument,
+            );
+        }
+        if ($this->influencedBy !== null) {
             $data['influencedBy'] = array_map(
                 static fn (LearningActivity $activity): array => $activity->toArray(),
                 $this->influencedBy,
             );
         }
-        if ($this->entitlesTo !== []) {
+        if ($this->provenBy !== null) {
+            $data['provenBy'] = array_map(
+                static fn (LearningAssessment $assessment): array => $assessment->toArray(),
+                $this->provenBy,
+            );
+        }
+        if ($this->entitlesTo !== null) {
             $data['entitlesTo'] = array_map(
                 static fn (LearningEntitlement $entitlement): array => $entitlement->toArray(),
                 $this->entitlesTo,
             );
         }
-        if ($this->hasPart !== []) {
+        if ($this->hasPart !== null) {
             $data['hasPart'] = array_map(
                 static fn (self $achievement): array => $achievement->toArray(),
                 $this->hasPart,
             );
         }
-        if ($this->isPartOf !== []) {
+        if ($this->isPartOf !== null) {
             $data['isPartOf'] = array_map(
                 static fn (self $achievement): array => $achievement->toArray(),
                 $this->isPartOf,
             );
         }
+        if ($this->creditReceived !== null) {
+            $data['creditReceived'] = array_map(
+                static fn (CreditPoint $creditPoint): array => $creditPoint->toArray(),
+                $this->creditReceived,
+            );
+        }
+        if ($this->order !== null) {
+            $data['order'] = $this->order;
+        }
+
         return $data;
     }
 
     /** @param array<string, mixed> $data */
     public static function fromArray(array $data): self {
+        if (!isset($data['type']) || $data['type'] !== 'LearningAchievement') {
+            throw new InvalidCredentialException('Data is not a LearningAchievement.');
+        }
+        if (!isset($data['title'])) {
+            throw new InvalidCredentialException('LearningAchievement requires a title.');
+        }
+        if (!isset($data['awardedBy'])) {
+            throw new InvalidCredentialException('LearningAchievement requires an awardedBy.');
+        }
+
         return new self(
             $data['id'],
             LocalizedString::fromArray($data['title']),
             AwardingProcess::fromArray($data['awardedBy']),
-            LearningAchievementSpecification::fromArray($data['specifiedBy']),
+            isset($data['identifier']) ? array_map(
+                static fn (array $identifier): Identifier|LegalIdentifier => Identifier::fromArray($identifier),
+                $data['identifier']
+            ) : null,
+            isset($data['specifiedBy']) ? (
+                $data['specifiedBy']['type'] === 'Qualification' ? Qualification::fromArray($data['specifiedBy'])
+                    : LearningAchievementSpecification::fromArray($data['specifiedBy'])
+            ) : null,
+            isset($data['learningOpportunity']) ? LearningOpportunity::fromArray($data['learningOpportunity']) : null,
+            isset($data['dcType']) ? array_map(
+                static fn (array $dcType): Concept => Concept::fromArray($dcType),
+                $data['dcType']
+            ) : null,
+            isset($data['description']) ? LocalizedString::fromArray($data['description']) : null,
+            isset($data['additionalNote']) ? array_map(
+                static fn (array $additionalNote): Note => Note::fromArray($additionalNote),
+                $data['additionalNote']
+            ) : null,
+            isset($data['supplementaryDocument']) ? array_map(
+                static fn (array $supplementaryDocument): WebResource => WebResource::fromArray($supplementaryDocument),
+                $data['supplementaryDocument']
+            ) : null,
+            isset($data['influencedBy']) ? array_map(
+                static fn (array $influencedBy): LearningActivity => LearningActivity::fromArray($influencedBy),
+                $data['influencedBy']
+            ) : null,
+            isset($data['provenBy']) ? array_map(
+                static fn (array $provenBy): LearningAssessment => LearningAssessment::fromArray($provenBy),
+                $data['provenBy']
+            ) : null,
+            isset($data['entitlesTo']) ? array_map(
+                static fn (array $entitlesTo): LearningEntitlement => LearningEntitlement::fromArray($entitlesTo),
+                $data['entitlesTo']
+            ) : null,
+            isset($data['hasPart']) ? array_map(
+                static fn (array $hasPart): LearningAchievement => LearningAchievement::fromArray($hasPart),
+                $data['hasPart']
+            ) : null,
+            isset($data['isPartOf']) ? array_map(
+                static fn (array $isPartOf): LearningAchievement => LearningAchievement::fromArray($isPartOf),
+                $data['isPartOf']
+            ) : null,
+            isset($data['creditReceived']) ? array_map(
+                static fn (array $creditReceived): CreditPoint => CreditPoint::fromArray($creditReceived),
+                $data['creditReceived']
+            ) : null,
+            isset($data['order']) ? $data['order'] : null,
         );
     }
 }

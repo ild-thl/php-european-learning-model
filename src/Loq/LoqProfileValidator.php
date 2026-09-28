@@ -6,24 +6,24 @@ namespace IsyThl\EuropeanLearningModel\Loq;
 
 use IsyThl\EuropeanLearningModel\Core\ConceptAssertions;
 use IsyThl\EuropeanLearningModel\Core\ElmVocabularySchemes;
-use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
+use IsyThl\EuropeanLearningModel\Core\LearningOpportunity;
 use IsyThl\EuropeanLearningModel\Core\Qualification;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LoqProfileValidator {
-
     public function validateQualification(Qualification $qualification): void {
         self::assertPersistentIdentifier($qualification->id, 'qualification');
         if ($qualification->eqfLevel === null) {
             throw new InvalidCredentialException('A LOQ qualification requires one EQF level.');
         }
-        if ($qualification->nqfLevels === []) {
+        if ($qualification->nqfLevel === []) {
             throw new InvalidCredentialException('A LOQ qualification requires at least one NQF level.');
         }
-        if ($qualification->educationSubjects === []) {
+        if ($qualification->educationSubject === []) {
             throw new InvalidCredentialException('A LOQ qualification requires at least one ISCED-F subject.');
         }
-        if ($qualification->learningOutcomes === []) {
+        if ($qualification->learningOutcome === []) {
             throw new InvalidCredentialException('A LOQ qualification requires at least one learning outcome.');
         }
     }

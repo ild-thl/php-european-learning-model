@@ -5,15 +5,6 @@ declare(strict_types=1);
 namespace IsyThl\EuropeanLearningModel\Core;
 
 use DateTimeImmutable;
-use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
-use IsyThl\EuropeanLearningModel\Core\Concept;
-use IsyThl\EuropeanLearningModel\Core\ContactPoint;
-use IsyThl\EuropeanLearningModel\Core\Identifier;
-use IsyThl\EuropeanLearningModel\Core\LegalIdentifier;
-use IsyThl\EuropeanLearningModel\Core\LocalizedString;
-use IsyThl\EuropeanLearningModel\Core\Location;
-use IsyThl\EuropeanLearningModel\Core\Organisation;
-use IsyThl\EuropeanLearningModel\Core\Person;
 use IsyThl\EuropeanLearningModel\Edc\Credential;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
@@ -23,7 +14,6 @@ use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
  * @see https://europa.eu/europass/elm-browser/documentation/rdf/ap/edc/documentation/edc-generic-no-cv_en.html#person
  */
 class Person extends Entity {
-
     public function __construct(
         string $id,
         public readonly ?LocalizedString $fullName = null,
@@ -70,65 +60,72 @@ class Person extends Entity {
 
     /** @return array<string, mixed> */
     public function toArray(): array {
-        $data = [
-            'id' => $this->id,
-            'type' => 'Person',
-        ];
-        if ($this->fullName !== null) {
-            $data['fullName'] = $this->fullName->toArray();
+        $this->beginSerialization();
+
+        try {
+            $data = [
+                'id' => $this->id,
+                'type' => 'Person',
+            ];
+            if ($this->fullName !== null) {
+                $data['fullName'] = $this->fullName->toArray();
+            }
+            if ($this->familyName !== null) {
+                $data['familyName'] = $this->familyName->toArray();
+            }
+            if ($this->givenName !== null) {
+                $data['givenName'] = $this->givenName->toArray();
+            }
+            if ($this->birthName !== null) {
+                $data['birthName'] = array_map(static fn (LocalizedString $name): array => $name->toArray(), $this->birthName);
+            }
+            if ($this->patronymicName !== null) {
+                $data['patronymicName'] = array_map(static fn (LocalizedString $name): array => $name->toArray(), $this->patronymicName);
+            }
+            if ($this->identifier !== null) {
+                $data['identifier'] = array_map(static fn (Identifier|LegalIdentifier $identifier): array => $identifier->toArray(), $this->identifier);
+            }
+            if ($this->nationalId !== null) {
+                $data['nationalID'] = $this->nationalId->toArray();
+            }
+            if ($this->dateOfBirth !== null) {
+                $data['dateOfBirth'] = DateTimeFormatter::format($this->dateOfBirth);
+            }
+            if ($this->placeOfBirth !== null) {
+                $data['placeOfBirth'] = $this->placeOfBirth->toArray();
+            }
+            if ($this->gender !== null) {
+                $data['gender'] = $this->gender->toArray();
+            }
+            if ($this->location !== null) {
+                $data['location'] = $this->location->toArray();
+            }
+            if ($this->contactPoint !== null) {
+                $data['contactPoint'] = array_map(static fn (ContactPoint $contactPoint): array => $contactPoint->toArray(), $this->contactPoint);
+            }
+            if ($this->memberOf !== null) {
+                $data['memberOf'] = array_map(static fn (Organisation $organisation): array => $organisation->toArray(), $this->memberOf);
+            }
+            if ($this->citizenshipCountry !== null) {
+                $data['citizenshipCountry'] = array_map(static fn (Concept $country): array => $country->toArray(), $this->citizenshipCountry);
+            }
+            if ($this->hasCredential !== null) {
+                $data['hasCredential'] = array_map(static fn (Credential $credential): array => $credential->toArray(), $this->hasCredential);
+            }
+            if ($this->hasFamilyRelationship !== null) {
+                $data['hasFamilyRelationship'] = array_map(static fn (Concept $familyRelationship): array => $familyRelationship->toArray(), $this->hasFamilyRelationship);
+            }
+            if ($this->order !== null) {
+                $data['order'] = $this->order;
+            }
+            if ($this->modified !== null) {
+                $data['modified'] = DateTimeFormatter::format($this->modified);
+            }
+
+            return $data;
+        } finally {
+            $this->endSerialization();
         }
-        if ($this->familyName !== null) {
-            $data['familyName'] = $this->familyName->toArray();
-        }
-        if ($this->givenName !== null) {
-            $data['givenName'] = $this->givenName->toArray();
-        }
-        if ($this->birthName !== null) {
-            $data['birthName'] = array_map(static fn (LocalizedString $name): array => $name->toArray(), $this->birthName);
-        }
-        if ($this->patronymicName !== null) {
-            $data['patronymicName'] = array_map(static fn (LocalizedString $name): array => $name->toArray(), $this->patronymicName);
-        }
-        if ($this->identifier !== null) {
-            $data['identifier'] = array_map(static fn (Identifier|LegalIdentifier $identifier): array => $identifier->toArray(), $this->identifier);
-        }
-        if ($this->nationalId !== null) {
-            $data['nationalID'] = $this->nationalId->toArray();
-        }
-        if ($this->dateOfBirth !== null) {
-            $data['dateOfBirth'] = DateTimeFormatter::format($this->dateOfBirth);
-        }
-        if ($this->placeOfBirth !== null) {
-            $data['placeOfBirth'] = $this->placeOfBirth->toArray();
-        }
-        if ($this->gender !== null) {
-            $data['gender'] = $this->gender->toArray();
-        }
-        if ($this->location !== null) {
-            $data['location'] = $this->location->toArray();
-        }
-        if ($this->contactPoint !== null) {
-            $data['contactPoint'] = array_map(static fn (ContactPoint $contactPoint): array => $contactPoint->toArray(), $this->contactPoint);
-        }
-        if ($this->memberOf !== null) {
-            $data['memberOf'] = array_map(static fn (Organisation $organisation): array => $organisation->toArray(), $this->memberOf);
-        }
-        if ($this->citizenshipCountry !== null) {
-            $data['citizenshipCountry'] = array_map(static fn (Concept $country): array => $country->toArray(), $this->citizenshipCountry);
-        }
-        if ($this->hasCredential !== null) {
-            $data['hasCredential'] = array_map(static fn (Credential $credential): array => $credential->toArray(), $this->hasCredential);
-        }
-        if ($this->hasFamilyRelationship !== null) {
-            $data['hasFamilyRelationship'] = array_map(static fn (Concept $familyRelationship): array => $familyRelationship->toArray(), $this->hasFamilyRelationship);
-        }
-        if ($this->order !== null) {
-            $data['order'] = $this->order;
-        }
-        if ($this->modified !== null) {
-            $data['modified'] = DateTimeFormatter::format($this->modified);
-        }
-        return $data;
     }
 
     /** @param array<string, mixed> $data */
@@ -136,6 +133,7 @@ class Person extends Entity {
         if (!isset($data['type']) || $data['type'] !== 'Person') {
             throw new InvalidCredentialException('Data is not an Person.');
         }
+
         return new self(
             $data['id'],
             isset($data['fullName']) ? LocalizedString::fromArray($data['fullName']) : null,

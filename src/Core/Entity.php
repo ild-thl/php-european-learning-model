@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
+
 abstract class Entity {
+    /** @var array<int, true> */
+    private static array $serializationStack = [];
 
     public readonly string $id;
 
@@ -17,6 +21,18 @@ abstract class Entity {
 
     /** @param array<string, mixed> $data */
     abstract public static function fromArray(array $data): self;
+
+    protected function beginSerialization(): void {
+        $objectId = spl_object_id($this);
+        if (isset(self::$serializationStack[$objectId])) {
+            throw new InvalidCredentialException('Circular entity reference detected during serialization.');
+        }
+        self::$serializationStack[$objectId] = true;
+    }
+
+    protected function endSerialization(): void {
+        unset(self::$serializationStack[spl_object_id($this)]);
+    }
 
     public function toJson(): string {
         return JsonLdEncoder::encode($this->toArray());

@@ -126,24 +126,7 @@ do not retrieve profiles or vocabularies from the network.
 
 ## LOQ documents
 
-LOQ documents serialize to deterministic unsigned JSON-LD:
-
-```php
-use IsyThl\EuropeanLearningModel\Loq\LoqDatasetDocument;
-use IsyThl\EuropeanLearningModel\Loq\QualificationReference;
-
-$reference = new QualificationReference($identifier, $datasetNamespace);
-$dataset = new LoqDatasetDocument([$qualification, $learningOpportunity]);
-$unsignedJsonLd = $dataset->toJson();
-```
-
-The model distinguishes an embedded `Core\Qualification` from an external
-`QualificationReference`. References require persistent identifiers and keep
-their dataset namespace as validated application metadata.
-
-### LOQ XML status
-
-XML export is not yet implemented.
+TODO
 
 ## Controlled vocabularies
 

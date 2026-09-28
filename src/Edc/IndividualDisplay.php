@@ -32,7 +32,7 @@ final class IndividualDisplay extends \IsyThl\EuropeanLearningModel\Core\Entity 
     /** @return array<string, mixed> */
     public function toArray(): array {
         return [
-            'id' => 'urn:epass:individualDisplay:' . $this->id,
+            'id' => $this->id,
             'type' => 'IndividualDisplay',
             'displayDetail' => array_map(
                 static fn (DisplayDetail $displayDetail): array => $displayDetail->toArray(),
@@ -40,5 +40,17 @@ final class IndividualDisplay extends \IsyThl\EuropeanLearningModel\Core\Entity 
             ),
             'language' => $this->language->toArray(),
         ];
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        return new self(
+            $data['id'],
+            Concept::fromArray($data['language']),
+            isset($data['displayDetail']) ? array_map(
+                static fn (array $displayDetail): DisplayDetail => DisplayDetail::fromArray($displayDetail),
+                $data['displayDetail'],
+            ) : [],
+        );
     }
 }

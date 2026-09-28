@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Loq;
 
-use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 use IsyThl\EuropeanLearningModel\Core\JsonLdEncoder;
+use IsyThl\EuropeanLearningModel\Core\LearningOpportunity;
+use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LearningOpportunityDocument {
-
     /** @param list<LearningOpportunity> $opportunities */
     public function __construct(
         private readonly array $opportunities,

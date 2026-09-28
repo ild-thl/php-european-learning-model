@@ -4,178 +4,237 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Core;
 
+use DateTimeImmutable;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class Qualification extends LearningAchievementSpecification {
-
     /**
-     * @param list<CreditPoint> $creditPoints
-     * @param list<string> $category
-     * @param list<Concept> $qualificationCodes
-    * @param list<LearningOutcome> $learningOutcomes
-    * @param list<Concept> $educationSubjects
-    * @param list<LearningActivity> $influencedBy
-    * @param list<AwardingOpportunity> $awardingOpportunities
+     * @param  list<Identifier|LegalIdentifier>|null  $identifier
+     * @param  list<LocalizedString>|null  $altLabel
+     * @param  list<Concept>|null  $dcType
+     * @param  list<Concept>|null  $language
+     * @param  list<Note>|null  $additionalNote
+     * @param  list<WebResource>|null  $supplementaryDocument
+     * @param  list<Qualification>|null  $generalisationOf
+     * @param  list<Qualification>|null  $specialisationOf
+     * @param  list<CreditPoint>|null  $creditPoint
+     * @param  list<Qualification>|null  $hasPart
+     * @param  list<Qualification>|null  $isPartOf
+     * @param  list<Concept>|null  $mode
+     * @param  list<WebResource>|null  $homepage
+     * @param  list<string>|null  $category
+     * @param  list<Concept>|null  $targetGroup
+     * @param  list<AwardingOpportunity>|null  $awardingOpportunity
+     * @param  list<Concept>|null  $educationSubject
+     * @param  list<LearningOutcome>|null  $learningOutcome
+     * @param  list<LearningActivitySpecification>|null  $influencedBy
+     * @param  list<LearningAssessmentSpecification>|null  $provenBy
+     * @param  list<Concept>|null  $iscedfCode
+     * @param  list<LearningEntitlementSpecification>|null  $entitlesTo
+     * @param  list<Concept>|null  $educationLevel
+     * @param  list<Concept>|null  $qualificationCode
+     * @param  list<Concept>|null  $nqfLevel
+     * @param  list<Accreditation>|null  $accreditation
      */
     public function __construct(
         string $id,
         LocalizedString $title,
-        ?LocalizedString $description = null,
-        array $creditPoints = [],
-        ?Concept $language = null,
-        array $category = [],
-        ?string $maximumDuration = null,
-        ?string $volumeOfLearning = null,
-        public readonly ?bool $isPartialQualification = null,
-        public readonly array $qualificationCodes = [],
-        public readonly ?Concept $eqfLevel = null,
-        /** @var list<Concept> */
-        public readonly array $nqfLevels = [],
-        /** @var list<Accreditation> */
-        public readonly array $accreditations = [],
-        array $learningOutcomes = [],
-        array $educationSubjects = [],
-        public readonly ?Organisation $publisher = null,
+        ?array $identifier = null,
+        ?array $altLabel = null,
         ?Note $learningOutcomeSummary = null,
-        public readonly ?Note $entryRequirement = null,
-        public readonly ?Qualification $specialisationOf = null,
-        public readonly ?Qualification $generalisationOf = null,
-        /** @var list<Qualification> */
-        public readonly array $hasPart = [],
-        /** @var list<Qualification> */
-        public readonly array $isPartOf = [],
-        /** @var list<LearningActivity> */
-        public readonly array $influencedBy = [],
-        /** @var list<AwardingOpportunity> */
-        public readonly array $awardingOpportunities = [],
+        ?Duration $volumeOfLearning = null,
+        ?Note $entryRequirement = null,
+        ?Concept $learningSetting = null,
+        ?string $status = null,
+        ?Duration $maximumDuration = null,
+        ?array $dcType = null,
+        ?array $language = null,
+        ?LocalizedString $description = null,
+        ?array $additionalNote = null,
+        ?array $supplementaryDocument = null,
+        ?array $generalisationOf = null,
+        ?array $specialisationOf = null,
+        ?array $creditPoint = null,
+        ?array $hasPart = null,
+        ?array $isPartOf = null,
+        ?array $mode = null,
+        ?array $homepage = null,
+        ?array $category = null,
+        ?array $targetGroup = null,
+        ?array $awardingOpportunity = null,
+        ?array $educationSubject = null,
+        ?array $learningOutcome = null,
+        ?array $influencedBy = null,
+        ?array $provenBy = null,
+        ?array $iscedfCode = null,
+        ?array $entitlesTo = null,
+        ?array $educationLevel = null,
+        ?int $order = null,
+        ?DateTimeImmutable $modified = null,
+        public readonly ?bool $isPartialQualification = null,
+        public readonly ?array $qualificationCode = null,
+        public readonly ?array $nqfLevel = null,
+        public readonly ?Concept $eqfLevel = null,
+        public readonly ?array $accreditation = null,
     ) {
+        foreach (
+            [
+                'generalisationOf' => $generalisationOf,
+                'specialisationOf' => $specialisationOf,
+                'hasPart' => $hasPart,
+                'isPartOf' => $isPartOf,
+            ] as $field => $values
+        ) {
+            if ($values !== null && array_filter($values, static fn ($value): bool => !$value instanceof self) !== []) {
+                throw new InvalidCredentialException(sprintf('%s must contain only Qualification objects.', $field));
+            }
+        }
         parent::__construct(
             $id,
             $title,
-            $description,
-            $creditPoints,
-            $language,
-            $category,
-            $maximumDuration,
+            $identifier,
+            $altLabel,
+            $learningOutcomeSummary,
             $volumeOfLearning,
-            learningOutcomes: $learningOutcomes,
-            educationSubjects: $educationSubjects,
-            learningOutcomeSummary: $learningOutcomeSummary,
+            $entryRequirement,
+            $learningSetting,
+            $status,
+            $maximumDuration,
+            $dcType,
+            $language,
+            $description,
+            $additionalNote,
+            $supplementaryDocument,
+            $generalisationOf,
+            $specialisationOf,
+            $creditPoint,
+            $hasPart,
+            $isPartOf,
+            $mode,
+            $homepage,
+            $category,
+            $targetGroup,
+            $awardingOpportunity,
+            $educationSubject,
+            $learningOutcome,
+            $influencedBy,
+            $provenBy,
+            $iscedfCode,
+            $entitlesTo,
+            $educationLevel,
+            $order,
+            $modified,
         );
-        if (
-            array_filter(
-                $qualificationCodes,
-                static fn ($qualificationCode): bool => !$qualificationCode instanceof Concept,
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('Qualification codes must be concepts.');
-        }
-        if (
-            array_filter(
-                $nqfLevels,
-                static fn ($nqfLevel): bool => !$nqfLevel instanceof Concept,
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('NQF levels must be concepts.');
-        }
         if ($eqfLevel !== null) {
-            ConceptAssertions::assertScheme($eqfLevel, ElmVocabularySchemes::EQF, 'eqfLevel');
+            ConceptAssertions::assertScheme($eqfLevel, ElmVocabularySchemes::EQF, 'EQFLevel');
         }
-        if (array_filter($hasPart, static fn ($part): bool => !$part instanceof self) !== []) {
-            throw new InvalidCredentialException('Qualification parts must be Qualification objects.');
-        }
-        if (array_filter($isPartOf, static fn ($parent): bool => !$parent instanceof self) !== []) {
-            throw new InvalidCredentialException('Qualification parents must be Qualification objects.');
-        }
-        if (array_filter($influencedBy, static fn ($activity): bool => !$activity instanceof LearningActivity) !== []) {
-            throw new InvalidCredentialException('Qualification activities must be LearningActivity objects.');
-        }
-        if (
-            array_filter(
-                $awardingOpportunities,
-                static fn ($opportunity): bool => !$opportunity instanceof AwardingOpportunity,
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('Awarding opportunities must be AwardingOpportunity objects.');
-        }
-        foreach ($nqfLevels as $nqfLevel) {
-            ConceptAssertions::assertSchemePrefix($nqfLevel, ElmVocabularySchemes::QDR_BASE, 'nqfLevels');
-        }
-        if (
-            array_filter(
-                $accreditations,
-                static fn ($accreditation): bool => !$accreditation instanceof Accreditation,
-            ) !== []
-        ) {
-            throw new InvalidCredentialException('Accreditations must be Accreditation objects.');
+        if ($nqfLevel !== null) {
+            foreach ($nqfLevel as $level) {
+                ConceptAssertions::assertSchemePrefix($level, ElmVocabularySchemes::QDR_BASE, 'NQFLevel');
+            }
         }
     }
 
     /** @return array<string, mixed> */
     public function toArray(): array {
         $data = parent::toArray();
-        $data['id'] = 'urn:epass:qualification:' . $this->id;
         $data['type'] = 'Qualification';
         if ($this->isPartialQualification !== null) {
             $data['isPartialQualification'] = $this->isPartialQualification;
         }
-        if ($this->qualificationCodes !== []) {
+        if ($this->qualificationCode !== null) {
             $data['qualificationCode'] = array_map(
                 static fn (Concept $qualificationCode): array => $qualificationCode->toArray(),
-                $this->qualificationCodes,
+                $this->qualificationCode,
             );
         }
-        if ($this->nqfLevels !== []) {
-            $data['nqfLevel'] = array_map(
+        if ($this->nqfLevel !== null) {
+            $data['NQFLevel'] = array_map(
                 static fn (Concept $nqfLevel): array => $nqfLevel->toArray(),
-                $this->nqfLevels,
+                $this->nqfLevel,
             );
         }
         if ($this->eqfLevel !== null) {
-            $data['eqfLevel'] = $this->eqfLevel->toArray();
+            $data['EQFLevel'] = $this->eqfLevel->toArray();
         }
-        if ($this->accreditations !== []) {
+        if ($this->accreditation !== null) {
             $data['accreditation'] = array_map(
                 static fn (Accreditation $accreditation): array => $accreditation->toArray(),
-                $this->accreditations,
+                $this->accreditation,
             );
         }
-        if ($this->publisher !== null) {
-            $data['publisher'] = $this->publisher->toArray();
-        }
-        if ($this->entryRequirement !== null) {
-            $data['entryRequirement'] = $this->entryRequirement->toArray();
-        }
-        if ($this->specialisationOf !== null) {
-            $data['specialisationOf'] = $this->specialisationOf->toArray();
-        }
-        if ($this->generalisationOf !== null) {
-            $data['generalisationOf'] = $this->generalisationOf->toArray();
-        }
-        if ($this->hasPart !== []) {
-            $data['hasPart'] = array_map(
-                static fn (self $part): array => $part->toArray(),
-                $this->hasPart,
-            );
-        }
-        if ($this->isPartOf !== []) {
-            $data['isPartOf'] = array_map(
-                static fn (self $parent): array => $parent->toArray(),
-                $this->isPartOf,
-            );
-        }
-        if ($this->influencedBy !== []) {
-            $data['influencedBy'] = array_map(
-                static fn (LearningActivity $activity): array => $activity->toArray(),
-                $this->influencedBy,
-            );
-        }
-        if ($this->awardingOpportunities !== []) {
-            $data['awardingOpportunity'] = array_map(
-                static fn (AwardingOpportunity $opportunity): array => $opportunity->toArray(),
-                $this->awardingOpportunities,
-            );
-        }
+
         return $data;
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        if (($data['type'] ?? null) !== 'Qualification') {
+            throw new InvalidCredentialException('Data is not a Qualification.');
+        }
+        if (!isset($data['title'])) {
+            throw new InvalidCredentialException('Data is missing title');
+        }
+
+        $shared = LearningAchievementSpecification::fromArray($data);
+
+        return new self(
+            $shared->id,
+            $shared->title,
+            $shared->identifier,
+            $shared->altLabel,
+            $shared->learningOutcomeSummary,
+            $shared->volumeOfLearning,
+            $shared->entryRequirement,
+            $shared->learningSetting,
+            $shared->status,
+            $shared->maximumDuration,
+            $shared->dcType,
+            $shared->language,
+            $shared->description,
+            $shared->additionalNote,
+            $shared->supplementaryDocument,
+            self::qualifications($shared->generalisationOf, 'generalisationOf'),
+            self::qualifications($shared->specialisationOf, 'specialisationOf'),
+            $shared->creditPoint,
+            self::qualifications($shared->hasPart, 'hasPart'),
+            self::qualifications($shared->isPartOf, 'isPartOf'),
+            $shared->mode,
+            $shared->homepage,
+            $shared->category,
+            $shared->targetGroup,
+            $shared->awardingOpportunity,
+            $shared->educationSubject,
+            $shared->learningOutcome,
+            $shared->influencedBy,
+            $shared->provenBy,
+            $shared->iscedfCode,
+            $shared->entitlesTo,
+            $shared->educationLevel,
+            $shared->order,
+            $shared->modified,
+            $data['isPartialQualification'] ?? null,
+            isset($data['qualificationCode']) ? array_map(static fn (array $concept): Concept => Concept::fromArray($concept), $data['qualificationCode']) : null,
+            isset($data['NQFLevel']) ? array_map(static fn (array $concept): Concept => Concept::fromArray($concept), $data['NQFLevel']) : null,
+            isset($data['EQFLevel']) ? Concept::fromArray($data['EQFLevel']) : null,
+            isset($data['accreditation']) ? array_map(static fn (array $accreditation): Accreditation => Accreditation::fromArray($accreditation), $data['accreditation']) : null,
+        );
+    }
+
+    /**
+     * @param  list<LearningAchievementSpecification|Qualification>|null  $values
+     * @return list<Qualification>|null
+     */
+    private static function qualifications(?array $values, string $field): ?array {
+        if ($values === null) {
+            return null;
+        }
+        foreach ($values as $value) {
+            if (!$value instanceof self) {
+                throw new InvalidCredentialException(sprintf('%s must contain only Qualification objects.', $field));
+            }
+        }
+
+        return $values;
     }
 }

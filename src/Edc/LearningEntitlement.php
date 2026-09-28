@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace IsyThl\EuropeanLearningModel\Edc;
 
+use DateTimeImmutable;
 use IsyThl\EuropeanLearningModel\Core\AwardingProcess;
-use IsyThl\EuropeanLearningModel\Core\LocalizedString;
+use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
 use IsyThl\EuropeanLearningModel\Core\LearningAchievementSpecification;
 use IsyThl\EuropeanLearningModel\Core\LearningEntitlementSpecification;
-use IsyThl\EuropeanLearningModel\Core\DateTimeFormatter;
-use DateTimeImmutable;
+use IsyThl\EuropeanLearningModel\Core\LocalizedString;
 use IsyThl\EuropeanLearningModel\Exception\InvalidCredentialException;
 
 final class LearningEntitlement extends Claim {
-
     /**
-    * @param list<LearningAchievementSpecification> $entitledBy
+     * @param  list<LearningAchievementSpecification>  $entitledBy
      */
     public function __construct(
         string $id,
@@ -45,10 +44,10 @@ final class LearningEntitlement extends Claim {
     /** @return array<string, mixed> */
     public function toArray(): array {
         $data = [
-            'id' => 'urn:epass:learningEntitlement:' . $this->id,
+            'id' => $this->id,
             'type' => 'LearningEntitlement',
-            'awardedBy' => $this->awardedBy->toArray(),
             'title' => $this->title->toArray(),
+            'awardedBy' => $this->awardedBy->toArray(),
         ];
         if ($this->issued !== null) {
             $data['issued'] = DateTimeFormatter::format($this->issued);
@@ -70,5 +69,26 @@ final class LearningEntitlement extends Claim {
         }
 
         return $data;
+    }
+
+    /** @param array<string, mixed> $data */
+    public static function fromArray(array $data): self {
+        if (!isset($data['type']) || $data['type'] !== 'LearningEntitlement') {
+            throw new InvalidCredentialException('Data is not a LearningEntitlement.');
+        }
+
+        return new self(
+            $data['id'],
+            LocalizedString::fromArray($data['title']),
+            AwardingProcess::fromArray($data['awardedBy']),
+            isset($data['description']) ? LocalizedString::fromArray($data['description']) : null,
+            isset($data['entitledBy']) ? array_map(
+                static fn (array $item): LearningAchievementSpecification => LearningAchievementSpecification::fromArray($item),
+                $data['entitledBy'],
+            ) : [],
+            isset($data['issued']) ? new DateTimeImmutable($data['issued']) : null,
+            isset($data['expiryDate']) ? new DateTimeImmutable($data['expiryDate']) : null,
+            isset($data['specifiedBy']) ? LearningEntitlementSpecification::fromArray($data['specifiedBy']) : null,
+        );
     }
 }

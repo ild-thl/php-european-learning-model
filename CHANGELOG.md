@@ -2,6 +2,10 @@
 
 All notable package changes are recorded here.
 
+## [0.2.0] - 2026-09-28
+
+- Added expanded ELM core models and entity-specific serialization tests.
+
 ## [0.1.0] - 2026-09-07
 
 - Added the framework-independent `Core`, `Edc`, and `Loq` package layers under

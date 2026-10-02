@@ -40,7 +40,7 @@ abstract class Entity {
 
     private static function newIdentifier(): string {
         try {
-            return 'urn:credential:' . bin2hex(random_bytes(16));
+            return 'urn:epass:' . bin2hex(random_bytes(16));
         } catch (\Throwable $exception) {
             throw new \JsonException('Unable to create a credential identifier.', 0, $exception);
         }

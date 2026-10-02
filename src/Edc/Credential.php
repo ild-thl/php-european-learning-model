@@ -74,7 +74,7 @@ final class Credential extends Entity {
 
         try {
             $data = [
-                'id' => 'urn:credential:' . $this->id,
+                'id' => $this->id,
                 'type' => ['VerifiableCredential', 'EuropeanDigitalCredential'],
                 'credentialProfiles' => [$this->credentialProfile->toArray()],
                 'displayParameter' => $this->displayParameter->toArray(),
